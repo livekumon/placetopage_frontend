@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { createSite, deploySite, enrichPlace, lookupPlace, checkSubdomain } from '../api/client'
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
+import {
+  createSite,
+  deploySite,
+  enrichPlace,
+  lookupPlace,
+  checkSubdomain,
+  createPaypalOrder,
+  capturePaypalOrder,
+  getPaypalClientId,
+} from '../api/client'
 import { useAuth } from '../context/AuthContext'
 
 const THEMES = [
@@ -77,7 +87,13 @@ export default function GeneratorPage() {
   const [subdomainInfo, setSubdomainInfo] = useState(null) // response from check-subdomain
   const subdomainDebounceRef = useRef(null)
 
+  const [paypalClientId, setPaypalClientId] = useState(() => import.meta.env.VITE_PAYPAL_CLIENT_ID || '')
+  const [paypalError, setPaypalError] = useState(null)
+
   const inputRef = useRef(null)
+
+  const canPublish =
+    Boolean(user?.skipPublishPayment) || (user?.publishingCredits ?? 0) >= 1
 
   // ── On mount: pick up URL from sessionStorage (set by landing page) ──────────
   useEffect(() => {
@@ -89,6 +105,24 @@ export default function GeneratorPage() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Load PayPal client ID from env or public API (must match server PAYPAL_CLIENT_ID)
+  useEffect(() => {
+    if (step !== 'preview') return
+    if (paypalClientId) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const id = await getPaypalClientId()
+        if (!cancelled && id) setPaypalClientId(id)
+      } catch {
+        /* ignore */
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [step, paypalClientId])
 
   // ── Lookup ───────────────────────────────────────────────────────────────────
 
@@ -960,6 +994,80 @@ export default function GeneratorPage() {
               </div>
             </div>
 
+            {/* Go Live — PayPal (required unless dev skip or credits) */}
+            {canPublish && user?.skipPublishPayment && (
+              <p className="rounded-lg border border-dashed border-surface-container-high bg-surface-container-low px-4 py-2 text-xs text-on-surface-variant">
+                Dev mode: publishing payment gate is off (SKIP_PUBLISH_PAYMENT on the API).
+              </p>
+            )}
+            {canPublish && !user?.skipPublishPayment && (user?.publishingCredits ?? 0) >= 1 && (
+              <p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+                <span className="material-symbols-outlined mr-1 align-middle text-base" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                You have <strong>{user.publishingCredits}</strong> Go Live credit
+                {user.publishingCredits === 1 ? '' : 's'} — ready to publish.
+              </p>
+            )}
+            {!canPublish && (
+              <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50/80 p-5 shadow-sm">
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-xl text-amber-700">payments</span>
+                  <h3 className="font-headline text-base font-bold text-amber-950">Go Live — $5 one-time</h3>
+                </div>
+                <p className="mb-4 text-sm text-amber-900/90">
+                  Publishing to <strong>*.placetopage.com</strong> requires a one-time PayPal payment. You get{' '}
+                  <strong>one publish credit</strong> per purchase. Preview above is always free.
+                </p>
+                {paypalError && (
+                  <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{paypalError}</div>
+                )}
+                {paypalClientId ? (
+                  <PayPalScriptProvider
+                    options={{
+                      clientId: paypalClientId,
+                      currency: 'USD',
+                      intent: 'capture',
+                    }}
+                  >
+                    <PayPalButtons
+                      style={{ layout: 'vertical', shape: 'rect', label: 'pay' }}
+                      createOrder={async () => {
+                        setPaypalError(null)
+                        try {
+                          const data = await createPaypalOrder('go_live')
+                          return data.orderId
+                        } catch (err) {
+                          setPaypalError(err.message || 'Could not start PayPal checkout')
+                          throw err
+                        }
+                      }}
+                      onApprove={async (data) => {
+                        try {
+                          setPaypalError(null)
+                          await capturePaypalOrder(data.orderID)
+                          await refreshUser()
+                        } catch (err) {
+                          setPaypalError(err.message || 'Payment capture failed')
+                          throw err
+                        }
+                      }}
+                      onError={(err) => {
+                        console.error(err)
+                        setPaypalError('PayPal encountered an error. Please try again.')
+                      }}
+                      onCancel={() => setPaypalError('Payment cancelled.')}
+                    />
+                  </PayPalScriptProvider>
+                ) : (
+                  <p className="text-sm text-amber-800">
+                    PayPal is not configured: set <code className="rounded bg-amber-100 px-1">PAYPAL_CLIENT_ID</code> and{' '}
+                    <code className="rounded bg-amber-100 px-1">PAYPAL_CLIENT_SECRET</code> on the API, redeploy, then add{' '}
+                    <code className="rounded bg-amber-100 px-1">VITE_PAYPAL_CLIENT_ID</code> on the frontend (same client ID as PayPal
+                    REST app).
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Deploy error */}
             {deployError && subdomainStatus !== 'taken' && (
               <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -980,8 +1088,16 @@ export default function GeneratorPage() {
               <button
                 type="button"
                 onClick={handleDeploy}
-                disabled={busy || subdomainStatus === 'taken' || subdomainStatus === 'checking' || !subdomain}
+                disabled={
+                  busy ||
+                  subdomainStatus === 'taken' ||
+                  subdomainStatus === 'checking' ||
+                  !subdomain ||
+                  !canPublish ||
+                  subdomainStatus !== 'available'
+                }
                 className="flex min-w-[210px] items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-bold text-on-primary shadow-md transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                title={!canPublish ? 'Purchase a Go Live pass with PayPal first' : undefined}
               >
                 {busy ? (
                   <>

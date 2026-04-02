@@ -146,7 +146,40 @@ export async function deploySite(siteId, { subdomain } = {}) {
     body: JSON.stringify({ subdomain: subdomain || '' }),
   })
   const data = await parseJson(res)
-  if (!res.ok) throw Object.assign(new Error(data?.message || 'Deployment failed'), { code: data?.code })
+  if (!res.ok) {
+    throw Object.assign(new Error(data?.message || 'Deployment failed'), {
+      code: data?.code,
+      status: res.status,
+    })
+  }
+  return data
+}
+
+export async function getPaypalClientId() {
+  const res = await fetch(`${base}/api/paypal/client-id`)
+  const data = await parseJson(res)
+  return data?.clientId || ''
+}
+
+export async function createPaypalOrder(productType = 'go_live') {
+  const res = await fetch(`${base}/api/payments/create-order`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ productType }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Failed to create PayPal order')
+  return data
+}
+
+export async function capturePaypalOrder(orderId) {
+  const res = await fetch(`${base}/api/payments/capture-order`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ orderId }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Failed to capture payment')
   return data
 }
 
