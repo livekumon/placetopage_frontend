@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { createSite, deploySite, enrichPlace, lookupPlace } from '../api/client'
+import { createSite, deploySite, enrichPlace, lookupPlace, checkSubdomain } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 
 const THEMES = [
@@ -70,6 +70,12 @@ export default function GeneratorPage() {
   const [busy, setBusy] = useState(false)
   const [enrichStage, setEnrichStage] = useState(0)  // animation stage 0-3
   const [previewDevice, setPreviewDevice] = useState('desktop') // 'desktop' | 'mobile'
+
+  // Subdomain state
+  const [subdomain, setSubdomain] = useState('')
+  const [subdomainStatus, setSubdomainStatus] = useState('idle') // idle | checking | available | taken | invalid
+  const [subdomainInfo, setSubdomainInfo] = useState(null) // response from check-subdomain
+  const subdomainDebounceRef = useRef(null)
 
   const inputRef = useRef(null)
 
@@ -193,6 +199,15 @@ export default function GeneratorPage() {
         },
       })
       setCreated(site)
+      // Auto-generate a subdomain slug from the business name
+      const autoSlug = (place.name || 'my-business')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 50)
+      setSubdomain(autoSlug)
+      setSubdomainStatus('idle')
+      setSubdomainInfo(null)
       setStep('preview')
     } catch (e) {
       setGenError(e.message || 'Failed to create site')
@@ -200,6 +215,26 @@ export default function GeneratorPage() {
     } finally {
       setBusy(false)
     }
+  }
+
+  // Debounced subdomain availability check
+  function handleSubdomainChange(value) {
+    const raw = value.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 50)
+    setSubdomain(raw)
+    setSubdomainStatus('idle')
+    setSubdomainInfo(null)
+    if (subdomainDebounceRef.current) clearTimeout(subdomainDebounceRef.current)
+    if (!raw) return
+    setSubdomainStatus('checking')
+    subdomainDebounceRef.current = setTimeout(async () => {
+      try {
+        const info = await checkSubdomain(raw)
+        setSubdomainInfo(info)
+        setSubdomainStatus(info.available ? 'available' : 'taken')
+      } catch {
+        setSubdomainStatus('idle')
+      }
+    }, 600)
   }
 
   async function handleDeploy() {
@@ -217,7 +252,7 @@ export default function GeneratorPage() {
     }, stageDurations[stageIdx] ?? 8000)
 
     try {
-      const deployed = await deploySite(created._id)
+      const deployed = await deploySite(created._id, { subdomain })
       clearInterval(stageTimer)
       setDeployStage(4) // "Live!" flash before transitioning
       await new Promise((r) => setTimeout(r, 600))
@@ -226,6 +261,11 @@ export default function GeneratorPage() {
       await refreshUser()
     } catch (e) {
       clearInterval(stageTimer)
+      // Show the specific "subdomain taken" error in the picker, not just a toast
+      if (e.code === 'SUBDOMAIN_TAKEN') {
+        setSubdomainStatus('taken')
+        setSubdomainInfo({ available: false, reason: e.message })
+      }
       setDeployError(e.message || 'Deployment failed. Please try again.')
     } finally {
       setBusy(false)
@@ -864,8 +904,64 @@ export default function GeneratorPage() {
               </div>
             </div>
 
+            {/* ── Subdomain picker ────────────────────────────────────────── */}
+            <div className="rounded-2xl border border-surface-container-high bg-surface-container-lowest p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-lg text-primary">language</span>
+                <h3 className="font-headline text-base font-bold">Your website address</h3>
+              </div>
+              <p className="mb-4 text-sm text-on-surface-variant">
+                Choose a subdomain for your site. It will be published at{' '}
+                <strong>{subdomain || 'your-name'}.placetopage.com</strong>.
+              </p>
+
+              {/* Input row */}
+              <div className="flex items-stretch overflow-hidden rounded-xl border-2 border-surface-container-high focus-within:border-primary transition-colors">
+                <input
+                  type="text"
+                  value={subdomain}
+                  onChange={(e) => handleSubdomainChange(e.target.value)}
+                  placeholder="your-business-name"
+                  maxLength={50}
+                  className="flex-1 bg-transparent px-4 py-3 text-sm font-mono outline-none placeholder:text-on-surface-variant/40"
+                />
+                <span className="flex items-center bg-surface-container-low px-4 text-sm font-medium text-on-surface-variant border-l border-surface-container-high select-none">
+                  .placetopage.com
+                </span>
+              </div>
+
+              {/* Status indicator */}
+              <div className="mt-2 h-5 flex items-center gap-1.5 text-xs font-medium">
+                {subdomainStatus === 'checking' && (
+                  <>
+                    <span className="h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    <span className="text-on-surface-variant">Checking availability…</span>
+                  </>
+                )}
+                {subdomainStatus === 'available' && (
+                  <>
+                    <span className="material-symbols-outlined text-base text-green-600" style={{ fontSize: '14px' }}>check_circle</span>
+                    <span className="text-green-700">
+                      <strong>{subdomainInfo?.fullDomain}</strong> is available!
+                    </span>
+                  </>
+                )}
+                {subdomainStatus === 'taken' && (
+                  <>
+                    <span className="material-symbols-outlined text-base text-red-500" style={{ fontSize: '14px' }}>cancel</span>
+                    <span className="text-red-600">
+                      {subdomainInfo?.reason || 'This subdomain is already taken.'} Try a different name.
+                    </span>
+                  </>
+                )}
+                {subdomainStatus === 'idle' && subdomain && (
+                  <span className="text-on-surface-variant/60">Enter your desired subdomain above</span>
+                )}
+              </div>
+            </div>
+
             {/* Deploy error */}
-            {deployError && (
+            {deployError && subdomainStatus !== 'taken' && (
               <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {deployError}
               </div>
@@ -884,8 +980,8 @@ export default function GeneratorPage() {
               <button
                 type="button"
                 onClick={handleDeploy}
-                disabled={busy}
-                className="flex min-w-[210px] items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-bold text-on-primary shadow-md transition-all hover:shadow-lg disabled:opacity-80"
+                disabled={busy || subdomainStatus === 'taken' || subdomainStatus === 'checking' || !subdomain}
+                className="flex min-w-[210px] items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-bold text-on-primary shadow-md transition-all hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {busy ? (
                   <>
@@ -901,7 +997,9 @@ export default function GeneratorPage() {
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-lg">rocket_launch</span>
-                    Deploy to Vercel
+                    {subdomainStatus === 'available'
+                      ? `Publish to ${subdomainInfo?.fullDomain}`
+                      : 'Deploy to Vercel'}
                   </>
                 )}
               </button>
@@ -969,8 +1067,19 @@ export default function GeneratorPage() {
                 <div className="mb-8 overflow-hidden rounded-2xl border border-green-200 bg-green-50 shadow-sm">
                   <div className="flex items-center gap-2 border-b border-green-200 bg-green-100/60 px-4 py-2">
                     <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-green-500" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-green-700">Live on Vercel</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-green-700">
+                      {created.customSubdomain ? `Live on placetopage.com` : 'Live on Vercel'}
+                    </span>
                   </div>
+                  {/* Custom domain badge */}
+                  {created.customSubdomain && (
+                    <div className="flex items-center gap-2 border-b border-green-200 bg-green-100/30 px-4 py-2">
+                      <span className="material-symbols-outlined text-sm text-green-600">domain</span>
+                      <span className="text-xs text-green-700 font-medium">
+                        Custom domain: <strong>{created.customSubdomain}.placetopage.com</strong>
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 p-4">
                     <span className="material-symbols-outlined text-green-600" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
                     <a

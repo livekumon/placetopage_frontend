@@ -139,12 +139,22 @@ export async function createSite(body) {
   return data
 }
 
-export async function deploySite(siteId) {
+export async function deploySite(siteId, { subdomain } = {}) {
   const res = await fetch(`${base}/api/sites/${siteId}/deploy`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ subdomain: subdomain || '' }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw Object.assign(new Error(data?.message || 'Deployment failed'), { code: data?.code })
+  return data
+}
+
+export async function checkSubdomain(subdomain) {
+  const res = await fetch(`${base}/api/sites/check-subdomain?subdomain=${encodeURIComponent(subdomain)}`, {
     headers: { ...authHeaders() },
   })
   const data = await parseJson(res)
-  if (!res.ok) throw new Error(data?.message || 'Deployment failed')
-  return data
+  if (!res.ok) throw new Error(data?.message || 'Check failed')
+  return data // { available, subdomain, fullDomain, domainBase, reason }
 }
