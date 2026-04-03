@@ -504,17 +504,20 @@ export default function LandingPage() {
                 <span className="mb-4 self-start rounded-full bg-surface-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                   Free
                 </span>
-                <h3 className="mb-2 font-headline text-2xl font-bold">Try it out</h3>
+                <h3 className="mb-2 font-headline text-2xl font-bold">Get started free</h3>
                 <div className="mb-1 text-5xl font-extrabold">$0</div>
                 <div className="mb-8 text-sm text-on-surface-variant">No credit card required</div>
                 <p className="mb-8 text-sm leading-relaxed text-on-surface-variant">
-                  Build one website and see exactly what your page will look like — design, copy, and layout.{' '}
-                  <span className="font-semibold text-on-surface">Site is not published live.</span> Perfect for experimenting before you commit.
+                  Sign up and instantly get{' '}
+                  <span className="font-semibold text-on-surface">1 free publishing credit</span> —
+                  generate your website and publish it live with no payment needed. Buy more credits whenever you're ready to grow.
                 </p>
                 <ul className="mb-10 flex-1 space-y-3">
                   {[
-                    'Generate 1 website',
-                    'Full design preview',
+                    '1 free website publish included',
+                    'AI-generated design & copy',
+                    'Full live preview before publishing',
+                    'Custom subdomain on placetopage.com',
                     'Basic analytics dashboard',
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-3 text-sm font-medium">
@@ -522,39 +525,34 @@ export default function LandingPage() {
                       {t}
                     </li>
                   ))}
-                  <li className="flex items-start gap-3 text-sm text-on-surface-variant/60">
-                    <span className="material-symbols-outlined mt-0.5 flex-shrink-0 text-lg">block</span>
-                    Site not published publicly
-                  </li>
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => setContactOpen(true)}
-                  className="w-full rounded-full bg-surface-container-highest py-4 text-center font-bold text-on-surface transition-all hover:bg-surface-container"
+                <a
+                  href="/login"
+                  className="w-full rounded-full bg-surface-container-highest py-4 text-center font-bold text-on-surface transition-all hover:bg-surface-container block"
                 >
                   Get started free
-                </button>
+                </a>
               </div>
 
-              {/* ── $5 Go Live ── */}
+              {/* ── $5 per site (Starter) ── */}
               <div className="relative flex h-full transform flex-col overflow-hidden rounded-2xl bg-primary p-12 text-on-primary shadow-2xl md:scale-105">
                 <div className="absolute right-6 top-6 rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
                   Most popular
                 </div>
                 <span className="mb-4 self-start rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
-                  Go Live
+                  Starter
                 </span>
-                <h3 className="mb-2 font-headline text-2xl font-bold">Publish your page</h3>
+                <h3 className="mb-2 font-headline text-2xl font-bold">Buy more websites</h3>
                 <div className="mb-1 text-5xl font-extrabold">$5</div>
                 <div className="mb-8 text-sm text-on-primary/70">per website · one-time payment</div>
                 <p className="mb-8 text-sm leading-relaxed text-on-primary/80">
-                  Ready to go public? Pay once and your site is instantly published on a live URL, fully indexed and ready to bring in customers.
+                  Used your free credit? Top up with a single website for $5 — pay once and it's live instantly, fully indexed and ready to bring in customers.
                 </p>
                 <ul className="mb-12 flex-1 space-y-3">
                   {[
-                    'Everything in Free',
-                    'Website published publicly',
-                    'Custom subdomain (yourname.placetopage.app)',
+                    'One additional website credit',
+                    'Published on a live URL instantly',
+                    'Custom subdomain (yourname.placetopage.com)',
                     'SEO-optimised page',
                     'Real-time analytics',
                     'Unlimited future updates',
@@ -565,13 +563,12 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => setContactOpen(true)}
-                  className="w-full rounded-full bg-white py-5 text-center text-lg font-bold text-black transition-all hover:bg-slate-100"
+                <a
+                  href="/login"
+                  className="w-full rounded-full bg-white py-5 text-center text-lg font-bold text-black transition-all hover:bg-slate-100 block"
                 >
-                  Publish for $5
-                </button>
+                  Buy for $5
+                </a>
               </div>
 
               {/* ── Bulk Credits ── */}
