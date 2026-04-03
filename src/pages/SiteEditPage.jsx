@@ -154,6 +154,8 @@ export default function SiteEditPage() {
   const [previewHtml, setPreviewHtml] = useState('')
   const [previewBusy, setPreviewBusy] = useState(false)
   const [previewTab, setPreviewTab] = useState('desktop')
+  /** Mobile-only: which panel is visible — 'settings' | 'preview' */
+  const [mobileEditorTab, setMobileEditorTab] = useState('settings')
 
   const [name, setName] = useState('')
   const [theme, setTheme] = useState('light')
@@ -752,30 +754,32 @@ export default function SiteEditPage() {
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-surface text-on-surface dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-40 shrink-0 border-b border-slate-200/50 bg-slate-50/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 px-6 py-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-4">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-6 sm:py-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             <Link
               to="/dashboard#recent-sites"
               className="shrink-0 font-inter text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
+              aria-label="Back to dashboard"
             >
-              ← Back to dashboard
+              <span className="hidden sm:inline">← Back to dashboard</span>
+              <span className="material-symbols-outlined text-[22px] sm:hidden">arrow_back</span>
             </Link>
             <span className="hidden h-4 w-px shrink-0 bg-slate-300 sm:inline dark:bg-slate-600" aria-hidden />
             <Link
               to="/"
-              className="flex shrink-0 items-center gap-1.5 font-manrope text-lg font-bold tracking-tighter text-slate-900 dark:text-white"
+              className="hidden shrink-0 items-center gap-1.5 font-manrope text-lg font-bold tracking-tighter text-slate-900 dark:text-white sm:flex"
             >
               <img src="/logo.png" alt="" className="h-7 w-7 rounded-md object-contain" aria-hidden />
               Place to Page
             </Link>
             <span className="hidden h-4 w-px shrink-0 bg-slate-300 sm:inline dark:bg-slate-600" aria-hidden />
-            <span className="min-w-0 truncate font-headline text-base font-extrabold tracking-tight text-on-surface sm:text-lg">
+            <span className="min-w-0 truncate font-headline text-sm font-extrabold tracking-tight text-on-surface sm:text-lg">
               Site settings
             </span>
           </div>
-          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             {saving && !deploying && (
-              <span className="text-xs font-medium text-on-surface-variant" aria-live="polite">
+              <span className="hidden text-xs font-medium text-on-surface-variant sm:inline" aria-live="polite">
                 Saving…
               </span>
             )}
@@ -784,21 +788,22 @@ export default function SiteEditPage() {
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
+                className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
+                title="View live site"
               >
                 <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                View live
+                <span className="hidden sm:inline">View live</span>
               </a>
             )}
             {user && (
               <Link
                 to="/purchase-tokens"
-                className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-on-surface-variant transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
-                title="Buy more websites"
+                className="flex items-center gap-1.5 rounded-full border border-slate-200 px-2 py-2 text-xs font-bold text-on-surface-variant transition-colors hover:border-primary hover:text-primary dark:border-slate-700 sm:px-3"
+                title={`${user.publishingCredits ?? 0} websites · Buy more`}
               >
                 <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
-                <span>{user.publishingCredits ?? 0} website{(user.publishingCredits ?? 0) !== 1 ? 's' : ''}</span>
-                <span className="hidden text-on-surface-variant/60 sm:inline">· Buy more</span>
+                <span className="hidden sm:inline">{user.publishingCredits ?? 0} website{(user.publishingCredits ?? 0) !== 1 ? 's' : ''}</span>
+                <span className="hidden text-on-surface-variant/60 md:inline">· Buy more</span>
               </Link>
             )}
             {!loading && site && (
@@ -806,7 +811,7 @@ export default function SiteEditPage() {
                 type="button"
                 disabled={saving || deploying}
                 onClick={openPublishReview}
-                className="rounded-full bg-primary px-5 py-2.5 font-headline text-xs font-bold uppercase tracking-widest text-on-primary shadow-md shadow-primary/15 transition-all hover:bg-primary-container disabled:opacity-60 sm:px-6"
+                className="rounded-full bg-primary px-4 py-2 font-headline text-xs font-bold uppercase tracking-widest text-on-primary shadow-md shadow-primary/15 transition-all hover:bg-primary-container disabled:opacity-60 sm:px-6 sm:py-2.5"
               >
                 Publish
               </button>
@@ -815,7 +820,7 @@ export default function SiteEditPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col overflow-hidden px-6 py-3 sm:py-4 dark:bg-slate-950">
+      <main className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col overflow-hidden px-3 py-2 sm:px-6 sm:py-3 md:py-4 dark:bg-slate-950">
         {loading && <p className="text-on-surface-variant">Loading site…</p>}
 
         {!loading && error && !site && (
@@ -833,9 +838,37 @@ export default function SiteEditPage() {
               <div className="mb-3 shrink-0 rounded-xl bg-error-container px-4 py-3 text-sm text-on-error-container">{error}</div>
             )}
 
+            {/* ── Mobile tab switcher (Settings / Preview) — hidden on desktop ── */}
+            <div className="flex shrink-0 overflow-hidden rounded-xl bg-surface-container-high/80 p-1 lg:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileEditorTab('settings')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+                  mobileEditorTab === 'settings'
+                    ? 'bg-white text-on-surface shadow-sm dark:bg-slate-900 dark:text-white'
+                    : 'text-on-surface-variant'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[18px]">tune</span>
+                Settings
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileEditorTab('preview')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+                  mobileEditorTab === 'preview'
+                    ? 'bg-white text-on-surface shadow-sm dark:bg-slate-900 dark:text-white'
+                    : 'text-on-surface-variant'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[18px]">preview</span>
+                Preview
+              </button>
+            </div>
+
             <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden lg:flex-row lg:gap-10">
-              {/* Left: settings — scroll inside column; flex shares height with preview on small screens */}
-              <div className="min-h-0 min-w-0 w-full flex-1 overflow-y-auto pb-2 lg:max-w-[440px] lg:flex-none lg:shrink-0 lg:self-stretch lg:pr-2">
+              {/* Left: settings — hidden on mobile when preview tab is active */}
+              <div className={`min-h-0 min-w-0 w-full flex-1 overflow-y-auto pb-16 lg:max-w-[440px] lg:flex-none lg:shrink-0 lg:self-stretch lg:pb-2 lg:pr-2 ${mobileEditorTab === 'preview' ? 'hidden lg:block' : ''}`}>
                 <form
                   onSubmit={(e) => e.preventDefault()}
                   className="space-y-6 pb-8"
@@ -1353,8 +1386,8 @@ export default function SiteEditPage() {
                 </form>
               </div>
 
-              {/* Right: live preview — fills remaining height in the viewport */}
-              <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden pl-0 lg:min-w-0 lg:pl-2">
+              {/* Right: live preview — hidden on mobile when settings tab is active */}
+              <section className={`min-h-0 min-w-0 flex-1 flex-col overflow-hidden pl-0 pb-16 lg:pb-0 lg:min-w-0 lg:pl-2 ${mobileEditorTab === 'settings' ? 'hidden lg:flex' : 'flex'}`}>
                 <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-3 dark:border-slate-800">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Live preview</p>

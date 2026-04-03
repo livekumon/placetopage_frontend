@@ -156,8 +156,10 @@ export default function AuthPage({ mode }) {
     if (!scriptReady || !clientId || !buttonRef.current || !window.google?.accounts?.id) return
     window.google.accounts.id.initialize({ client_id: clientId, callback: handleGoogleCredential, auto_select: false })
     buttonRef.current.innerHTML = ''
+    const containerWidth = buttonRef.current.offsetWidth || 360
     window.google.accounts.id.renderButton(buttonRef.current, {
-      type: 'standard', theme: 'outline', size: 'large', width: 360,
+      type: 'standard', theme: 'outline', size: 'large',
+      width: Math.min(360, containerWidth),
       text: isLogin ? 'signin_with' : 'signup_with', shape: 'rectangular',
     })
   }, [scriptReady, clientId, isLogin, handleGoogleCredential])
@@ -171,10 +173,10 @@ export default function AuthPage({ mode }) {
   // ── Render
   return (
     <div className="min-h-screen bg-slate-50 font-body text-on-surface antialiased">
-      <main className="flex min-h-screen items-center justify-center px-4 py-12">
+      <main className="flex min-h-screen items-center justify-center px-4 py-8 sm:py-12">
         <div className="w-full max-w-md">
           {/* Card */}
-          <div className="rounded-2xl border border-slate-200 bg-white px-8 py-10 shadow-xl shadow-slate-200/60">
+          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-8 shadow-xl shadow-slate-200/60 sm:px-8 sm:py-10">
 
             {/* Title */}
             <div className="mb-8 text-center">

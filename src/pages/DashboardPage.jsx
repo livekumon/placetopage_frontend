@@ -316,7 +316,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-surface text-on-surface">
-      <main className="flex min-h-0 flex-1 flex-col">
+      <main className="flex min-h-0 flex-1 flex-col pb-16 lg:pb-0">
         <header className="shrink-0 border-b border-slate-200/70 bg-surface px-4 py-4 dark:border-slate-800 md:px-8 md:py-5">
           <div className="mb-4 space-y-1">
             <p className="text-sm text-on-surface-variant">

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { createSite, enrichPlace, lookupPlace } from '../api/client'
 import { trimPhotoUrl } from '../utils/photoUrl'
 
@@ -165,9 +165,9 @@ export default function GeneratorPage() {
 
   return (
     <div className="min-h-screen bg-background font-body text-on-surface antialiased">
-      <main className="mx-auto max-w-5xl px-6 pb-20 pt-8 md:pt-10">
+      <main className="mx-auto max-w-5xl px-4 pb-20 pt-6 sm:px-6 md:pt-10">
         {/* Step indicator */}
-        <div className="mb-16 flex items-center justify-between px-4 md:px-20">
+        <div className="mb-8 flex items-center justify-between px-2 sm:px-4 md:mb-16 md:px-20">
           {STEP_LABELS.map((label, i, arr) => (
             <div key={label} className="flex flex-1 items-center">
               <div className={`flex flex-col items-center gap-2 ${i > currentStepIdx ? 'opacity-40' : ''}`}>
@@ -197,13 +197,13 @@ export default function GeneratorPage() {
 
         {/* ── STEP: input ─────────────────────────────────────────────────── */}
         {step === 'input' && (
-          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-8 shadow-md md:p-12">
+          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-5 shadow-md sm:p-8 md:p-12">
             <div className="mx-auto max-w-xl">
-              <div className="mb-10 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg">
-                  <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
+              <div className="mb-8 text-center md:mb-10">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg sm:h-16 sm:w-16">
+                  <span className="material-symbols-outlined text-2xl sm:text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
                 </div>
-                <h1 className="mb-2 font-headline text-3xl font-extrabold tracking-tight">Paste your Google Maps link</h1>
+                <h1 className="mb-2 font-headline text-2xl font-extrabold tracking-tight sm:text-3xl">Paste your Google Maps link</h1>
                 <p className="text-on-surface-variant">
                   We will fetch the business, generate your page, then open <strong>Site settings</strong> where you can
                   customize everything and publish when you are ready.
@@ -263,12 +263,12 @@ export default function GeneratorPage() {
               <div className="mt-8 rounded-xl bg-surface-container-low px-5 py-4">
                 <p className="mb-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">All accepted link formats</p>
                 <ul className="space-y-1 text-xs text-on-surface-variant">
-                  <li className="font-mono">https://www.google.com/maps/place/...</li>
-                  <li className="font-mono">https://maps.google.com/maps?...</li>
-                  <li className="font-mono">https://goo.gl/maps/XXXX</li>
-                  <li className="font-mono">https://maps.app.goo.gl/XXXX</li>
-                  <li className="font-mono">https://share.google/XXXX</li>
-                  <li className="font-mono">https://g.co/maps/XXXX</li>
+                  <li className="break-all font-mono">https://www.google.com/maps/place/...</li>
+                  <li className="break-all font-mono">https://maps.google.com/maps?...</li>
+                  <li className="break-all font-mono">https://goo.gl/maps/XXXX</li>
+                  <li className="break-all font-mono">https://maps.app.goo.gl/XXXX</li>
+                  <li className="break-all font-mono">https://share.google/XXXX</li>
+                  <li className="break-all font-mono">https://g.co/maps/XXXX</li>
                 </ul>
               </div>
             </div>
@@ -383,16 +383,6 @@ export default function GeneratorPage() {
         )}
 
       </main>
-
-      <footer className="w-full border-t border-slate-100 bg-white py-12">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-          <span className="text-xs uppercase tracking-widest text-slate-400">© 2026 Place to Page. All rights reserved.</span>
-          <nav className="flex flex-wrap justify-center gap-8">
-            <Link to="/#terms" className="text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100">Terms</Link>
-            <Link to="/#privacy" className="text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100">Privacy</Link>
-          </nav>
-        </div>
-      </footer>
     </div>
   )
 }

@@ -8,6 +8,8 @@ const STORAGE_KEY = 'p2p-app-nav-expanded-v2'
 /** Default: icon-only rail; user can expand (persisted). */
 const COLLAPSED_PX = 72
 const EXPANDED_PX = 260
+/** lg breakpoint from Tailwind (1024 px) */
+const LG_BREAKPOINT = 1024
 
 function itemClass(active, expanded) {
   const base = expanded
@@ -25,6 +27,13 @@ export default function AppShell() {
   const { user, logout } = useAuth()
 
   const [expanded, setExpanded] = useState(() => localStorage.getItem(STORAGE_KEY) === 'true')
+  const [windowWidth, setWindowWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : LG_BREAKPOINT))
+
+  useEffect(() => {
+    const handler = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handler, { passive: true })
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, expanded ? 'true' : 'false')
@@ -36,6 +45,7 @@ export default function AppShell() {
     setExpanded(true)
   }
 
+  const isMobile = windowWidth < LG_BREAKPOINT
   const railPx = expanded ? EXPANDED_PX : COLLAPSED_PX
   const isAuthOnly = !user && (pathname === '/login' || pathname === '/register')
   const dashboardActive = pathname === '/dashboard' || pathname.startsWith('/dashboard/sites/')
@@ -47,10 +57,11 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen bg-surface text-on-surface">
+      {/* Desktop sidebar — hidden on mobile */}
       <aside
-        className={`fixed left-0 top-0 z-[100] flex h-screen flex-col border-r border-slate-200/60 bg-slate-50 transition-[width] duration-200 ease-out dark:border-slate-800/60 dark:bg-slate-950 ${
+        className={`fixed left-0 top-0 z-[100] h-screen flex-col border-r border-slate-200/60 bg-slate-50 transition-[width] duration-200 ease-out dark:border-slate-800/60 dark:bg-slate-950 ${
           expanded ? '' : 'cursor-pointer'
-        }`}
+        } ${isMobile ? 'hidden' : 'flex'}`}
         style={{ width: railPx }}
         onClick={handleAsideClick}
       >
@@ -171,9 +182,13 @@ export default function AppShell() {
 
       <div
         className="min-h-screen transition-[padding] duration-200 ease-out"
-        style={{ paddingLeft: railPx }}
+        style={{
+          paddingLeft: isMobile ? 0 : railPx,
+          paddingBottom: isMobile && user ? 64 : 0,
+        }}
       >
-        {user && !purchaseTokensActive && !pathname.startsWith('/dashboard/sites/') && (
+        {/* "Buy more websites" floating badge — desktop only; mobile uses bottom nav */}
+        {user && !isMobile && !purchaseTokensActive && !pathname.startsWith('/dashboard/sites/') && (
           <Link
             to="/purchase-tokens"
             className="fixed right-5 top-4 z-[200] flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-xl"
@@ -191,6 +206,47 @@ export default function AppShell() {
         <Outlet />
         <Footer />
       </div>
+
+      {/* ── Mobile bottom navigation bar ─────────────────────────────────────── */}
+      {isMobile && user && (
+        <nav
+          className="fixed bottom-0 left-0 right-0 z-[200] flex items-stretch border-t border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95"
+          aria-label="Mobile navigation"
+        >
+          {[
+            { to: '/dashboard', icon: 'dashboard', label: 'Dashboard', active: dashboardActive },
+            { to: '/generator', icon: 'add_circle', label: 'New site', active: generatorActive },
+            { to: '/purchase-tokens', icon: 'language', label: 'Purchase', active: purchaseTokensActive },
+            { to: '/recycle-bin', icon: 'delete_sweep', label: 'Recycle', active: recycleBinActive },
+          ].map(({ to, icon, label, active }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold uppercase tracking-widest transition-colors ${
+                active
+                  ? 'text-primary'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+              }`}
+            >
+              <span
+                className="material-symbols-outlined text-[22px]"
+                style={{ fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0" }}
+              >
+                {icon}
+              </span>
+              <span>{label}</span>
+            </Link>
+          ))}
+          <button
+            type="button"
+            onClick={() => { logout(); navigate('/', { replace: true }) }}
+            className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            <span className="material-symbols-outlined text-[22px]">logout</span>
+            <span>Sign out</span>
+          </button>
+        </nav>
+      )}
     </div>
   )
 }
