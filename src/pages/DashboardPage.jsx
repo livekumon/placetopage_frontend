@@ -318,39 +318,38 @@ export default function DashboardPage() {
     <div className="flex min-h-[100dvh] flex-col bg-surface text-on-surface">
       <main className="flex min-h-0 flex-1 flex-col">
         <header className="shrink-0 border-b border-slate-200/70 bg-surface px-4 py-4 dark:border-slate-800 md:px-8 md:py-5">
-          <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-1">
-              <p className="text-sm text-on-surface-variant">
-                Welcome back{user?.name ? `, ${user.name}` : ''}
-              </p>
-              <h1 className="font-headline text-2xl font-extrabold tracking-tight text-on-surface md:text-3xl">Dashboard</h1>
-            </div>
-            <Link
-              to="/generator"
-              className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full bg-primary px-6 py-3 font-headline text-sm font-bold text-on-primary shadow-md transition-all hover:bg-primary-container lg:self-auto"
-            >
-              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                magic_button
-              </span>
-              New site
-            </Link>
+          <div className="mb-4 space-y-1">
+            <p className="text-sm text-on-surface-variant">
+              Welcome back{user?.name ? `, ${user.name}` : ''}
+            </p>
+            <h1 className="font-headline text-2xl font-extrabold tracking-tight text-on-surface md:text-3xl">Dashboard</h1>
           </div>
           <label className="sr-only" htmlFor="dashboard-site-search">
             Search sites
           </label>
-          <div className="relative">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" aria-hidden>
-              <span className="material-symbols-outlined text-[22px]">search</span>
-            </span>
-            <input
-              id="dashboard-site-search"
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name, URL, category, or status…"
-              autoComplete="off"
-              className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-sm text-on-surface shadow-sm outline-none transition-shadow placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 md:text-base"
-            />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" aria-hidden>
+                <span className="material-symbols-outlined text-[22px]">search</span>
+              </span>
+              <input
+                id="dashboard-site-search"
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, URL, category, or status…"
+                autoComplete="off"
+                className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-sm text-on-surface shadow-sm outline-none transition-shadow placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 md:text-base"
+              />
+            </div>
+            <Link
+              to="/generator"
+              title="New site"
+              aria-label="Create new site"
+              className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-sm transition-all hover:opacity-90 hover:shadow-md"
+            >
+              <span className="material-symbols-outlined text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+            </Link>
           </div>
 
           <div className="mt-4 flex flex-col gap-4 border-t border-slate-200/60 pt-4 dark:border-slate-800 sm:flex-row sm:flex-wrap sm:items-end sm:gap-x-6 sm:gap-y-3">
