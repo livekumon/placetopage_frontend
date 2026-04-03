@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import Footer from './Footer'
-
 /** Bump v2 so default collapsed (icon rail) applies once. */
 const STORAGE_KEY = 'p2p-app-nav-expanded-v2'
 /** Default: icon-only rail; user can expand (persisted). */
@@ -204,7 +202,6 @@ export default function AppShell() {
           </Link>
         )}
         <Outlet />
-        <Footer />
       </div>
 
       {/* ── Mobile bottom navigation bar ─────────────────────────────────────── */}
