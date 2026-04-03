@@ -1,9 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+const CONTACT = {
+  email: 'hello@placetopage.app',
+  phone: '+1 (415) 555-0199',
+  hours: 'Monday–Friday, 9:00 a.m.–6:00 p.m. PT',
+  note: 'Questions about pricing, agencies, or going live? Reach out—we usually reply within one business day.',
+}
+
 const MAPS_URL_RE =
   /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i
+
+function userInitialLetter(user) {
+  const name = (user?.name || '').trim()
+  const email = (user?.email || '').trim()
+  if (name) return name[0].toUpperCase()
+  if (email) return email[0].toUpperCase()
+  return '?'
+}
 
 const avatars = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAogbVBtJT_4CrevVcXfTpe8vvtpx8a433w3dE6sVh6QHWf3ERBY_VJcMegGbjITcXZ5ykkiVzgK_Ix-Z3y2uIwwzLeR0UdAwrRwMycurNHZ0ykCNN0SBF3OniG6TVUP0gQldguyzjjixBA0PKStrSBGyGZJewpxhF-MLBkOOafYhkURwm8oeqaGNCkl5GkWJ5oDxtOJqWzlFZ8Y1lVqoGXyVhg-jtLuxmkE5lPEwcaNBAB2V1_tyGBDLohFY2DlF4hdhI1rnV0bqY',
@@ -26,6 +41,33 @@ export default function LandingPage() {
   const navigate = useNavigate()
   const [mapsUrl, setMapsUrl] = useState('')
   const [urlError, setUrlError] = useState('')
+  const [contactOpen, setContactOpen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+
+  useEffect(() => {
+    if (!contactOpen) return
+    function onKey(e) {
+      if (e.key === 'Escape') setContactOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [contactOpen])
+
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    function onKey(e) {
+      if (e.key === 'Escape') setMobileNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileNavOpen])
+
+  useEffect(() => {
+    document.body.style.overflow = mobileNavOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileNavOpen])
 
   function handleGenerate(e) {
     e.preventDefault()
@@ -46,87 +88,224 @@ export default function LandingPage() {
     navigate(user ? '/generator' : '/register')
   }
 
+  function closeMobileNav() {
+    setMobileNavOpen(false)
+  }
+
+  const headerNavLinkClass =
+    'rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+
   return (
     <div className="bg-background text-on-background font-body antialiased">
-      <header className="fixed top-0 z-50 w-full border-b border-slate-100 bg-white/80 font-manrope tracking-tight shadow-sm backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-none">
-        <div className="relative mx-auto flex h-16 w-full items-center justify-between px-6 md:px-12">
-          <Link to="/" className="text-xl font-bold tracking-tighter text-slate-900 dark:text-white">
+      <header className="fixed top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 font-manrope tracking-tight shadow-sm backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-none">
+        <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
+          <Link
+            to="/"
+            className="shrink-0 text-lg font-bold tracking-tight text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:text-xl dark:text-white"
+          >
             Place to Page
           </Link>
-          <nav className="hidden items-center gap-8 md:flex">
-            <a
-              className="text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              href="#features"
-            >
+
+          <nav
+            className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 md:flex lg:gap-1"
+            aria-label="Primary"
+          >
+            <a className={headerNavLinkClass} href="#features">
               How it works
             </a>
-            <a
-              className="text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              href="#pricing"
-            >
+            <a className={headerNavLinkClass} href="#pricing">
               Pricing
             </a>
-            <a
-              className="text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              href="#pricing"
-            >
+            <a className={headerNavLinkClass} href="#agencies">
               For agencies
             </a>
           </nav>
-          <div className="flex items-center gap-3 md:gap-4">
+
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
             {user ? (
               <>
-                <Link
-                  to="/dashboard"
-                  className="hidden font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white sm:block"
-                >
-                  Dashboard
-                </Link>
-                {user.picture ? (
-                  <img
-                    src={user.picture}
-                    alt=""
-                    className="h-9 w-9 rounded-full border border-slate-200 object-cover dark:border-slate-700"
-                  />
-                ) : null}
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Link
+                    to="/dashboard"
+                    title="Dashboard"
+                    aria-label="Dashboard"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:text-slate-200 dark:hover:bg-slate-800"
+                  >
+                    <span
+                      className="material-symbols-outlined text-[22px]"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                      aria-hidden
+                    >
+                      dashboard
+                    </span>
+                  </Link>
+                  {user.picture ? (
+                    <img
+                      src={user.picture}
+                      alt=""
+                      className="h-9 w-9 shrink-0 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+                    />
+                  ) : (
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-on-primary shadow-sm"
+                      aria-hidden
+                    >
+                      {userInitialLetter(user)}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={logout}
+                    title="Sign out"
+                    aria-label="Sign out"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                  >
+                    <span className="material-symbols-outlined text-[22px]" aria-hidden>
+                      logout
+                    </span>
+                  </button>
+                </div>
                 <button
                   type="button"
-                  onClick={logout}
-                  className="rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
+                  aria-expanded={mobileNavOpen}
+                  aria-controls="mobile-primary-nav"
+                  aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+                  onClick={() => setMobileNavOpen((o) => !o)}
                 >
-                  Sign out
+                  <span className="material-symbols-outlined text-[26px]" aria-hidden>
+                    {mobileNavOpen ? 'close' : 'menu'}
+                  </span>
                 </button>
-                <Link
-                  to="/generator"
-                  className="rounded-full bg-primary px-5 py-2.5 font-semibold text-on-primary transition-all hover:bg-primary-container active:scale-95 md:px-6"
-                >
-                  Generate
-                </Link>
               </>
             ) : (
               <>
                 <Link
-                  to="/login"
-                  className="px-3 py-2 font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:px-4"
+                  to="/dashboard"
+                  title="Dashboard"
+                  aria-label="Dashboard"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
-                  Log In
+                  <span
+                    className="material-symbols-outlined text-[22px]"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                    aria-hidden
+                  >
+                    dashboard
+                  </span>
                 </Link>
                 <Link
-                  to="/register"
-                  className="hidden font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white sm:block"
+                  to="/login"
+                  className={`${headerNavLinkClass} hidden sm:inline-flex`}
+                >
+                  Log in
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setContactOpen(true)}
+                  className={`${headerNavLinkClass} hidden md:inline-flex`}
                 >
                   Sign up
+                </button>
+                <Link
+                  to="/login"
+                  className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 dark:ring-offset-slate-900 md:inline-flex"
+                >
+                  Get started
                 </Link>
                 <Link
-                  to="/register"
-                  className="rounded-full bg-primary px-5 py-2.5 font-semibold text-on-primary transition-all hover:bg-primary-container active:scale-95 md:px-6"
+                  to="/login"
+                  className="inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 dark:ring-offset-slate-900 md:hidden"
                 >
-                  Get Started
+                  Get started
                 </Link>
+                <button
+                  type="button"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
+                  aria-expanded={mobileNavOpen}
+                  aria-controls="mobile-primary-nav"
+                  aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+                  onClick={() => setMobileNavOpen((o) => !o)}
+                >
+                  <span className="material-symbols-outlined text-[26px]" aria-hidden>
+                    {mobileNavOpen ? 'close' : 'menu'}
+                  </span>
+                </button>
               </>
             )}
           </div>
         </div>
+
+        {mobileNavOpen ? (
+          <>
+            <button
+              type="button"
+              className="fixed inset-x-0 bottom-0 top-16 z-[45] bg-slate-900/35 backdrop-blur-[2px] md:hidden dark:bg-black/50"
+              aria-label="Close menu"
+              onClick={closeMobileNav}
+            />
+            <div
+              id="mobile-primary-nav"
+              className="relative z-50 max-h-[min(70vh,calc(100dvh-4rem))] overflow-y-auto border-t border-slate-200/80 bg-white/95 px-4 py-4 shadow-lg backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95 md:hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site menu"
+            >
+            <nav className="mx-auto flex max-w-7xl flex-col gap-0.5" aria-label="Primary mobile">
+              <a
+                className={headerNavLinkClass}
+                href="#features"
+                onClick={closeMobileNav}
+              >
+                How it works
+              </a>
+              <a
+                className={headerNavLinkClass}
+                href="#pricing"
+                onClick={closeMobileNav}
+              >
+                Pricing
+              </a>
+              <a
+                className={headerNavLinkClass}
+                href="#agencies"
+                onClick={closeMobileNav}
+              >
+                For agencies
+              </a>
+              {user && (
+                <>
+                  <hr className="my-2 border-slate-200 dark:border-slate-700" />
+                  <Link className={headerNavLinkClass} to="/dashboard" onClick={closeMobileNav}>
+                    Dashboard
+                  </Link>
+                </>
+              )}
+              {!user && (
+                <>
+                  <hr className="my-2 border-slate-200 dark:border-slate-700" />
+                  <Link className={headerNavLinkClass} to="/dashboard" onClick={closeMobileNav}>
+                    Dashboard
+                  </Link>
+                  <Link className={headerNavLinkClass} to="/login" onClick={closeMobileNav}>
+                    Log in
+                  </Link>
+                  <button
+                    type="button"
+                    className={`${headerNavLinkClass} w-full text-left`}
+                    onClick={() => {
+                      closeMobileNav()
+                      setContactOpen(true)
+                    }}
+                  >
+                    Sign up
+                  </button>
+                </>
+              )}
+            </nav>
+            </div>
+          </>
+        ) : null}
       </header>
 
       <main className="pt-16">
@@ -206,9 +385,17 @@ export default function LandingPage() {
                 <p className="mb-3 w-full max-w-lg text-center text-xs font-medium text-red-500">{urlError}</p>
               )}
 
-              <p className="mb-8 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+              <p className="mb-4 text-xs font-medium uppercase tracking-widest text-on-surface-variant">
                 Restaurants · Hotels · Gyms · Salons · Attractions
               </p>
+
+              <button
+                type="button"
+                onClick={() => setContactOpen(true)}
+                className="mb-8 rounded-full border-2 border-primary/30 bg-transparent px-6 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary/5 active:scale-[0.98]"
+              >
+                Start a journey
+              </button>
 
               {/* social proof */}
               <div className="flex flex-col items-center gap-4 sm:flex-row">
@@ -336,12 +523,13 @@ export default function LandingPage() {
                     Site not published publicly
                   </li>
                 </ul>
-                <Link
-                  to="/register"
+                <button
+                  type="button"
+                  onClick={() => setContactOpen(true)}
                   className="w-full rounded-full bg-surface-container-highest py-4 text-center font-bold text-on-surface transition-all hover:bg-surface-container"
                 >
                   Get started free
-                </Link>
+                </button>
               </div>
 
               {/* ── $5 Go Live ── */}
@@ -373,16 +561,20 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to="/register"
+                <button
+                  type="button"
+                  onClick={() => setContactOpen(true)}
                   className="w-full rounded-full bg-white py-5 text-center text-lg font-bold text-black transition-all hover:bg-slate-100"
                 >
                   Publish for $5
-                </Link>
+                </button>
               </div>
 
               {/* ── Agency ── */}
-              <div className="flex h-full flex-col rounded-2xl border-2 border-dashed border-outline-variant/40 bg-white p-10 shadow-sm">
+              <div
+                id="agencies"
+                className="scroll-mt-28 flex h-full flex-col rounded-2xl border-2 border-dashed border-outline-variant/40 bg-white p-10 shadow-sm"
+              >
                 <span className="mb-4 self-start rounded-full bg-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-on-secondary-container">
                   Agencies
                 </span>
@@ -407,12 +599,13 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="mailto:hello@placetopage.app"
+                <button
+                  type="button"
+                  onClick={() => setContactOpen(true)}
                   className="w-full rounded-full bg-on-surface py-4 text-center font-bold text-surface transition-all hover:opacity-90"
                 >
                   Contact us for a bulk plan
-                </a>
+                </button>
               </div>
 
             </div>
@@ -481,6 +674,91 @@ export default function LandingPage() {
           </nav>
         </div>
       </footer>
+
+      {contactOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" role="presentation">
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px]"
+            aria-label="Close contact dialog"
+            onClick={() => setContactOpen(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-modal-title"
+            className="relative z-10 w-full max-w-md rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl dark:border-slate-700 dark:bg-slate-900"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25">
+              <span className="material-symbols-outlined text-[26px]" aria-hidden>
+                contact_mail
+              </span>
+            </div>
+            <h2
+              id="contact-modal-title"
+              className="font-headline text-xl font-bold tracking-tight text-slate-900 dark:text-white"
+            >
+              Contact us
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{CONTACT.note}</p>
+            <ul className="mt-6 space-y-4 text-sm">
+              <li className="flex gap-3">
+                <span className="material-symbols-outlined mt-0.5 shrink-0 text-slate-400" aria-hidden>
+                  mail
+                </span>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Email</p>
+                  <a
+                    href={`mailto:${CONTACT.email}`}
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    {CONTACT.email}
+                  </a>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <span className="material-symbols-outlined mt-0.5 shrink-0 text-slate-400" aria-hidden>
+                  call
+                </span>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Phone</p>
+                  <a
+                    href={`tel:${CONTACT.phone.replace(/[^+\d]/g, '')}`}
+                    className="font-semibold text-slate-900 hover:underline dark:text-white"
+                  >
+                    {CONTACT.phone}
+                  </a>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <span className="material-symbols-outlined mt-0.5 shrink-0 text-slate-400" aria-hidden>
+                  schedule
+                </span>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Hours</p>
+                  <p className="font-medium text-slate-800 dark:text-slate-200">{CONTACT.hours}</p>
+                </div>
+              </li>
+            </ul>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setContactOpen(false)}
+                className="order-2 rounded-full border-2 border-slate-200 px-5 py-2.5 font-headline text-sm font-bold text-slate-800 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800 sm:order-1"
+              >
+                Close
+              </button>
+              <Link
+                to="/register"
+                onClick={() => setContactOpen(false)}
+                className="order-1 inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-center font-headline text-sm font-bold text-on-primary shadow-md transition-colors hover:bg-primary-container sm:order-2"
+              >
+                Create free account
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

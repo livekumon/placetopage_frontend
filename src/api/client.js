@@ -1,6 +1,7 @@
 const base = import.meta.env.VITE_API_URL || ''
 
 const TOKEN_KEY = 'auth_token'
+const ADMIN_TOKEN_KEY = 'admin_token'
 
 export function getAuthToken() {
   return localStorage.getItem(TOKEN_KEY)
@@ -11,8 +12,24 @@ export function setAuthToken(token) {
   else localStorage.removeItem(TOKEN_KEY)
 }
 
+export function getAdminToken() {
+  return localStorage.getItem(ADMIN_TOKEN_KEY)
+}
+
+export function setAdminToken(token) {
+  if (token) localStorage.setItem(ADMIN_TOKEN_KEY, token)
+  else localStorage.removeItem(ADMIN_TOKEN_KEY)
+}
+
 function authHeaders() {
   const t = getAuthToken()
+  return t ? { Authorization: `Bearer ${t}` } : {}
+}
+
+function adminAuthHeaders() {
+  const adminT = getAdminToken()
+  const userT = getAuthToken()
+  const t = adminT || userT
   return t ? { Authorization: `Bearer ${t}` } : {}
 }
 
@@ -29,6 +46,33 @@ async function parseJson(res) {
 export async function getHealth() {
   const res = await fetch(`${base}/api/health`)
   return parseJson(res)
+}
+
+export async function adminLogin(email, password) {
+  const res = await fetch(`${base}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Admin login failed')
+  return data
+}
+
+export async function getAdminMetrics() {
+  const headers = adminAuthHeaders()
+  if (!headers.Authorization) {
+    throw Object.assign(new Error('Not signed in'), { code: 'admin_auth' })
+  }
+  const res = await fetch(`${base}/api/admin/metrics`, {
+    headers: { ...headers },
+  })
+  const data = await parseJson(res)
+  if (res.status === 401 || res.status === 403) {
+    throw Object.assign(new Error(data?.message || 'Unauthorized'), { code: 'admin_auth' })
+  }
+  if (!res.ok) throw new Error(data?.message || 'Failed to load metrics')
+  return data
 }
 
 export async function getMe() {
@@ -94,6 +138,16 @@ export async function getSites() {
   return data
 }
 
+export async function getRecycleBinSites() {
+  const res = await fetch(`${base}/api/sites/recycle-bin`, {
+    headers: { ...authHeaders() },
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) throw new Error(data?.message || 'Failed to load recycle bin')
+  return data
+}
+
 export async function getDashboardStats() {
   const res = await fetch(`${base}/api/sites/stats`, {
     headers: { ...authHeaders() },
@@ -104,6 +158,74 @@ export async function getDashboardStats() {
   return data
 }
 
+export async function getSiteMine(siteId) {
+  const res = await fetch(`${base}/api/sites/mine/${encodeURIComponent(siteId)}`, {
+    headers: { ...authHeaders() },
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) throw new Error(data?.message || 'Site not found')
+  return data
+}
+
+export async function updateSite(siteId, body) {
+  const res = await fetch(`${base}/api/sites/${encodeURIComponent(siteId)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(body),
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) {
+    throw Object.assign(new Error(data?.message || 'Failed to update site'), {
+      status: res.status,
+      code: data?.code,
+    })
+  }
+  return data
+}
+
+/** Soft-delete: archived sites only; hidden from dashboard but kept in DB */
+export async function softDeleteSite(siteId) {
+  const res = await fetch(`${base}/api/sites/${encodeURIComponent(siteId)}`, {
+    method: 'DELETE',
+    headers: { ...authHeaders() },
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) {
+    throw new Error(data?.message || 'Failed to remove site')
+  }
+  return data && typeof data === 'object' ? data : { ok: true }
+}
+
+export async function restoreSiteFromRecycleBin(siteId) {
+  const res = await fetch(
+    `${base}/api/sites/recycle-bin/${encodeURIComponent(siteId)}/restore`,
+    {
+      method: 'POST',
+      headers: { ...authHeaders() },
+    }
+  )
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) throw new Error(data?.message || 'Failed to restore site')
+  return data
+}
+
+/** Server-side HTML render for the editor preview (does not persist). */
+export async function renderSitePreview(body) {
+  const res = await fetch(`${base}/api/sites/preview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(body),
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) throw new Error(data?.message || 'Preview render failed')
+  return data.html
+}
+
 export async function enrichPlace(placeData) {
   const res = await fetch(`${base}/api/enrich`, {
     method: 'POST',
@@ -111,7 +233,7 @@ export async function enrichPlace(placeData) {
     body: JSON.stringify(placeData),
   })
   const data = await parseJson(res)
-  // 503 means no Gemini key — return empty gracefully so flow continues
+  // 503 means no Anthropic key — return empty gracefully so flow continues
   if (res.status === 503) return data
   if (!res.ok) throw new Error(data?.message || 'AI enrichment failed')
   return data
@@ -161,6 +283,13 @@ export async function getPaypalClientId() {
   return data?.clientId || ''
 }
 
+export async function getTokenPacks() {
+  const res = await fetch(`${base}/api/payments/token-packs`)
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Failed to load token packs')
+  return data?.packs || []
+}
+
 export async function createPaypalOrder(productType = 'go_live') {
   const res = await fetch(`${base}/api/payments/create-order`, {
     method: 'POST',
@@ -183,11 +312,36 @@ export async function capturePaypalOrder(orderId) {
   return data
 }
 
-export async function checkSubdomain(subdomain) {
-  const res = await fetch(`${base}/api/sites/check-subdomain?subdomain=${encodeURIComponent(subdomain)}`, {
+export async function checkSubdomain(subdomain, { exceptSiteId } = {}) {
+  const q = new URLSearchParams({ subdomain })
+  if (exceptSiteId) q.set('exceptSiteId', String(exceptSiteId))
+  const res = await fetch(`${base}/api/sites/check-subdomain?${q}`, {
     headers: { ...authHeaders() },
   })
   const data = await parseJson(res)
   if (!res.ok) throw new Error(data?.message || 'Check failed')
   return data // { available, subdomain, fullDomain, domainBase, reason }
+}
+
+/** Whether the API has GCS configured for hero image uploads */
+export async function getUploadStatus() {
+  const res = await fetch(`${base}/api/upload/status`)
+  const data = await parseJson(res)
+  if (!res.ok) return { uploadConfigured: false }
+  return data
+}
+
+/** Multipart upload → public URL on GCS (requires server env). */
+export async function uploadHeroImage(file) {
+  const form = new FormData()
+  form.append('file', file)
+  const res = await fetch(`${base}/api/upload/hero`, {
+    method: 'POST',
+    headers: { ...authHeaders() },
+    body: form,
+  })
+  const data = await parseJson(res)
+  if (res.status === 401) throw new Error('Unauthorized')
+  if (!res.ok) throw new Error(data?.message || 'Upload failed')
+  return data.url
 }

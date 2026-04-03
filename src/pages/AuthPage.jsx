@@ -171,19 +171,7 @@ export default function AuthPage({ mode }) {
   // ── Render
   return (
     <div className="min-h-screen bg-slate-50 font-body text-on-surface antialiased">
-      {/* Header */}
-      <header className="border-b border-slate-100 bg-white/90 px-6 py-4 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-screen-xl items-center justify-between">
-          <Link to="/" className="font-headline text-lg font-bold tracking-tighter text-slate-900">
-            Place to Page
-          </Link>
-          <Link to="/" className="text-sm font-medium text-slate-500 hover:text-slate-900">
-            ← Back to home
-          </Link>
-        </div>
-      </header>
-
-      <main className="flex min-h-[calc(100vh-65px)] items-center justify-center px-4 py-12">
+      <main className="flex min-h-screen items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           {/* Card */}
           <div className="rounded-2xl border border-slate-200 bg-white px-8 py-10 shadow-xl shadow-slate-200/60">
