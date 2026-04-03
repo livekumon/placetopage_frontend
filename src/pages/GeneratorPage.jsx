@@ -14,8 +14,16 @@ function stepIndex(step) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+// Matches every known Google Maps URL format:
+//   maps.google.*           full URL on any country TLD
+//   www.google.com/maps     desktop Maps
+//   google.com/maps         same without www
+//   goo.gl/maps             legacy short link
+//   maps.app.goo.gl         standard share link
+//   share.google            new share.google/XXXXX format
+//   g.co                    Google's own short-domain
 const MAPS_URL_RE =
-  /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i
+  /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl|share\.google|g\.co)/i
 
 function formatTypes(types = []) {
   const skip = new Set(['point_of_interest', 'establishment', 'food', 'store'])
@@ -143,7 +151,7 @@ export default function GeneratorPage() {
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
     if (!MAPS_URL_RE.test(withProtocol)) {
       setUrlError(
-        "That doesn't look like a Google Maps link. Copy the URL directly from Google Maps while a business page is open."
+        "That doesn't look like a Google Maps link. Accepted formats: maps.app.goo.gl, share.google, goo.gl/maps, or any google.com/maps URL."
       )
       return
     }
@@ -226,7 +234,7 @@ export default function GeneratorPage() {
                         ref={inputRef}
                         autoFocus
                         className="min-w-0 flex-1 border-none bg-transparent py-3 text-sm font-medium text-on-surface placeholder:text-outline-variant focus:ring-0"
-                        placeholder="https://www.google.com/maps/place/..."
+                        placeholder="https://maps.app.goo.gl/… or share.google/… or any Maps link"
                         type="text"
                         value={mapsUrl}
                         onChange={(e) => { setMapsUrl(e.target.value); setUrlError('') }}
@@ -253,12 +261,14 @@ export default function GeneratorPage() {
               </form>
 
               <div className="mt-8 rounded-xl bg-surface-container-low px-5 py-4">
-                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Accepted link formats</p>
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">All accepted link formats</p>
                 <ul className="space-y-1 text-xs text-on-surface-variant">
-                  <li className="font-mono">https://www.google.com/maps/place/Business+Name/...</li>
+                  <li className="font-mono">https://www.google.com/maps/place/...</li>
                   <li className="font-mono">https://maps.google.com/maps?...</li>
-                  <li className="font-mono">https://goo.gl/maps/XXXX (short link)</li>
-                  <li className="font-mono">https://maps.app.goo.gl/XXXX (share link)</li>
+                  <li className="font-mono">https://goo.gl/maps/XXXX</li>
+                  <li className="font-mono">https://maps.app.goo.gl/XXXX</li>
+                  <li className="font-mono">https://share.google/XXXX</li>
+                  <li className="font-mono">https://g.co/maps/XXXX</li>
                 </ul>
               </div>
             </div>
