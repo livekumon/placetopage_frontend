@@ -583,27 +583,33 @@ export default function LandingPage() {
                   Bulk credits
                 </span>
                 <h3 className="mb-2 font-headline text-2xl font-bold">Buy more, save more</h3>
-                <div className="mb-1 text-2xl font-extrabold text-primary">From $4 / site</div>
+                <div className="mb-1 text-2xl font-extrabold text-primary">From $2.50 / site</div>
                 <div className="mb-6 text-sm text-on-surface-variant">One-time purchase · credits never expire</div>
 
-                {/* Tiered price rows */}
-                <div className="mb-8 flex-1 divide-y divide-outline-variant/20 rounded-xl border border-outline-variant/20 overflow-hidden">
+                {/* Tiered price rows — mirrors the Purchase Websites page exactly */}
+                <div className="mb-8 flex-1 divide-y divide-outline-variant/20 overflow-hidden rounded-xl border border-outline-variant/20">
                   {[
-                    { sites: 5,  price: 20,  per: '4.00', label: 'Builder',  save: null },
-                    { sites: 20, price: 60,  per: '3.00', label: 'Studio',   save: '25%' },
-                    { sites: 40, price: 100, per: '2.50', label: 'Agency',   save: '38%' },
-                  ].map(({ sites, price, per, label, save }) => (
-                    <div key={price} className="flex items-center justify-between gap-3 bg-surface-container-lowest px-4 py-3.5 hover:bg-surface-container-low transition-colors">
+                    { sites: 5,  price: 20,  per: '4.00', label: 'Builder', save: '20%', popular: false },
+                    { sites: 10, price: 35,  per: '3.50', label: 'Growth',  save: '30%', popular: true  },
+                    { sites: 20, price: 60,  per: '3.00', label: 'Studio',  save: '40%', popular: false },
+                    { sites: 40, price: 100, per: '2.50', label: 'Agency',  save: '50%', popular: false },
+                  ].map(({ sites, price, per, label, save, popular }) => (
+                    <div key={price} className={`flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-surface-container-low ${popular ? 'bg-primary/5' : 'bg-surface-container-lowest'}`}>
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-on-surface">{label} <span className="font-normal text-on-surface-variant">· {sites} websites</span></p>
-                        <p className="text-xs text-on-surface-variant">${per} per site</p>
+                        <p className="flex items-center gap-1.5 text-sm font-bold text-on-surface">
+                          {label}
+                          {popular && (
+                            <span className="rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">
+                              Popular
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-xs text-on-surface-variant">{sites} websites · ${per}/site</p>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
-                        {save && (
-                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                            Save {save}
-                          </span>
-                        )}
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          Save {save}
+                        </span>
                         <span className="text-xl font-extrabold text-on-surface">${price}</span>
                       </div>
                     </div>
@@ -622,13 +628,12 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => setContactOpen(true)}
-                  className="w-full rounded-full bg-on-surface py-4 text-center font-bold text-surface transition-all hover:opacity-90"
+                <a
+                  href="/login"
+                  className="w-full rounded-full bg-on-surface py-4 text-center font-bold text-surface transition-all hover:opacity-90 block"
                 >
                   Buy credits
-                </button>
+                </a>
               </div>
 
             </div>
