@@ -126,6 +126,30 @@ export default function LandingPage() {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+            {/* Social icons — always visible in header */}
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter / X"
+              className="hidden h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 sm:flex dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+            <a
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hidden h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 sm:flex dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </a>
+
             {user ? (
               <>
                 <div className="flex items-center gap-1.5 sm:gap-2">
@@ -718,46 +742,6 @@ export default function LandingPage() {
 
       </main>
 
-      <footer
-        id="site-footer"
-        className="w-full border-t border-slate-100 bg-white py-12 dark:border-slate-800 dark:bg-slate-900"
-      >
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 md:flex-row">
-          <div className="font-inter text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500">
-            © 2026 Place to Page. All rights reserved.
-          </div>
-          <nav className="flex flex-wrap justify-center gap-8" aria-label="Footer">
-            <a
-              className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="/policies/terms"
-            >
-              Terms
-            </a>
-            <a
-              className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="/policies/privacy"
-            >
-              Privacy
-            </a>
-            <a
-              className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Twitter
-            </a>
-            <a
-              className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="https://www.linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn
-            </a>
-          </nav>
-        </div>
-      </footer>
 
       {contactOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" role="presentation">
