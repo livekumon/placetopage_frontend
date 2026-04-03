@@ -290,6 +290,34 @@ export async function getTokenPacks() {
   return data?.packs || []
 }
 
+export async function getRazorpayKeyId() {
+  const res = await fetch(`${base}/api/payments/razorpay/key-id`)
+  const data = await parseJson(res)
+  return data?.keyId || ''
+}
+
+export async function createRazorpayOrder(productType) {
+  const res = await fetch(`${base}/api/payments/razorpay/create-order`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ productType }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Failed to create Razorpay order')
+  return data
+}
+
+export async function verifyRazorpayPayment(payload) {
+  const res = await fetch(`${base}/api/payments/razorpay/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(payload),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw new Error(data?.message || 'Payment verification failed')
+  return data
+}
+
 export async function createPaypalOrder(productType = 'go_live') {
   const res = await fetch(`${base}/api/payments/create-order`, {
     method: 'POST',
