@@ -25,7 +25,7 @@ const THEMES = [
 ]
 
 const labelClass =
-  'mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant'
+  'mb-1.5 block text-xs font-semibold text-slate-500 dark:text-slate-400'
 const inputClass =
   'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400'
 
@@ -869,74 +869,73 @@ export default function SiteEditPage() {
             <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden lg:flex-row lg:gap-10">
               {/* Left: settings — hidden on mobile when preview tab is active */}
               <div className={`min-h-0 min-w-0 w-full flex-1 overflow-y-auto pb-16 lg:max-w-[440px] lg:flex-none lg:shrink-0 lg:self-stretch lg:pb-2 lg:pr-2 ${mobileEditorTab === 'preview' ? 'hidden lg:block' : ''}`}>
-                <form
-                  onSubmit={(e) => e.preventDefault()}
-                  className="space-y-6 pb-8"
-                >
-                  <div>
-                    <label className={labelClass} htmlFor="site-name">
-                      Site name
-                    </label>
-                    <input
-                      id="site-name"
-                      className={inputClass}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
+                {/* Hidden file inputs */}
+                <input ref={heroFileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" aria-label="Upload hero image" onChange={handleHeroFileChange} />
+                <input ref={aboutFileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" aria-label="Upload about image" onChange={handleAboutFileChange} />
 
-                  <div>
-                    <span className={labelClass}>Visual theme</span>
-                    <div className="flex flex-wrap gap-3">
-                      {THEMES.map((t) => (
-                        <button
-                          key={t.id}
-                          type="button"
-                          onClick={() => setTheme(t.id)}
-                          className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
-                            theme === t.id
-                              ? 'bg-primary text-on-primary shadow-md'
-                              : 'bg-surface-container-high text-on-surface-variant hover:opacity-90'
-                          }`}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                <form onSubmit={(e) => e.preventDefault()} className="divide-y divide-slate-100 pb-8 dark:divide-slate-800">
 
-                  <div>
-                    <label className={labelClass} htmlFor="maps-url">
-                      Google Maps URL
-                    </label>
-                    <input
-                      id="maps-url"
-                      type="url"
-                      className={inputClass}
-                      value={mapsUrl}
-                      onChange={(e) => setMapsUrl(e.target.value)}
-                      placeholder="https://maps.google.com/..."
-                    />
-                  </div>
-
-                  <div className="rounded-xl border border-slate-200/80 bg-surface-container-low/40 p-4 dark:border-slate-700/80">
-                    <label className={labelClass} htmlFor="public-subdomain-inline">
-                      Public address (placetopage.com)
-                    </label>
-                    <p className="mb-3 text-xs leading-relaxed text-on-surface-variant">
-                      <span className="font-medium text-on-surface">{PUBLIC_SITE_DOMAIN}</span> is your main domain.
-                      Edit the <strong>subdomain</strong> below, then save. Use Publish in the header when you&apos;re ready
-                      to go live.
-                    </p>
-                    <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
-                      <span className="shrink-0 font-mono text-sm text-on-surface-variant" aria-hidden>
-                        https://
+                  {/* ── Basics ─────────────────────────────────────────── */}
+                  <section className="space-y-4 py-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <span className="material-symbols-outlined text-[16px] text-slate-500">tune</span>
                       </span>
+                      <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Basics</h3>
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="site-name">Site name</label>
+                      <input id="site-name" className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="category">Category</label>
+                      <input id="category" className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)} placeholder="e.g. Restaurant, Salon, Gym…" />
+                    </div>
+
+                    <div>
+                      <label className={labelClass}>Theme</label>
+                      <div className="flex gap-2">
+                        {THEMES.map((t) => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() => setTheme(t.id)}
+                            className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all ${
+                              theme === t.id
+                                ? 'bg-primary text-on-primary shadow-sm'
+                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                            }`}
+                          >
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="maps-url">Google Maps link</label>
+                      <input id="maps-url" type="url" className={inputClass} value={mapsUrl} onChange={(e) => setMapsUrl(e.target.value)} placeholder="https://maps.google.com/…" />
+                    </div>
+                  </section>
+
+                  {/* ── Your URL ───────────────────────────────────────── */}
+                  <section className="space-y-3 py-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <span className="material-symbols-outlined text-[16px] text-slate-500">link</span>
+                      </span>
+                      <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Your URL</h3>
+                    </div>
+
+                    {/* Subdomain row */}
+                    <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
+                      <span className="shrink-0 font-mono text-xs text-slate-400">https://</span>
                       <input
                         ref={publicSubdomainInputRef}
                         id="public-subdomain-inline"
-                        className={`${inputClass} min-w-[8rem] flex-1 py-2.5 font-mono text-sm sm:min-w-[12rem]`}
+                        className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
                         value={publishSubdomain}
                         onChange={(e) => {
                           setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
@@ -947,442 +946,247 @@ export default function SiteEditPage() {
                         spellCheck="false"
                         disabled={inlineAddressSaving}
                       />
-                      <span className="shrink-0 font-mono text-sm text-on-surface-variant">
-                        .{PUBLIC_SITE_DOMAIN}
-                      </span>
-                      <button
-                        type="button"
-                        title="Focus subdomain"
-                        aria-label="Focus subdomain field"
-                        onClick={() => {
-                          const el = publicSubdomainInputRef.current
-                          el?.focus()
-                          el?.select()
-                        }}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 text-on-surface-variant transition-colors hover:border-primary hover:bg-slate-50 hover:text-primary dark:border-slate-600 dark:hover:bg-slate-800"
-                      >
-                        <span className="material-symbols-outlined text-[22px]" aria-hidden>
-                          edit
-                        </span>
-                      </button>
+                      <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
                       <button
                         type="button"
                         title="Save subdomain"
-                        aria-label="Save subdomain"
                         disabled={inlineAddressSaving}
                         onClick={() => void savePublicAddressFromSettings()}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 text-primary transition-colors hover:bg-primary/10 disabled:opacity-50 dark:border-slate-600"
+                        className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-primary transition-colors hover:bg-primary/10 disabled:opacity-40"
                       >
-                        <span className="material-symbols-outlined text-[22px]" aria-hidden>
-                          save
-                        </span>
+                        <span className="material-symbols-outlined text-[20px]">save</span>
                       </button>
                     </div>
-                    {customPublicSiteUrl ? (
-                      <p className="mt-2 break-all font-mono text-[11px] text-on-surface-variant">
-                        Full URL: {customPublicSiteUrl}
-                      </p>
-                    ) : null}
-                    {inlineAddressSaving ? (
-                      <p className="mt-2 text-xs text-on-surface-variant" aria-live="polite">
-                        Saving…
-                      </p>
-                    ) : null}
-                    {inlineAddressError ? (
-                      <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400" role="alert">
-                        {inlineAddressError}
-                      </p>
-                    ) : null}
-                  </div>
 
-                  <div>
-                    <label className={labelClass} htmlFor="category">
-                      Category
-                    </label>
-                    <input
-                      id="category"
-                      className={inputClass}
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="rounded-xl border border-slate-200/80 bg-surface-container-low/50 p-4 dark:border-slate-700/80">
-                    <span className={labelClass}>Photos & hero</span>
-                    <p className="mb-3 text-xs leading-relaxed text-on-surface-variant">
-                      Choose one image as your <strong>hero</strong> — it fills the top of your site. Pick from your listing photos or upload your own.
-                    </p>
-                    <input
-                      ref={heroFileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif"
-                      className="hidden"
-                      aria-label="Upload hero image file"
-                      onChange={handleHeroFileChange}
-                    />
-                    <input
-                      ref={aboutFileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif"
-                      className="hidden"
-                      aria-label="Upload About us image file"
-                      onChange={handleAboutFileChange}
-                    />
-                    {uploadError && (
-                      <p className="mb-3 text-xs font-medium text-red-600 dark:text-red-400">{uploadError}</p>
+                    {inlineAddressSaving && <p className="text-xs text-slate-400" aria-live="polite">Saving…</p>}
+                    {inlineAddressError && <p className="text-xs font-medium text-red-600 dark:text-red-400" role="alert">{inlineAddressError}</p>}
+                    {customPublicSiteUrl && !inlineAddressError && (
+                      <p className="break-all font-mono text-[11px] text-slate-400">{customPublicSiteUrl}</p>
                     )}
+                  </section>
 
-                    {/* ── Hero image picker ── */}
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Hero image</p>
-
-                    {/* Large preview of selected hero */}
-                    <div className="mb-3 relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800" style={{ aspectRatio: '16/7' }}>
-                      {activeHeroUrl ? (
-                        <>
-                          <AuthenticatedGcsImage
-                            src={activeHeroUrl}
-                            alt="Selected hero"
-                            bucketName={gcsBucket}
-                            className="h-full w-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                          <span className="absolute bottom-2 left-3 text-[10px] font-bold uppercase tracking-widest text-white/80">
-                            Selected hero
-                          </span>
-                        </>
-                      ) : (
-                        <div className="flex h-full flex-col items-center justify-center gap-2 text-on-surface-variant">
-                          <span className="material-symbols-outlined text-4xl opacity-40">image</span>
-                          <span className="text-xs opacity-60">No hero image selected</span>
-                        </div>
-                      )}
+                  {/* ── Photos ─────────────────────────────────────────── */}
+                  <section className="space-y-4 py-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <span className="material-symbols-outlined text-[16px] text-slate-500">photo_library</span>
+                      </span>
+                      <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Photos</h3>
                     </div>
 
-                    {/* Horizontal scroll strip of options */}
-                    {photoUrls.length > 0 ? (
-                      <div className="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                    {uploadError && <p className="text-xs font-medium text-red-600 dark:text-red-400">{uploadError}</p>}
+
+                    {/* Hero image */}
+                    <div>
+                      <label className={labelClass}>Hero image <span className="font-normal text-slate-400">(top of your site)</span></label>
+
+                      {/* Large preview */}
+                      <div className="relative mb-2 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800" style={{ aspectRatio: '16/7' }}>
+                        {activeHeroUrl ? (
+                          <>
+                            <AuthenticatedGcsImage src={activeHeroUrl} alt="Selected hero" bucketName={gcsBucket} className="h-full w-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                            <span className="absolute bottom-2 left-3 rounded-md bg-black/40 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">Active</span>
+                          </>
+                        ) : (
+                          <div className="flex h-full flex-col items-center justify-center gap-1.5 text-slate-400">
+                            <span className="material-symbols-outlined text-3xl">image</span>
+                            <span className="text-xs">No image selected</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Thumbnail strip */}
+                      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
                         {photoUrls.map((url) => {
                           const isHero = samePhotoUrl(url, activeHeroUrl)
                           return (
-                            <button
-                              key={url}
-                              type="button"
-                              onClick={() => setThumbnailUrl(trimPhotoUrl(url))}
-                              title="Use as hero photo"
-                              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 ${
-                                isHero
-                                  ? 'border-primary ring-2 ring-primary/30'
-                                  : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
-                              }`}
-                            >
-                              <AuthenticatedGcsImage
-                                src={url}
-                                alt=""
-                                bucketName={gcsBucket}
-                                className="h-full w-full object-cover"
-                                loading="lazy"
-                              />
+                            <button key={url} type="button" onClick={() => setThumbnailUrl(trimPhotoUrl(url))} title="Set as hero"
+                              className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${isHero ? 'border-primary ring-2 ring-primary/30' : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'}`}>
+                              <AuthenticatedGcsImage src={url} alt="" bucketName={gcsBucket} className="h-full w-full object-cover" loading="lazy" />
                               {isHero && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
-                                  <span className="material-symbols-outlined text-[18px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>
-                                    check_circle
-                                  </span>
+                                <div className="absolute inset-0 flex items-center justify-center bg-primary/25">
+                                  <span className="material-symbols-outlined text-[16px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                                 </div>
                               )}
                             </button>
                           )
                         })}
-                        {/* Upload tile */}
-                        <button
-                          type="button"
-                          disabled={!uploadConfigured || uploadBusy}
+                        <button type="button" disabled={!uploadConfigured || uploadBusy}
                           onClick={() => heroFileInputRef.current?.click()}
-                          className="flex h-16 w-16 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-primary"
-                          title={uploadBusy ? 'Uploading…' : 'Upload a new hero image'}
-                        >
-                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
-                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
+                          className="flex h-14 w-14 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800"
+                          title={uploadBusy ? 'Uploading…' : 'Upload image'}>
+                          <span className="material-symbols-outlined text-[20px]">upload</span>
+                          <span className="text-[9px] font-bold uppercase tracking-wide">{uploadBusy ? '…' : 'Upload'}</span>
                         </button>
-                      </div>
-                    ) : (
-                      <div className="mb-6 flex gap-2">
-                        <button
-                          type="button"
-                          disabled={!uploadConfigured || uploadBusy}
-                          onClick={() => heroFileInputRef.current?.click()}
-                          className="flex h-16 w-28 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
-                          title={uploadBusy ? 'Uploading…' : 'Upload hero image'}
-                        >
-                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
-                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload hero</span>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* ── About us image picker ── */}
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                      About us image
-                    </p>
-                    {photoUrls.length > 0 ? (
-                      <div className="mb-2 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
-                        {photoUrls.map((url) => {
-                          const isAbout = samePhotoUrl(url, activeAboutUrl)
-                          return (
-                            <button
-                              key={`about-${url}`}
-                              type="button"
-                              onClick={() => setAboutPhotoUrl(trimPhotoUrl(url))}
-                              title="Use as About us photo"
-                              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-1 ${
-                                isAbout
-                                  ? 'border-amber-600 ring-2 ring-amber-600/30'
-                                  : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
-                              }`}
-                            >
-                              <AuthenticatedGcsImage
-                                src={url}
-                                alt=""
-                                bucketName={gcsBucket}
-                                className="h-full w-full object-cover"
-                                loading="lazy"
-                              />
-                              {isAbout && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-amber-600/20">
-                                  <span className="material-symbols-outlined text-[18px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>
-                                    check_circle
-                                  </span>
-                                </div>
-                              )}
-                            </button>
-                          )
-                        })}
-                        <button
-                          type="button"
-                          disabled={!uploadConfigured || uploadBusy}
-                          onClick={() => aboutFileInputRef.current?.click()}
-                          className="flex h-16 w-16 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
-                          title={uploadBusy ? 'Uploading…' : 'Upload About us image'}
-                        >
-                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
-                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="mb-3 text-xs text-on-surface-variant">
-                          No photos were saved with this site. Upload a hero image above, or regenerate from a Maps listing that includes photos.
-                        </p>
-                        {!uploadConfigured && (
-                          <p className="mb-4 text-[11px] text-on-surface-variant">
-                            Server has no GCS bucket — add GCP env vars (see backend/.env.example).
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </div>
-
-                  <div className="border-t border-slate-200 pt-6 dark:border-slate-800">
-                    <h2 className="mb-4 font-headline text-lg font-bold text-on-surface">Content</h2>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className={labelClass} htmlFor="tagline">
-                          Tagline
-                        </label>
-                        <input id="tagline" className={inputClass} value={tagline} onChange={(e) => setTagline(e.target.value)} />
-                      </div>
-                      <div>
-                        <label className={labelClass} htmlFor="hero">
-                          Hero headline
-                        </label>
-                        <input id="hero" className={inputClass} value={heroHeadline} onChange={(e) => setHeroHeadline(e.target.value)} />
-                      </div>
-                      <div>
-                        <label className={labelClass} htmlFor="desc">
-                          Description
-                        </label>
-                        <textarea
-                          id="desc"
-                          rows={4}
-                          className={`${inputClass} resize-y`}
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label className={labelClass} htmlFor="phone">
-                            Phone
-                          </label>
-                          <input id="phone" className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} />
-                        </div>
-                        <div>
-                          <label className={labelClass} htmlFor="web">
-                            Website
-                          </label>
-                          <input
-                            id="web"
-                            type="url"
-                            className={inputClass}
-                            value={website}
-                            onChange={(e) => setWebsite(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className={labelClass} htmlFor="cta">
-                          Primary button label
-                        </label>
-                        <input id="cta" className={inputClass} value={ctaText} onChange={(e) => setCtaText(e.target.value)} />
-                      </div>
-                      <div>
-                        <label className={labelClass} htmlFor="seo">
-                          SEO description
-                        </label>
-                        <textarea
-                          id="seo"
-                          rows={2}
-                          className={`${inputClass} resize-y`}
-                          value={seoDescription}
-                          onChange={(e) => setSeoDescription(e.target.value)}
-                        />
                       </div>
                     </div>
-                  </div>
 
-                  <div className="border-t border-slate-200 pt-6 dark:border-slate-800">
-                    <h2 className="mb-2 font-headline text-lg font-bold text-on-surface">Customer reviews</h2>
-                    <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">
-                      Google reviews cannot be edited here. Use <strong>Load 5 more reviews</strong> to append demo-only
-                      quotes for layout testing (clearly labeled). Choose which rows appear on the site (up to six with
-                      enough text). Save to persist and update the preview.
-                    </p>
+                    {/* About us image */}
+                    <div>
+                      <label className={labelClass}>About us image <span className="font-normal text-slate-400">(shown in the About section)</span></label>
+                      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                        {photoUrls.length > 0 ? photoUrls.map((url) => {
+                          const isAbout = samePhotoUrl(url, activeAboutUrl)
+                          return (
+                            <button key={`about-${url}`} type="button" onClick={() => setAboutPhotoUrl(trimPhotoUrl(url))} title="Set as About us photo"
+                              className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${isAbout ? 'border-amber-500 ring-2 ring-amber-500/30' : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'}`}>
+                              <AuthenticatedGcsImage src={url} alt="" bucketName={gcsBucket} className="h-full w-full object-cover" loading="lazy" />
+                              {isAbout && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-amber-500/25">
+                                  <span className="material-symbols-outlined text-[16px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                </div>
+                              )}
+                            </button>
+                          )
+                        }) : (
+                          <span className="text-xs text-slate-400">No photos available — upload a hero image first.</span>
+                        )}
+                        {photoUrls.length > 0 && (
+                          <button type="button" disabled={!uploadConfigured || uploadBusy}
+                            onClick={() => aboutFileInputRef.current?.click()}
+                            className="flex h-14 w-14 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 transition-colors hover:border-amber-500 hover:bg-amber-50 hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800"
+                            title={uploadBusy ? 'Uploading…' : 'Upload image'}>
+                            <span className="material-symbols-outlined text-[20px]">upload</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wide">{uploadBusy ? '…' : 'Upload'}</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* ── Content ────────────────────────────────────────── */}
+                  <section className="space-y-4 py-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <span className="material-symbols-outlined text-[16px] text-slate-500">edit_note</span>
+                      </span>
+                      <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Content</h3>
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="tagline">Tagline</label>
+                      <input id="tagline" className={inputClass} value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="A short punchy line about your business" />
+                    </div>
+                    <div>
+                      <label className={labelClass} htmlFor="hero">Hero headline</label>
+                      <input id="hero" className={inputClass} value={heroHeadline} onChange={(e) => setHeroHeadline(e.target.value)} placeholder="Big bold title at the top of your page" />
+                    </div>
+                    <div>
+                      <label className={labelClass} htmlFor="desc">Description</label>
+                      <textarea id="desc" rows={4} className={`${inputClass} resize-y`} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Tell visitors what makes your business special…" />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <label className={labelClass} htmlFor="phone">Phone</label>
+                        <input id="phone" className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 555 000 0000" />
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="web">Website</label>
+                        <input id="web" type="url" className={inputClass} value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://yourbusiness.com" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelClass} htmlFor="cta">Button label</label>
+                      <input id="cta" className={inputClass} value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="e.g. Book now, Contact us, Get a quote" />
+                    </div>
+                    <div>
+                      <label className={labelClass} htmlFor="seo">SEO description <span className="font-normal text-slate-400">(shown in Google search results)</span></label>
+                      <textarea id="seo" rows={2} className={`${inputClass} resize-y`} value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="One or two sentences summarising your business for search engines" />
+                    </div>
+                  </section>
+
+                  {/* ── Reviews ────────────────────────────────────────── */}
+                  <section className="space-y-3 py-5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                          <span className="material-symbols-outlined text-[16px] text-slate-500">star</span>
+                        </span>
+                        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Reviews</h3>
+                      </div>
+                      {reviewsCatalog.length > 1 && (
+                        <button type="button" onClick={() => setReviewsEnabled(reviewsCatalog.map(() => true))}
+                          className="text-xs font-semibold text-primary hover:underline">
+                          Show all
+                        </button>
+                      )}
+                    </div>
+
                     {reviewsCatalog.length === 0 ? (
-                      <p className="text-sm text-on-surface-variant">
-                        No reviews yet. Add demo reviews with the button below, or generate this site from a Google Maps
-                        listing that includes reviews.
+                      <p className="rounded-xl bg-slate-50 px-4 py-4 text-center text-xs text-slate-400 dark:bg-slate-800/60">
+                        No reviews yet — use the button below to add demo reviews.
                       </p>
                     ) : (
-                      <ul className="space-y-3">
+                      <ul className="space-y-2">
                         {reviewsCatalog.map((r, i) => {
                           const stars = Math.min(5, Math.max(0, Math.round(Number(r.rating) || 0)))
                           return (
-                            <li
-                              key={i}
-                              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-surface-container-low/40 px-4 py-3 dark:border-slate-700/80"
-                            >
+                            <li key={i} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-3.5 py-3 dark:border-slate-700/80 dark:bg-slate-800/40">
                               <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <p className="font-semibold text-on-surface">{r.author?.trim() || 'Anonymous'}</p>
-                                  {r.isDemo ? (
-                                    <span className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 dark:bg-amber-900/40 dark:text-amber-100">
-                                      Demo
-                                    </span>
-                                  ) : null}
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{r.author?.trim() || 'Anonymous'}</p>
+                                  {r.isDemo && (
+                                    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-800 dark:bg-amber-900/40 dark:text-amber-100">Demo</span>
+                                  )}
                                 </div>
-                                <p
-                                  className="mt-1 text-sm text-on-surface-variant"
-                                  aria-label={`${stars} out of 5 stars`}
-                                >
-                                  <span className="text-amber-500" aria-hidden="true">
-                                    {'★'.repeat(stars)}
-                                    {'☆'.repeat(5 - stars)}
-                                  </span>
-                                  <span className="ml-1.5 tabular-nums">({stars}/5)</span>
-                                </p>
+                                <span className="text-xs text-amber-400" aria-label={`${stars} stars`}>{'★'.repeat(stars)}{'☆'.repeat(5 - stars)}</span>
                               </div>
-                              <label className="flex shrink-0 cursor-pointer items-center gap-2 text-sm font-medium text-on-surface">
-                                <input
-                                  type="checkbox"
-                                  checked={reviewsEnabled[i] !== false}
+                              <label className="flex shrink-0 cursor-pointer items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                                <input type="checkbox" checked={reviewsEnabled[i] !== false}
                                   onChange={(e) => {
                                     const n = reviewsCatalog.length
-                                    setReviewsEnabled((prev) =>
-                                      Array.from({ length: n }, (_, j) =>
-                                        j === i ? e.target.checked : prev[j] !== false
-                                      )
-                                    )
+                                    setReviewsEnabled((prev) => Array.from({ length: n }, (_, j) => j === i ? e.target.checked : prev[j] !== false))
                                   }}
-                                  className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
-                                />
-                                Show on site
+                                  className="h-3.5 w-3.5 rounded border-slate-300 text-primary focus:ring-primary" />
+                                Show
                               </label>
                             </li>
                           )
                         })}
                       </ul>
                     )}
-                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-                      <button
-                        type="button"
-                        disabled={!canLoadMoreDemo}
-                        onClick={handleLoadMoreDemoReviews}
-                        className="inline-flex items-center justify-center rounded-full border-2 border-primary bg-transparent px-5 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        Load 5 more reviews
-                      </button>
-                      {!canLoadMoreDemo && (
-                        <span className="text-xs text-on-surface-variant">
-                          Demo limit reached ({MAX_DEMO_REVIEWS} demo reviews max).
-                        </span>
-                      )}
-                    </div>
-                    {reviewsCatalog.length > 1 && (
-                      <button
-                        type="button"
-                        className="mt-3 text-sm font-semibold text-primary underline-offset-2 hover:underline"
-                        onClick={() => setReviewsEnabled(reviewsCatalog.map(() => true))}
-                      >
-                        Show all on site
-                      </button>
-                    )}
-                  </div>
 
-                  <div className="border-t border-slate-200 pt-6 dark:border-slate-800">
-                    <h2 className="mb-2 font-headline text-lg font-bold text-on-surface">Footer</h2>
-                    <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">
-                      Bottom copyright line and optional attribution link next to Maps / Website.
-                    </p>
-                    <div className="space-y-4">
-                      <div>
-                        <label className={labelClass} htmlFor="footer-copyright">
-                          Copyright line
-                        </label>
-                        <input
-                          id="footer-copyright"
-                          className={inputClass}
-                          value={footerCopyright}
-                          onChange={(e) => setFooterCopyright(e.target.value)}
-                          placeholder={`© ${new Date().getFullYear()} ${name || 'Your business'}`}
-                        />
-                        <p className="mt-1.5 text-[11px] text-on-surface-variant">
-                          Leave blank to use the year and site name automatically.
-                        </p>
-                      </div>
-                      <div>
-                        <label className={labelClass} htmlFor="footer-attribution">
-                          Attribution link text
-                        </label>
-                        <input
-                          id="footer-attribution"
-                          className={inputClass}
-                          value={footerAttribution}
-                          onChange={(e) => setFooterAttribution(e.target.value)}
-                          placeholder="Made with Place to Page"
-                        />
-                      </div>
-                      <label className="flex cursor-pointer items-center gap-2 text-sm text-on-surface">
-                        <input
-                          id="footer-show-attrib"
-                          type="checkbox"
-                          checked={showFooterAttribution}
-                          onChange={(e) => setShowFooterAttribution(e.target.checked)}
-                          className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
-                        />
-                        Show attribution link in footer
-                      </label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button type="button" disabled={!canLoadMoreDemo} onClick={handleLoadMoreDemoReviews}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-xs font-bold text-primary transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50">
+                        <span className="material-symbols-outlined text-[15px]">add</span>
+                        Load 5 demo reviews
+                      </button>
+                      {!canLoadMoreDemo && <span className="text-xs text-slate-400">Limit reached ({MAX_DEMO_REVIEWS} max)</span>}
                     </div>
-                  </div>
+                  </section>
+
+                  {/* ── Footer ─────────────────────────────────────────── */}
+                  <section className="space-y-4 py-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <span className="material-symbols-outlined text-[16px] text-slate-500">bottom_panel_open</span>
+                      </span>
+                      <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Footer</h3>
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="footer-copyright">Copyright line</label>
+                      <input id="footer-copyright" className={inputClass} value={footerCopyright}
+                        onChange={(e) => setFooterCopyright(e.target.value)}
+                        placeholder={`© ${new Date().getFullYear()} ${name || 'Your business'}`} />
+                      <p className="mt-1 text-[11px] text-slate-400">Leave blank to auto-fill with the year and site name.</p>
+                    </div>
+                    <div>
+                      <label className={labelClass} htmlFor="footer-attribution">Attribution text</label>
+                      <input id="footer-attribution" className={inputClass} value={footerAttribution}
+                        onChange={(e) => setFooterAttribution(e.target.value)}
+                        placeholder="Made with Place to Page" />
+                    </div>
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                      <input id="footer-show-attrib" type="checkbox" checked={showFooterAttribution}
+                        onChange={(e) => setShowFooterAttribution(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" />
+                      Show attribution link
+                    </label>
+                  </section>
+
                 </form>
               </div>
 
