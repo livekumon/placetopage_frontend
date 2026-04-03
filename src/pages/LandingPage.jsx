@@ -314,7 +314,7 @@ export default function LandingPage() {
 
       <main className="pt-16">
         {/* ── Hero ── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-surface-container-low to-background py-20 md:py-28">
+        <section className="relative overflow-hidden bg-gradient-to-b from-surface-container-low to-background py-16 md:py-28">
           {/* subtle grid texture */}
           <div
             aria-hidden
@@ -326,9 +326,9 @@ export default function LandingPage() {
             }}
           />
 
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-[1fr_auto_1fr] md:gap-8 md:px-12">
-            {/* ── Left image ── */}
-            <div className="flex justify-center md:justify-end">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 md:grid-cols-[1fr_auto_1fr] md:gap-8 md:px-12">
+            {/* ── Left image — hidden on mobile ── */}
+            <div className="hidden md:flex md:justify-end">
               <div className="relative w-full max-w-sm overflow-hidden rounded-2xl shadow-2xl ring-1 ring-slate-200/60">
                 <img
                   src="/hero.png"
@@ -336,7 +336,6 @@ export default function LandingPage() {
                   className="h-auto w-full object-cover"
                   style={{ transform: 'scaleX(-1)' }}
                 />
-                {/* fading right edge to blend into centre */}
                 <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-surface-container-low to-transparent" />
               </div>
             </div>
@@ -344,33 +343,33 @@ export default function LandingPage() {
             {/* ── Centre text ── */}
             <div className="flex flex-col items-center text-center">
               {/* badge */}
-              <span className="mb-6 inline-flex items-center gap-2 rounded-full bg-secondary-container px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-on-secondary-container">
+              <span className="mb-5 inline-flex items-center gap-2 rounded-full bg-secondary-container px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-on-secondary-container">
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
                   magic_button
                 </span>
                 AI-powered · No code needed
               </span>
 
-              <h1 className="mb-6 font-headline text-4xl font-extrabold leading-[1.1] tracking-tighter text-on-background md:text-5xl lg:text-6xl">
+              <h1 className="mb-5 font-headline text-3xl font-extrabold leading-[1.1] tracking-tighter text-on-background sm:text-4xl md:text-5xl lg:text-6xl">
                 Paste a Google Map link.
                 <br />
                 <span className="text-primary-container">Get a live website.</span>
               </h1>
 
-              <p className="mb-8 max-w-md text-lg text-on-surface-variant md:text-xl">
+              <p className="mb-7 max-w-md text-base text-on-surface-variant sm:text-lg md:text-xl">
                 Instantly turn any Google Maps business listing into a premium, high-converting landing page — in under 60 seconds. No designers, no developers, no waiting.
               </p>
 
               {/* URL input */}
               <form onSubmit={handleGenerate} className="mb-1 w-full max-w-lg">
                 <div className={`flex items-center rounded-full bg-white p-1.5 shadow-lg ring-1 transition-all ${urlError ? 'ring-red-400' : 'ring-slate-200'}`}>
-                  <div className="flex flex-1 items-center overflow-hidden px-4">
-                    <span className={`material-symbols-outlined mr-2 flex-shrink-0 ${urlError ? 'text-red-400' : 'text-outline'}`}>
+                  <div className="flex flex-1 items-center overflow-hidden px-3 sm:px-4">
+                    <span className={`material-symbols-outlined mr-2 flex-shrink-0 text-[20px] ${urlError ? 'text-red-400' : 'text-outline'}`}>
                       {urlError ? 'error' : 'link'}
                     </span>
                     <input
                       className="min-w-0 flex-1 border-none bg-transparent py-2 text-sm font-medium text-on-surface placeholder:text-outline-variant focus:ring-0"
-                      placeholder="Paste your Google Maps URL here…"
+                      placeholder="Paste your Google Maps URL…"
                       type="text"
                       value={mapsUrl}
                       onChange={(e) => { setMapsUrl(e.target.value); setUrlError('') }}
@@ -378,7 +377,7 @@ export default function LandingPage() {
                   </div>
                   <button
                     type="submit"
-                    className="flex flex-shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-on-primary transition-all hover:bg-primary-container active:scale-95 md:px-6"
+                    className="flex flex-shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-bold text-on-primary transition-all hover:bg-primary-container active:scale-95 sm:px-5 md:px-6"
                   >
                     <span className="hidden sm:inline">Generate</span>
                     <span className="material-symbols-outlined text-[18px]">magic_button</span>
@@ -396,13 +395,13 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => setContactOpen(true)}
-                className="mb-8 rounded-full border-2 border-primary/30 bg-transparent px-6 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary/5 active:scale-[0.98]"
+                className="mb-7 rounded-full border-2 border-primary/30 bg-transparent px-6 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary/5 active:scale-[0.98]"
               >
                 Start a journey
               </button>
 
               {/* social proof */}
-              <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
                 <div className="flex -space-x-2.5">
                   {avatars.map((src, i) => (
                     <img
@@ -413,9 +412,9 @@ export default function LandingPage() {
                     />
                   ))}
                 </div>
-                <div className="text-left">
+                <div className="text-center sm:text-left">
                   <div className="text-sm font-bold text-on-surface">1,428 sites generated this month</div>
-                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <div className="flex items-center justify-center gap-2 text-xs text-on-surface-variant sm:justify-start">
                     <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
                     Average deploy time: 54 seconds
                   </div>
@@ -423,10 +422,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* ── Right image ── */}
-            <div className="flex justify-center md:justify-start">
+            {/* ── Right image — hidden on mobile ── */}
+            <div className="hidden md:flex md:justify-start">
               <div className="relative w-full max-w-sm overflow-hidden rounded-2xl shadow-2xl ring-1 ring-slate-200/60">
-                {/* fading left edge to blend into centre */}
                 <div className="absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-surface-container-low to-transparent" />
                 <img
                   src="/hero.png"
@@ -439,9 +437,9 @@ export default function LandingPage() {
         </section>
 
         {/* ── How it works strip ── */}
-        <section className="border-y border-outline-variant/20 bg-surface-container-lowest py-14">
-          <div className="mx-auto max-w-5xl px-6">
-            <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
+        <section className="border-y border-outline-variant/20 bg-surface-container-lowest py-12 md:py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="grid grid-cols-1 gap-10 text-center sm:grid-cols-3 sm:gap-8">
               {[
                 { icon: 'link', step: '1', title: 'Paste a Maps link', desc: 'Copy any Google Maps business URL and drop it in the input above.' },
                 { icon: 'magic_button', step: '2', title: 'AI builds your page', desc: 'Our engine pulls your data, picks a design, and writes the copy.' },
@@ -467,7 +465,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── Inside the editor ── */}
-        <section className="relative overflow-hidden bg-slate-950 py-24 md:py-32">
+        <section className="relative overflow-hidden bg-slate-950 py-16 md:py-32">
           {/* subtle dot grid */}
           <div
             aria-hidden
@@ -477,19 +475,19 @@ export default function LandingPage() {
               backgroundSize: '32px 32px',
             }}
           />
-          <div className="relative mx-auto max-w-7xl px-6">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
             {/* heading */}
-            <div className="mb-16 text-center">
+            <div className="mb-10 text-center md:mb-16">
               <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/70">
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
                   preview
                 </span>
                 Inside the dashboard
               </span>
-              <h2 className="mt-4 font-headline text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+              <h2 className="mt-4 font-headline text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
                 You&apos;re always in control.
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
+              <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 sm:text-lg">
                 A clean, intuitive editor lets you tweak every word, swap the theme, and see your live website update in real time — no code, no guesswork.
               </p>
             </div>
@@ -547,18 +545,18 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="features" className="mx-auto mb-40 max-w-7xl scroll-mt-28 px-6">
-          <div className="mb-20 text-center">
-            <h2 className="mb-4 font-headline text-4xl font-extrabold">The new standard for local SEO.</h2>
+        <section id="features" className="mx-auto mb-20 max-w-7xl scroll-mt-28 px-4 pt-16 sm:px-6 md:mb-40 md:pt-24">
+          <div className="mb-12 text-center md:mb-20">
+            <h2 className="mb-4 font-headline text-3xl font-extrabold sm:text-4xl">The new standard for local SEO.</h2>
             <p className="mx-auto max-w-xl text-on-surface-variant">
               Everything you need to turn searchers into customers, automated from start to finish.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
             {features.map((f) => (
               <div
                 key={f.title}
-                className="group rounded-xl border border-transparent bg-surface-container-lowest p-10 shadow-sm transition-all hover:bg-white"
+                className="group rounded-xl border border-transparent bg-surface-container-lowest p-6 shadow-sm transition-all hover:bg-white md:p-10"
               >
                 <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-container text-white transition-transform group-hover:scale-110">
                   <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -572,13 +570,13 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="pricing" className="scroll-mt-28 bg-surface-container-low px-6 py-32">
+        <section id="pricing" className="scroll-mt-28 bg-surface-container-low px-4 py-20 sm:px-6 md:py-32">
           <div className="mx-auto max-w-7xl">
-            <div className="mb-20 text-center">
-              <h2 className="mb-4 font-headline text-4xl font-extrabold">Simple, transparent pricing.</h2>
+            <div className="mb-12 text-center md:mb-20">
+              <h2 className="mb-4 font-headline text-3xl font-extrabold sm:text-4xl">Simple, transparent pricing.</h2>
               <p className="text-on-surface-variant">Start free, go live when you're ready. No hidden fees.</p>
             </div>
-            <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-3 md:gap-8">
 
               {/* ── Free ── */}
               <div className="flex h-full flex-col rounded-2xl border border-outline-variant/10 bg-white p-10 shadow-sm">
@@ -616,7 +614,7 @@ export default function LandingPage() {
               </div>
 
               {/* ── $5 per site (Starter) ── */}
-              <div className="relative flex h-full transform flex-col overflow-hidden rounded-2xl bg-primary p-12 text-on-primary shadow-2xl md:scale-105">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-primary p-8 text-on-primary shadow-2xl sm:p-12 md:scale-105">
                 <div className="absolute right-6 top-6 rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
                   Most popular
                 </div>
