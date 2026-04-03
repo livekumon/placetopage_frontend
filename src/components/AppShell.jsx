@@ -38,7 +38,10 @@ export default function AppShell() {
 
   const railPx = expanded ? EXPANDED_PX : COLLAPSED_PX
   const isAuthOnly = !user && (pathname === '/login' || pathname === '/register')
-  const dashboardActive = pathname === '/dashboard' || pathname.startsWith('/dashboard/sites/')
+  const dashboardActive = pathname === '/dashboard'
+  const siteEditorMatch = pathname.match(/^\/dashboard\/sites\/([^/]+)/)
+  const currentSiteId = siteEditorMatch ? siteEditorMatch[1] : null
+  const siteEditorActive = Boolean(currentSiteId)
   const recycleBinActive = pathname === '/recycle-bin'
   const generatorActive = pathname === '/generator'
   const purchaseTokensActive = pathname === '/purchase-tokens'
@@ -105,6 +108,19 @@ export default function AppShell() {
                   </span>
                   {expanded && <span>Dashboard</span>}
                 </Link>
+
+                {/* Contextual: only shown when inside a site editor */}
+                {siteEditorActive && (
+                  <Link
+                    to={`/dashboard/sites/${currentSiteId}`}
+                    title="Site settings"
+                    className={itemClass(siteEditorActive, expanded)}
+                  >
+                    <span className="material-symbols-outlined shrink-0 text-[22px]">settings</span>
+                    {expanded && <span>Site settings</span>}
+                  </Link>
+                )}
+
                 <Link to="/generator" title="New site" className={itemClass(generatorActive, expanded)}>
                   <span className="material-symbols-outlined shrink-0 text-[22px]">add_circle</span>
                   {expanded && <span>New site</span>}

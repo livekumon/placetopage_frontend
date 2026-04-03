@@ -578,27 +578,43 @@ export default function DashboardPage() {
                                       </span>
                                       <span className="truncate">{site.pageViews?.toLocaleString?.() ?? 0} views</span>
                                     </div>
-                                    <button
-                                      type="button"
-                                      aria-label={
-                                        isSiteArchived(site)
-                                          ? `Remove ${site.name || 'site'} from dashboard`
-                                          : `Archive ${site.name || 'site'}`
-                                      }
-                                      title={isSiteArchived(site) ? 'Remove from dashboard' : 'Archive'}
-                                      disabled={siteRowBusy(site)}
-                                      onClick={() =>
-                                        isSiteArchived(site) ? openDeleteModal(site) : openArchiveModal(site)
-                                      }
-                                      className="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-slate-400/70 transition-all duration-200 hover:border-red-200/70 hover:bg-red-50 hover:shadow-sm disabled:opacity-35 dark:text-slate-500/55 dark:hover:border-red-900/40 dark:hover:bg-red-950/35"
-                                    >
-                                      <span
-                                        className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-red-600 group-hover:opacity-100 dark:group-hover:text-red-400"
-                                        aria-hidden
+                                    <div className="flex items-center gap-1">
+                                      <button
+                                        type="button"
+                                        aria-label={`Settings for ${site.name || 'site'}`}
+                                        title="Site settings"
+                                        onClick={() => navigate(`/dashboard/sites/${site._id}`)}
+                                        className="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-slate-400/70 transition-all duration-200 hover:border-indigo-200/70 hover:bg-indigo-50 hover:shadow-sm dark:text-slate-500/55 dark:hover:border-indigo-900/40 dark:hover:bg-indigo-950/35"
                                       >
-                                        delete
-                                      </span>
-                                    </button>
+                                        <span
+                                          className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-indigo-600 group-hover:opacity-100 dark:group-hover:text-indigo-400"
+                                          aria-hidden
+                                        >
+                                          settings
+                                        </span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        aria-label={
+                                          isSiteArchived(site)
+                                            ? `Remove ${site.name || 'site'} from dashboard`
+                                            : `Archive ${site.name || 'site'}`
+                                        }
+                                        title={isSiteArchived(site) ? 'Remove from dashboard' : 'Archive'}
+                                        disabled={siteRowBusy(site)}
+                                        onClick={() =>
+                                          isSiteArchived(site) ? openDeleteModal(site) : openArchiveModal(site)
+                                        }
+                                        className="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-transparent text-slate-400/70 transition-all duration-200 hover:border-red-200/70 hover:bg-red-50 hover:shadow-sm disabled:opacity-35 dark:text-slate-500/55 dark:hover:border-red-900/40 dark:hover:bg-red-950/35"
+                                      >
+                                        <span
+                                          className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-red-600 group-hover:opacity-100 dark:group-hover:text-red-400"
+                                          aria-hidden
+                                        >
+                                          delete
+                                        </span>
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                               ))}
@@ -660,6 +676,20 @@ export default function DashboardPage() {
                               {site.status === 'live' ? 'Live' : site.status}
                             </span>
                           </div>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Settings for ${site.name || 'site'}`}
+                          title="Site settings"
+                          onClick={() => navigate(`/dashboard/sites/${site._id}`)}
+                          className="group flex shrink-0 items-center justify-center border-l border-slate-200 px-3 text-slate-400/70 transition-all duration-200 hover:bg-indigo-50 dark:border-slate-800 dark:hover:bg-indigo-950/35"
+                        >
+                          <span
+                            className="material-symbols-outlined text-[16px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[20px] group-hover:text-indigo-600 group-hover:opacity-100 dark:group-hover:text-indigo-400"
+                            aria-hidden
+                          >
+                            settings
+                          </span>
                         </button>
                         <button
                           type="button"
@@ -792,29 +822,48 @@ export default function DashboardPage() {
                             onClick={(e) => e.stopPropagation()}
                             onKeyDown={(e) => e.stopPropagation()}
                           >
-                            <button
-                              type="button"
-                              aria-label={
-                                isSiteArchived(site)
-                                  ? `Remove ${site.name || 'site'} from dashboard`
-                                  : `Archive ${site.name || 'site'}`
-                              }
-                              title={isSiteArchived(site) ? 'Remove from dashboard' : 'Archive'}
-                              disabled={siteRowBusy(site)}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                if (isSiteArchived(site)) openDeleteModal(site)
-                                else openArchiveModal(site)
-                              }}
-                              className="group inline-flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-slate-400/70 transition-all duration-200 hover:border-red-200/70 hover:bg-red-50 disabled:opacity-35 dark:hover:border-red-900/40 dark:hover:bg-red-950/35"
-                            >
-                              <span
-                                className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-red-600 group-hover:opacity-100 dark:group-hover:text-red-400"
-                                aria-hidden
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                aria-label={`Settings for ${site.name || 'site'}`}
+                                title="Site settings"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  navigate(`/dashboard/sites/${site._id}`)
+                                }}
+                                className="group inline-flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-slate-400/70 transition-all duration-200 hover:border-indigo-200/70 hover:bg-indigo-50 dark:hover:border-indigo-900/40 dark:hover:bg-indigo-950/35"
                               >
-                                delete
-                              </span>
-                            </button>
+                                <span
+                                  className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-indigo-600 group-hover:opacity-100 dark:group-hover:text-indigo-400"
+                                  aria-hidden
+                                >
+                                  settings
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                aria-label={
+                                  isSiteArchived(site)
+                                    ? `Remove ${site.name || 'site'} from dashboard`
+                                    : `Archive ${site.name || 'site'}`
+                                }
+                                title={isSiteArchived(site) ? 'Remove from dashboard' : 'Archive'}
+                                disabled={siteRowBusy(site)}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  if (isSiteArchived(site)) openDeleteModal(site)
+                                  else openArchiveModal(site)
+                                }}
+                                className="group inline-flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-slate-400/70 transition-all duration-200 hover:border-red-200/70 hover:bg-red-50 disabled:opacity-35 dark:hover:border-red-900/40 dark:hover:bg-red-950/35"
+                              >
+                                <span
+                                  className="material-symbols-outlined text-[15px] opacity-45 transition-all duration-200 group-hover:scale-110 group-hover:text-[18px] group-hover:text-red-600 group-hover:opacity-100 dark:group-hover:text-red-400"
+                                  aria-hidden
+                                >
+                                  delete
+                                </span>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
