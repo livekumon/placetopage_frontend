@@ -27,7 +27,7 @@ const THEMES = [
 const labelClass =
   'mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant'
 const inputClass =
-  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900'
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400'
 
 const PREVIEW_DEBOUNCE_MS = 320
 /** Shown next to subdomain input; must match backend CUSTOM_DOMAIN_BASE default for UX copy. */
@@ -738,7 +738,7 @@ export default function SiteEditPage() {
   }
 
   return (
-    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-surface text-on-surface">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-surface text-on-surface dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-40 shrink-0 border-b border-slate-200/50 bg-slate-50/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 px-6 py-3">
           <div className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-4">
@@ -803,7 +803,7 @@ export default function SiteEditPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col overflow-hidden px-6 py-3 sm:py-4">
+      <main className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col overflow-hidden px-6 py-3 sm:py-4 dark:bg-slate-950">
         {loading && <p className="text-on-surface-variant">Loading site…</p>}
 
         {!loading && error && !site && (

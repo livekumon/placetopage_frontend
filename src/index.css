@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Switch dark-mode to class-based so OS dark mode never auto-applies.
+   The app is a fixed light theme; dark: variants only fire when a .dark
+   class is explicitly placed on a parent element (never happens today). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-headline: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -70,6 +75,12 @@
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
+}
+
+:root {
+  /* Tell the browser this app is light-only — prevents Safari/iOS from
+     auto-darkening native form controls and scrollbars in dark mode. */
+  color-scheme: light;
 }
 
 body {
