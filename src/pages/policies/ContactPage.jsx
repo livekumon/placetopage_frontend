@@ -15,59 +15,83 @@ export default function ContactPage() {
           <p className="policy-page__updated">We typically respond within 1 business day.</p>
 
           <div className="policy-page__body">
-            <h2>Get in Touch</h2>
+            <h2>We're Here to Help</h2>
             <p>
-              Have a question, need help with your account, or want to report an issue?
-              We're here to help. Reach out to us through any of the channels below.
+              Whether you have a question about generating your first website, need help
+              with your account, or want to report a technical issue — our team is ready to
+              assist. Place to Page is built to make professional web presence effortless for
+              every business, and great support is part of that promise.
             </p>
 
-            <h2>Support</h2>
             <div className="policy-contact-card">
-              <p>
-                <strong>Email:</strong>{' '}
-                <a href="mailto:support@placetopage.com">support@placetopage.com</a>
-              </p>
-              <p>
-                <strong>Phone:</strong>{' '}
-                <a href="tel:+918309341208">+91 83093 41208</a>
-              </p>
-              <p>
-                <strong>Hours:</strong> Monday–Friday, 10:00 a.m.–6:00 p.m. IST
-              </p>
+              <p><strong>Support email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
+              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Support hours:</strong> Monday–Friday, 10:00 a.m.–6:00 p.m. IST</p>
             </div>
 
-            <h2>Payment &amp; Refund Queries</h2>
+            <h2>Getting Started</h2>
             <p>
-              For any issues related to payments, credits, or refund requests, please
-              include the following in your email:
+              If you're new to Place to Page and need help understanding how website
+              generation works, please email us with the subject line{' '}
+              <em>"Getting started"</em>. We're happy to walk you through how to:
+            </p>
+            <ul>
+              <li>Find and copy your Google Maps business URL</li>
+              <li>Generate and preview your site</li>
+              <li>Choose a custom subdomain (e.g. yourname.placetopage.com)</li>
+              <li>Publish your site live using a website credit</li>
+              <li>Manage multiple sites from your dashboard</li>
+            </ul>
+
+            <h2>Account &amp; Billing Support</h2>
+            <p>
+              For issues related to login, password reset, website credits, or payment
+              history, email us with:
             </p>
             <ul>
               <li>Your registered email address</li>
-              <li>Transaction ID or order ID</li>
-              <li>A description of the issue</li>
-              <li>Any relevant screenshots or evidence</li>
+              <li>A description of the problem you're experiencing</li>
+              <li>Any relevant transaction or order ID (from PayPal or Razorpay)</li>
             </ul>
             <p>
-              Refund requests are reviewed within <strong>5–7 business days</strong> and
-              approved refunds are processed within <strong>10–15 business days</strong>.
-              See our{' '}
-              <Link to="/policies/cancellation-refunds">Cancellation &amp; Refunds Policy</Link>{' '}
-              for full details.
+              For payment and refund queries, please also review our{' '}
+              <Link to="/policies/cancellation-refunds">Cancellation &amp; Refunds Policy</Link>.
             </p>
 
-            <h2>Technical Support</h2>
+            <h2>Technical Issues</h2>
             <p>
-              If you are experiencing a technical issue — such as a site failing to publish,
-              credits not appearing after payment, or an error during site generation —
-              please email us with your account email and a description of the problem. We
-              will investigate and respond within <strong>1–2 business days</strong>.
+              If your site fails to generate, a publish gets stuck, or a credit is deducted
+              without your site going live, please reach out with:
+            </p>
+            <ul>
+              <li>The Google Maps URL you used</li>
+              <li>The name of the site that encountered the issue</li>
+              <li>A screenshot or description of any error message</li>
+              <li>Approximate time the issue occurred</li>
+            </ul>
+            <p>
+              Technical issues are typically resolved within <strong>1–2 business days</strong>.
+              If a credit was lost due to a technical fault on our end, we will restore it
+              promptly.
             </p>
 
-            <h2>Business Inquiries</h2>
+            <h2>Reporting Misuse</h2>
             <p>
-              For partnerships, agency plans, or bulk pricing enquiries, please email{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a> with
-              the subject line <em>"Business Inquiry"</em>.
+              If you believe a site published on placetopage.com contains false information,
+              impersonates a real business, or violates our{' '}
+              <Link to="/policies/terms">Terms &amp; Conditions</Link>, please email us with
+              the subject line <em>"Report a site"</em> and include the full URL of the
+              site in question. We take all reports seriously and will investigate within 3
+              business days.
+            </p>
+
+            <h2>Business &amp; Agency Enquiries</h2>
+            <p>
+              Are you an agency, freelancer, or business owner looking to generate websites
+              for multiple clients? We offer bulk credit packs and are open to discussing
+              custom arrangements. Email us at{' '}
+              <a href="mailto:support@placetopage.com">support@placetopage.com</a> with the
+              subject line <em>"Agency enquiry"</em> and tell us a bit about your needs.
             </p>
           </div>
         </article>

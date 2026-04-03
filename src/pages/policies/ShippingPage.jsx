@@ -15,54 +15,76 @@ export default function ShippingPage() {
           <p className="policy-page__updated">Last updated: April 2026</p>
 
           <div className="policy-page__body">
-            <h2>Digital Delivery</h2>
+            <h2>100% Digital — No Physical Shipping</h2>
             <p>
-              Place to Page is an entirely digital service. There are no physical goods,
-              shipments, or courier deliveries of any kind. All products and services
-              are delivered electronically.
+              Place to Page is a fully digital platform. We do not sell or ship any physical
+              products. There are no couriers, packaging, customs duties, or delivery
+              timelines to worry about. Everything we offer — website generation, live
+              publishing, and account credits — is delivered electronically over the internet.
             </p>
 
-            <h2>Website Credits</h2>
+            <h2>Website Credits — Instant Delivery</h2>
             <p>
-              Upon successful payment through PayPal or Razorpay, website credits are
-              credited to your account <strong>instantly and automatically</strong>. You
-              do not need to wait or take any additional action — the credits will reflect
-              on your dashboard immediately after payment confirmation.
+              When you purchase a credit pack (Starter, Builder, Growth, Studio, or Agency),
+              the credits are added to your Place to Page account <strong>immediately and
+              automatically</strong> as soon as your payment is confirmed by PayPal or
+              Razorpay. You can verify your updated credit balance by checking the{' '}
+              <strong>"websites remaining"</strong> indicator in the top bar or on the
+              Purchase Websites page.
+            </p>
+            <p>
+              There is no manual approval step. Credits are available to use the moment
+              payment succeeds — day or night, weekday or weekend.
             </p>
 
-            <h2>Published Websites</h2>
+            <h2>Generated Websites — Delivered in Seconds</h2>
             <p>
-              When you publish a site using a website credit, your generated site is
-              deployed live on <strong>placetopage.com</strong> (or your chosen subdomain)
-              within minutes. Typical deployment time is under 2 minutes, subject to
-              Vercel platform availability.
+              Once you enter a Google Maps URL and click <strong>Generate</strong>, our
+              AI engine fetches your business data and produces a complete website in
+              under 30 seconds. The generated site is immediately available for you to
+              preview and edit in our site editor — no waiting, no email confirmation.
             </p>
 
-            <h2>Delivery Failures</h2>
+            <h2>Published Sites — Live in Under 2 Minutes</h2>
             <p>
-              In the rare event that your payment is confirmed but credits are not
-              reflected in your account, or a publish fails after a credit is consumed,
-              please contact us immediately:
+              When you click <strong>Publish</strong> and confirm your chosen subdomain
+              (e.g. <strong>yourbusiness.placetopage.com</strong>), your site is deployed to
+              Vercel's global edge network. Typical deployment time is{' '}
+              <strong>60–120 seconds</strong>. Once deployment is complete, your site is
+              accessible worldwide with a free SSL certificate (HTTPS).
             </p>
+            <p>
+              You will see your live site URL on screen the moment deployment succeeds.
+              Your dashboard will update to reflect the site's "Live" status.
+            </p>
+
+            <h2>What Affects Delivery Speed?</h2>
+            <p>
+              In rare cases, delivery may take slightly longer due to:
+            </p>
+            <ul>
+              <li>High traffic on Vercel's deployment platform</li>
+              <li>DNS propagation delays (usually under 5 minutes for placetopage.com subdomains)</li>
+              <li>Payment gateway processing delays during peak hours</li>
+            </ul>
+            <p>
+              If your credits have not appeared within <strong>10 minutes</strong> of a
+              successful payment, or your site has not gone live within{' '}
+              <strong>5 minutes</strong> of publishing, please contact us — we will
+              investigate and resolve the issue promptly.
+            </p>
+
+            <h2>Reporting a Delivery Issue</h2>
             <div className="policy-contact-card">
-              <p>
-                <strong>Email:</strong>{' '}
-                <a href="mailto:support@placetopage.com">support@placetopage.com</a>
-              </p>
-              <p>
-                <strong>Phone:</strong>{' '}
-                <a href="tel:+918309341208">+91 83093 41208</a>
-              </p>
+              <p><strong>Email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
+              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Response time:</strong> Within 1–2 business days</p>
             </div>
             <p>
-              We will investigate and resolve delivery issues within{' '}
-              <strong>1–2 business days</strong>.
-            </p>
-
-            <h2>No Physical Shipping</h2>
-            <p>
-              Since all services are digital, no shipping charges, customs duties, or
-              delivery timelines apply to any purchase made on Place to Page.
+              Please include your registered email address, the name of the site or the
+              transaction ID, and a brief description of the issue. See also our{' '}
+              <Link to="/policies/cancellation-refunds">Cancellation &amp; Refunds Policy</Link>{' '}
+              if a credit was incorrectly consumed.
             </p>
           </div>
         </article>
