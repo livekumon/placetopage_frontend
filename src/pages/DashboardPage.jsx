@@ -317,12 +317,14 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-surface text-on-surface">
       <main className="flex min-h-0 flex-1 flex-col pb-16 lg:pb-0">
-        <header className="shrink-0 border-b border-slate-200/70 bg-surface px-4 py-4 dark:border-slate-800 md:px-8 md:py-5">
-          <div className="mb-4 space-y-1">
-            <p className="text-sm text-on-surface-variant">
-              Welcome back{user?.name ? `, ${user.name}` : ''}
-            </p>
-            <h1 className="font-headline text-2xl font-extrabold tracking-tight text-on-surface md:text-3xl">Dashboard</h1>
+        <header className="shrink-0 border-b border-slate-200/70 bg-surface px-4 py-3 dark:border-slate-800 md:px-8 md:py-5">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div>
+              <p className="text-xs text-on-surface-variant">
+                Welcome back{user?.name ? `, ${user.name}` : ''}
+              </p>
+              <h1 className="font-headline text-xl font-extrabold tracking-tight text-on-surface md:text-3xl">Dashboard</h1>
+            </div>
           </div>
           <label className="sr-only" htmlFor="dashboard-site-search">
             Search sites
@@ -337,7 +339,7 @@ export default function DashboardPage() {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by name, URL, category, or status…"
+                placeholder="Search sites…"
                 autoComplete="off"
                 className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-sm text-on-surface shadow-sm outline-none transition-shadow placeholder:text-on-surface-variant focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 md:text-base"
               />
@@ -352,33 +354,32 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="mt-4 flex flex-col gap-4 border-t border-slate-200/60 pt-4 dark:border-slate-800 sm:flex-row sm:flex-wrap sm:items-end sm:gap-x-6 sm:gap-y-3">
-            <div className="min-w-0 flex-1 flex flex-col gap-2">
-              <span id="filter-status-label" className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                Status
-              </span>
+          {/* ── Filters ── */}
+          <div className="mt-3 space-y-2.5 border-t border-slate-200/60 pt-3 dark:border-slate-800">
+
+            {/* Row 1 — Status: horizontally scrollable pill strip, never wraps */}
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-xs font-semibold text-slate-400">Status</span>
               <div
-                className="flex flex-wrap gap-2"
+                className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 role="group"
-                aria-labelledby="filter-status-label"
+                aria-label="Filter by status"
               >
-                {(
-                  [
-                    { id: 'all', label: 'All' },
-                    { id: 'live', label: 'Live' },
-                    { id: 'draft', label: 'Draft' },
-                    { id: 'archived', label: 'Archived' },
-                  ]
-                ).map(({ id, label }) => (
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'live', label: 'Live' },
+                  { id: 'draft', label: 'Draft' },
+                  { id: 'archived', label: 'Archived' },
+                ].map(({ id, label }) => (
                   <button
                     key={id}
                     type="button"
                     aria-pressed={statusFilter === id}
                     onClick={() => setStatusFilter(id)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
+                    className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                       statusFilter === id
                         ? 'bg-primary text-on-primary shadow-sm'
-                        : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700 dark:hover:bg-slate-800'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                     }`}
                   >
                     {label}
@@ -387,36 +388,29 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-end sm:gap-3">
-              <div className="min-w-0 sm:min-w-[11rem] sm:max-w-xs">
-                <label
-                  htmlFor="dashboard-category-filter"
-                  className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant"
-                >
-                  Category
-                </label>
-                <select
-                  id="dashboard-category-filter"
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  disabled={categoryOptions.length === 0}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900"
-                >
-                  <option value="all">All categories</option>
-                  {categoryOptions.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Row 2 — Category select + Clear button on one line */}
+            <div className="flex items-center gap-2">
+              <select
+                id="dashboard-category-filter"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                disabled={categoryOptions.length === 0}
+                aria-label="Filter by category"
+                className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900"
+              >
+                <option value="all">All categories</option>
+                {categoryOptions.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
               {(filtersActive || searchQuery.trim()) && (
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="shrink-0 self-start rounded-full border border-slate-200 px-4 py-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant transition-colors hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800 sm:self-auto sm:pb-2.5"
+                  className="shrink-0 flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
                 >
-                  Clear all
+                  <span className="material-symbols-outlined text-[15px]">close</span>
+                  Clear
                 </button>
               )}
             </div>
@@ -431,11 +425,12 @@ export default function DashboardPage() {
 
         <section id="recent-sites" className="flex min-h-0 flex-1 flex-col scroll-mt-24">
           <div className="flex min-h-0 flex-1 flex-col border-slate-200/60 bg-surface dark:border-slate-800/60">
-            <div className="flex shrink-0 flex-col gap-4 border-b border-slate-200/60 px-4 py-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between md:px-8">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 className="font-headline text-lg font-bold text-on-surface">Your sites</h2>
+            {/* ── "Your sites" toolbar — always a single row ── */}
+            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200/60 px-4 py-3 dark:border-slate-800 md:px-8">
+              <div className="flex min-w-0 items-baseline gap-2">
+                <h2 className="font-headline text-base font-bold text-on-surface md:text-lg">Your sites</h2>
                 {!loading && sites.length > 0 && (
-                  <span className="text-sm text-on-surface-variant">
+                  <span className="text-xs text-on-surface-variant">
                     {filteredSites.length === sites.length
                       ? `${sites.length} total`
                       : `${filteredSites.length} of ${sites.length}`}
@@ -447,45 +442,26 @@ export default function DashboardPage() {
                 role="group"
                 aria-label="Sites layout"
               >
-                <button
-                  type="button"
-                  onClick={() => setRecentSitesView('card')}
-                  aria-pressed={recentSitesView === 'card'}
-                  title="Card view"
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                    recentSitesView === 'card'
-                      ? 'bg-primary text-on-primary shadow-sm'
-                      : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[20px]">grid_view</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRecentSitesView('list')}
-                  aria-pressed={recentSitesView === 'list'}
-                  title="List view"
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                    recentSitesView === 'list'
-                      ? 'bg-primary text-on-primary shadow-sm'
-                      : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[20px]">view_list</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRecentSitesView('table')}
-                  aria-pressed={recentSitesView === 'table'}
-                  title="Table view"
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                    recentSitesView === 'table'
-                      ? 'bg-primary text-on-primary shadow-sm'
-                      : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[20px]">table_rows</span>
-                </button>
+                {[
+                  { id: 'card', icon: 'grid_view', title: 'Card view' },
+                  { id: 'list', icon: 'view_list', title: 'List view' },
+                  { id: 'table', icon: 'table_rows', title: 'Table view' },
+                ].map(({ id, icon, title }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setRecentSitesView(id)}
+                    aria-pressed={recentSitesView === id}
+                    title={title}
+                    className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors md:h-9 md:w-9 ${
+                      recentSitesView === id
+                        ? 'bg-primary text-on-primary shadow-sm'
+                        : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">{icon}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
