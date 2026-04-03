@@ -1470,7 +1470,7 @@ export default function SiteEditPage() {
                       No publishing credits left
                     </p>
                     <p className="mt-1 text-xs leading-relaxed text-amber-800 dark:text-amber-300">
-                      You've used your free website credit. Purchase more credits to publish this site live.
+                      You need at least one website credit to publish. Purchase a credit starting from $5 to go live.
                     </p>
                     <Link
                       to="/purchase-tokens"

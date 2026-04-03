@@ -625,7 +625,7 @@ export default function LandingPage() {
                 <div className="mb-1 text-5xl font-extrabold">$5</div>
                 <div className="mb-8 text-sm text-on-primary/70">per website · one-time payment</div>
                 <p className="mb-8 text-sm leading-relaxed text-on-primary/80">
-                  Used your free credit? Top up with a single website for $5 — pay once and it's live instantly, fully indexed and ready to bring in customers.
+                  Publish your first site for just $5 — pay once and it's live instantly, fully indexed and ready to bring in customers.
                 </p>
                 <ul className="mb-12 flex-1 space-y-3">
                   {[
