@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-const STORAGE_KEY = 'p2p-app-nav-expanded'
-const COLLAPSED_PX = 64
-const EXPANDED_PX = 256
+/** Bump v2 so default collapsed (icon rail) applies once. */
+const STORAGE_KEY = 'p2p-app-nav-expanded-v2'
+/** Default: icon-only rail; user can expand (persisted). */
+const COLLAPSED_PX = 72
+const EXPANDED_PX = 260
 
 function itemClass(active, expanded) {
   const base = expanded
@@ -27,6 +29,12 @@ export default function AppShell() {
     localStorage.setItem(STORAGE_KEY, expanded ? 'true' : 'false')
   }, [expanded])
 
+  function handleAsideClick(e) {
+    if (expanded) return
+    if (e.target.closest('a[href], button')) return
+    setExpanded(true)
+  }
+
   const railPx = expanded ? EXPANDED_PX : COLLAPSED_PX
   const isAuthOnly = !user && (pathname === '/login' || pathname === '/register')
   const dashboardActive = pathname === '/dashboard' || pathname.startsWith('/dashboard/sites/')
@@ -39,8 +47,11 @@ export default function AppShell() {
   return (
     <div className="min-h-screen bg-surface text-on-surface">
       <aside
-        className="fixed left-0 top-0 z-[100] flex h-screen flex-col border-r border-slate-200/60 bg-slate-50 transition-[width] duration-200 ease-out dark:border-slate-800/60 dark:bg-slate-950"
+        className={`fixed left-0 top-0 z-[100] flex h-screen flex-col border-r border-slate-200/60 bg-slate-50 transition-[width] duration-200 ease-out dark:border-slate-800/60 dark:bg-slate-950 ${
+          expanded ? '' : 'cursor-pointer'
+        }`}
         style={{ width: railPx }}
+        onClick={handleAsideClick}
       >
         <div className={`flex shrink-0 items-center border-b border-slate-200/60 py-3 dark:border-slate-800/60 ${expanded ? 'justify-between px-3' : 'flex-col gap-2 px-2'}`}>
           <Link
@@ -161,7 +172,7 @@ export default function AppShell() {
         className="min-h-screen transition-[padding] duration-200 ease-out"
         style={{ paddingLeft: railPx }}
       >
-        {user && !purchaseTokensActive && (
+        {user && !purchaseTokensActive && !pathname.startsWith('/dashboard/sites/') && (
           <Link
             to="/purchase-tokens"
             className="fixed right-5 top-4 z-[200] flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-xl"
