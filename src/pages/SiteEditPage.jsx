@@ -977,9 +977,7 @@ export default function SiteEditPage() {
                   <div className="rounded-xl border border-slate-200/80 bg-surface-container-low/50 p-4 dark:border-slate-700/80">
                     <span className={labelClass}>Photos & hero</span>
                     <p className="mb-3 text-xs leading-relaxed text-on-surface-variant">
-                      Up to 20 listing photos are shown when saved. Click a thumbnail for the <strong>hero</strong>{' '}
-                      (slideshow), or use the second grid for the <strong>About us</strong> image beside your story. Uploads
-                      go to Google Cloud Storage when configured.
+                      Choose one image as your <strong>hero</strong> — it fills the top of your site. Pick from your listing photos or upload your own.
                     </p>
                     <input
                       ref={heroFileInputRef}
@@ -1000,107 +998,148 @@ export default function SiteEditPage() {
                     {uploadError && (
                       <p className="mb-3 text-xs font-medium text-red-600 dark:text-red-400">{uploadError}</p>
                     )}
+
+                    {/* ── Hero image picker ── */}
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Hero image</p>
+
+                    {/* Large preview of selected hero */}
+                    <div className="mb-3 relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800" style={{ aspectRatio: '16/7' }}>
+                      {activeHeroUrl ? (
+                        <>
+                          <AuthenticatedGcsImage
+                            src={activeHeroUrl}
+                            alt="Selected hero"
+                            bucketName={gcsBucket}
+                            className="h-full w-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                          <span className="absolute bottom-2 left-3 text-[10px] font-bold uppercase tracking-widest text-white/80">
+                            Selected hero
+                          </span>
+                        </>
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center gap-2 text-on-surface-variant">
+                          <span className="material-symbols-outlined text-4xl opacity-40">image</span>
+                          <span className="text-xs opacity-60">No hero image selected</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Horizontal scroll strip of options */}
                     {photoUrls.length > 0 ? (
-                      <>
-                      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Hero</p>
-                      <div className="mb-6 max-h-[min(480px,60vh)] overflow-y-auto overflow-x-hidden rounded-lg pr-1">
-                      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                      <div className="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
                         {photoUrls.map((url) => {
                           const isHero = samePhotoUrl(url, activeHeroUrl)
                           return (
-                            <li key={url}>
-                              <button
-                                type="button"
-                                onClick={() => setThumbnailUrl(trimPhotoUrl(url))}
-                                className={`group relative aspect-square w-full overflow-hidden rounded-xl border-2 bg-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-slate-800 ${
-                                  isHero
-                                    ? 'border-primary ring-2 ring-primary/30'
-                                    : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
-                                }`}
-                                title="Use as hero photo"
-                              >
-                                <AuthenticatedGcsImage
-                                  src={url}
-                                  alt=""
-                                  bucketName={gcsBucket}
-                                  className="h-full w-full object-cover"
-                                  loading="lazy"
-                                />
-                              </button>
-                            </li>
+                            <button
+                              key={url}
+                              type="button"
+                              onClick={() => setThumbnailUrl(trimPhotoUrl(url))}
+                              title="Use as hero photo"
+                              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 ${
+                                isHero
+                                  ? 'border-primary ring-2 ring-primary/30'
+                                  : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
+                              }`}
+                            >
+                              <AuthenticatedGcsImage
+                                src={url}
+                                alt=""
+                                bucketName={gcsBucket}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                              {isHero && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
+                                  <span className="material-symbols-outlined text-[18px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>
+                                    check_circle
+                                  </span>
+                                </div>
+                              )}
+                            </button>
                           )
                         })}
-                        <li>
-                          <button
-                            type="button"
-                            disabled={!uploadConfigured || uploadBusy}
-                            onClick={() => heroFileInputRef.current?.click()}
-                            className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-primary"
-                            title={uploadBusy ? 'Uploading…' : 'Upload image and use as hero'}
-                          >
-                            <span className="material-symbols-outlined text-[28px]" aria-hidden>
-                              upload
-                            </span>
-                            <span className="px-1 text-center text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                          </button>
-                        </li>
-                      </ul>
+                        {/* Upload tile */}
+                        <button
+                          type="button"
+                          disabled={!uploadConfigured || uploadBusy}
+                          onClick={() => heroFileInputRef.current?.click()}
+                          className="flex h-16 w-16 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-primary"
+                          title={uploadBusy ? 'Uploading…' : 'Upload a new hero image'}
+                        >
+                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
+                        </button>
                       </div>
-                      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                        About us
-                      </p>
-                      <div className="mb-4 max-h-[min(480px,60vh)] overflow-y-auto overflow-x-hidden rounded-lg pr-1">
-                        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                          {photoUrls.map((url) => {
-                            const isAbout = samePhotoUrl(url, activeAboutUrl)
-                            return (
-                              <li key={`about-${url}`}>
-                                <button
-                                  type="button"
-                                  onClick={() => setAboutPhotoUrl(trimPhotoUrl(url))}
-                                  className={`group relative aspect-square w-full overflow-hidden rounded-xl border-2 bg-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 dark:bg-slate-800 ${
-                                    isAbout
-                                      ? 'border-amber-600 ring-2 ring-amber-600/30'
-                                      : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
-                                  }`}
-                                  title="Use as About us photo"
-                                >
-                                  <AuthenticatedGcsImage
-                                    src={url}
-                                    alt=""
-                                    bucketName={gcsBucket}
-                                    className="h-full w-full object-cover"
-                                    loading="lazy"
-                                  />
-                                </button>
-                              </li>
-                            )
-                          })}
-                        <li>
-                          <button
-                            type="button"
-                            disabled={!uploadConfigured || uploadBusy}
-                            onClick={() => aboutFileInputRef.current?.click()}
-                            className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50/80 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-amber-500 dark:hover:bg-amber-950/40 dark:hover:text-amber-100"
-                            title={uploadBusy ? 'Uploading…' : 'Upload image for About us'}
-                          >
-                            <span className="material-symbols-outlined text-[28px]" aria-hidden>
-                              upload
-                            </span>
-                            <span className="px-1 text-center text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                          </button>
-                        </li>
-                        </ul>
+                    ) : (
+                      <div className="mb-6 flex gap-2">
+                        <button
+                          type="button"
+                          disabled={!uploadConfigured || uploadBusy}
+                          onClick={() => heroFileInputRef.current?.click()}
+                          className="flex h-16 w-28 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
+                          title={uploadBusy ? 'Uploading…' : 'Upload hero image'}
+                        >
+                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload hero</span>
+                        </button>
                       </div>
-                      </>
+                    )}
+
+                    {/* ── About us image picker ── */}
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                      About us image
+                    </p>
+                    {photoUrls.length > 0 ? (
+                      <div className="mb-2 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                        {photoUrls.map((url) => {
+                          const isAbout = samePhotoUrl(url, activeAboutUrl)
+                          return (
+                            <button
+                              key={`about-${url}`}
+                              type="button"
+                              onClick={() => setAboutPhotoUrl(trimPhotoUrl(url))}
+                              title="Use as About us photo"
+                              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-1 ${
+                                isAbout
+                                  ? 'border-amber-600 ring-2 ring-amber-600/30'
+                                  : 'border-transparent hover:border-slate-300 dark:hover:border-slate-600'
+                              }`}
+                            >
+                              <AuthenticatedGcsImage
+                                src={url}
+                                alt=""
+                                bucketName={gcsBucket}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                              {isAbout && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-amber-600/20">
+                                  <span className="material-symbols-outlined text-[18px] text-white drop-shadow" style={{ fontVariationSettings: "'FILL' 1" }}>
+                                    check_circle
+                                  </span>
+                                </div>
+                              )}
+                            </button>
+                          )
+                        })}
+                        <button
+                          type="button"
+                          disabled={!uploadConfigured || uploadBusy}
+                          onClick={() => aboutFileInputRef.current?.click()}
+                          className="flex h-16 w-16 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
+                          title={uploadBusy ? 'Uploading…' : 'Upload About us image'}
+                        >
+                          <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
+                          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
+                        </button>
+                      </div>
                     ) : (
                       <>
                         <p className="mb-3 text-xs text-on-surface-variant">
-                          No photos were saved with this site. Use the upload tiles below or regenerate from the generator
-                          with a Maps listing that includes photos.
+                          No photos were saved with this site. Upload a hero image above, or regenerate from a Maps listing that includes photos.
                         </p>
-                        <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Hero</p>
-                        <div className="mb-6 max-h-[min(480px,60vh)] overflow-y-auto overflow-x-hidden rounded-lg pr-1">
+                        <div className="mb-2 flex gap-2">
                           <ul className="grid max-w-[200px] grid-cols-1 gap-2 sm:max-w-none sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                             <li>
                               <button
@@ -1113,31 +1152,16 @@ export default function SiteEditPage() {
                                 <span className="material-symbols-outlined text-[28px]" aria-hidden>
                                   upload
                                 </span>
-                                <span className="px-1 text-center text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                        <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                          About us
-                        </p>
-                        <div className="mb-4 max-h-[min(480px,60vh)] overflow-y-auto overflow-x-hidden rounded-lg pr-1">
-                          <ul className="grid max-w-[200px] grid-cols-1 gap-2 sm:max-w-none sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                            <li>
-                              <button
-                                type="button"
-                                disabled={!uploadConfigured || uploadBusy}
-                                onClick={() => aboutFileInputRef.current?.click()}
-                                className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50/80 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-amber-500 dark:hover:bg-amber-950/40 dark:hover:text-amber-100"
-                                title={uploadBusy ? 'Uploading…' : 'Upload image for About us'}
-                              >
-                                <span className="material-symbols-outlined text-[28px]" aria-hidden>
-                                  upload
-                                </span>
-                                <span className="px-1 text-center text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                              </button>
-                            </li>
-                          </ul>
+                          <button
+                            type="button"
+                            disabled={!uploadConfigured || uploadBusy}
+                            onClick={() => aboutFileInputRef.current?.click()}
+                            className="flex h-16 w-28 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
+                            title={uploadBusy ? 'Uploading…' : 'Upload About us image'}
+                          >
+                            <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
+                          </button>
                         </div>
                         {!uploadConfigured && (
                           <p className="mb-4 text-[11px] text-on-surface-variant">
