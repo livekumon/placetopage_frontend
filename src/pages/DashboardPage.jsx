@@ -318,6 +318,27 @@ export default function DashboardPage() {
     <div className="flex min-h-[100dvh] flex-col bg-surface text-on-surface">
       <main className="flex min-h-0 flex-1 flex-col pb-16 lg:pb-0">
         <header className="shrink-0 border-b border-slate-200/70 bg-surface px-4 py-3 dark:border-slate-800 md:px-8 md:py-5">
+          {/* Logo row — mobile only (desktop sees it in the sidebar) */}
+          <div className="mb-3 flex items-center justify-between lg:hidden">
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
+              aria-label="Go to Place to Page home"
+            >
+              <img src="/logo.png" alt="Place to Page" className="h-8 w-8 rounded-lg object-contain" />
+              <span className="font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">
+                Place to Page
+              </span>
+            </Link>
+            <a
+              href="/"
+              className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
+            >
+              <span className="material-symbols-outlined text-[15px]">home</span>
+              Website
+            </a>
+          </div>
+
           <div className="mb-3 flex items-center justify-between gap-2">
             <div>
               <p className="text-xs text-on-surface-variant">
