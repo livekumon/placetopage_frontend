@@ -466,6 +466,87 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Inside the editor ── */}
+        <section className="relative overflow-hidden bg-slate-950 py-24 md:py-32">
+          {/* subtle dot grid */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '32px 32px',
+            }}
+          />
+          <div className="relative mx-auto max-w-7xl px-6">
+            {/* heading */}
+            <div className="mb-16 text-center">
+              <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/70">
+                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  preview
+                </span>
+                Inside the dashboard
+              </span>
+              <h2 className="mt-4 font-headline text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                You&apos;re always in control.
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
+                A clean, intuitive editor lets you tweak every word, swap the theme, and see your live website update in real time — no code, no guesswork.
+              </p>
+            </div>
+
+            {/* screenshot in a browser-chrome frame */}
+            <div className="mx-auto max-w-5xl">
+              <div className="overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_32px_80px_-12px_rgba(0,0,0,0.9)]">
+                {/* fake browser bar */}
+                <div className="flex items-center gap-2 bg-slate-800 px-4 py-3">
+                  <span className="h-3 w-3 rounded-full bg-red-500/80" />
+                  <span className="h-3 w-3 rounded-full bg-amber-400/80" />
+                  <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
+                  <div className="ml-3 flex-1 rounded-md bg-slate-700 px-3 py-1 text-xs text-slate-400 font-mono truncate">
+                    app.placetopage.com/dashboard/sites/…
+                  </div>
+                </div>
+                <img
+                  src="/editor-preview.png"
+                  alt="Place to Page site editor — settings panel on the left with a live website preview on the right"
+                  className="block w-full"
+                />
+              </div>
+            </div>
+
+            {/* 3 callouts below the screenshot */}
+            <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3">
+              {[
+                {
+                  icon: 'tune',
+                  title: 'Edit anything instantly',
+                  desc: 'Site name, theme, subdomain, photos, category — change it all and hit Save.',
+                },
+                {
+                  icon: 'devices',
+                  title: 'Live preview on every device',
+                  desc: 'Toggle between Desktop and iPhone views before you push any change live.',
+                },
+                {
+                  icon: 'rocket_launch',
+                  title: 'One-click publish',
+                  desc: 'When you\'re happy, hit Publish. Your site goes live globally in seconds.',
+                },
+              ].map((c) => (
+                <div key={c.title} className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-white">
+                    <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {c.icon}
+                    </span>
+                  </div>
+                  <h3 className="font-headline text-base font-bold text-white">{c.title}</h3>
+                  <p className="text-sm leading-relaxed text-slate-400">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="features" className="mx-auto mb-40 max-w-7xl scroll-mt-28 px-6">
           <div className="mb-20 text-center">
             <h2 className="mb-4 font-headline text-4xl font-extrabold">The new standard for local SEO.</h2>
