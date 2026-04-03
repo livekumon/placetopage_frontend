@@ -140,6 +140,8 @@ export default function SiteEditPage() {
   const [publishSuccessOpen, setPublishSuccessOpen] = useState(false)
   const [publishSuccessLiveUrl, setPublishSuccessLiveUrl] = useState(null)
   const [publishReviewOpen, setPublishReviewOpen] = useState(false)
+  const [publishModalError, setPublishModalError] = useState(null)
+  const [publishNoCredits, setPublishNoCredits] = useState(false)
   const [subdomainAvailability, setSubdomainAvailability] = useState(null)
   const [subdomainCheckBusy, setSubdomainCheckBusy] = useState(false)
   const [subdomainSaving, setSubdomainSaving] = useState(false)
@@ -214,12 +216,16 @@ export default function SiteEditPage() {
   const openPublishReview = useCallback(() => {
     setError(null)
     setSubdomainSaveError(null)
+    setPublishModalError(null)
+    setPublishNoCredits(false)
     setPublishReviewOpen(true)
   }, [])
 
   const closePublishReview = useCallback(() => {
     if (saving || deploying || subdomainSaving) return
     setPublishReviewOpen(false)
+    setPublishModalError(null)
+    setPublishNoCredits(false)
     setSubdomainAvailability(null)
     setSubdomainSaveError(null)
     if (isPublishStepRoute) {
@@ -583,6 +589,8 @@ export default function SiteEditPage() {
     setPublishSuccessOpen(false)
     setPublishSuccessLiveUrl(null)
     setError(null)
+    setPublishModalError(null)
+    setPublishNoCredits(false)
     setSaving(true)
     setDeploying(false)
     try {
@@ -621,7 +629,11 @@ export default function SiteEditPage() {
       }
       setPublishSuccessOpen(true)
     } catch (err) {
-      setError(err.message || 'Save or publish failed')
+      if (err.code === 'PUBLISHING_CREDITS_REQUIRED' || err.status === 402) {
+        setPublishNoCredits(true)
+      } else {
+        setPublishModalError(err.message || 'Save or publish failed')
+      }
     } finally {
       setSaving(false)
       setDeploying(false)
@@ -1606,7 +1618,43 @@ export default function SiteEditPage() {
               ) : null}
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-end gap-3">
+            {/* ── No credits error ── */}
+            {publishNoCredits && (
+              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-700/50 dark:bg-amber-950/40">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined mt-0.5 shrink-0 text-[22px] text-amber-600 dark:text-amber-400" aria-hidden>
+                    toll
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-amber-900 dark:text-amber-200">
+                      No publishing credits left
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-amber-800 dark:text-amber-300">
+                      You've used your free website credit. Purchase more credits to publish this site live.
+                    </p>
+                    <Link
+                      to="/purchase-tokens"
+                      onClick={closePublishReview}
+                      className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-600 px-5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400"
+                    >
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                        language
+                      </span>
+                      Buy website credits
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Generic modal error ── */}
+            {publishModalError && !publishNoCredits && (
+              <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-800/50 dark:bg-red-950/40 dark:text-red-300" role="alert">
+                {publishModalError}
+              </div>
+            )}
+
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
               <button
                 type="button"
                 onClick={closePublishReview}
@@ -1615,14 +1663,16 @@ export default function SiteEditPage() {
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={() => void confirmPublishFromReview()}
-                disabled={publishAddressBlocked || saving || deploying}
-                className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary shadow-md transition-colors hover:bg-primary-container disabled:opacity-50"
-              >
-                {saving && !deploying ? 'Saving…' : deploying ? 'Publishing…' : 'Publish site'}
-              </button>
+              {!publishNoCredits && (
+                <button
+                  type="button"
+                  onClick={() => void confirmPublishFromReview()}
+                  disabled={publishAddressBlocked || saving || deploying}
+                  className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary shadow-md transition-colors hover:bg-primary-container disabled:opacity-50"
+                >
+                  {saving && !deploying ? 'Saving…' : deploying ? 'Publishing…' : 'Publish site'}
+                </button>
+              )}
             </div>
           </div>
         </div>
