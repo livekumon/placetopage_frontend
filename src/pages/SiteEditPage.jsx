@@ -1321,7 +1321,7 @@ export default function SiteEditPage() {
       </main>
 
       {publishReviewOpen && (
-        <div className="fixed inset-0 z-[210] flex items-center justify-center p-4" role="presentation">
+        <div className="fixed inset-0 z-[210] flex items-end justify-center sm:items-center sm:p-4" role="presentation">
           <button
             type="button"
             className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm dark:bg-black/60"
@@ -1329,190 +1329,186 @@ export default function SiteEditPage() {
             disabled={saving || deploying || subdomainSaving}
             onClick={closePublishReview}
           />
+
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="publish-review-title"
-            className="relative z-10 max-h-[min(90vh,720px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xl dark:border-slate-700 dark:bg-slate-900"
+            className="relative z-10 w-full max-w-md overflow-y-auto rounded-t-3xl border border-slate-200/80 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900 sm:rounded-2xl"
           >
-            <h2
-              id="publish-review-title"
-              className="font-headline text-xl font-bold tracking-tight text-slate-900 dark:text-white"
-            >
-              Review your public address
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              <span className="font-semibold text-slate-900 dark:text-slate-100">{PUBLIC_SITE_DOMAIN}</span> is the main
-              domain for every site. You choose only the{' '}
-              <span className="font-medium text-slate-800 dark:text-slate-200">subdomain</span> — the part before the dot
-              — so your visitors get a short, memorable link.
-            </p>
+            {/* ── Drag handle (mobile) ── */}
+            <div className="flex justify-center pb-1 pt-3 sm:hidden">
+              <div className="h-1 w-10 rounded-full bg-slate-200 dark:bg-slate-700" />
+            </div>
 
-            <div className="mt-5 rounded-xl border border-slate-200/90 bg-slate-100/90 p-3 dark:border-slate-600 dark:bg-slate-800/60">
-              <p className="mb-2 text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                How your link looks
-              </p>
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white px-3 py-3 shadow-sm dark:border-slate-600 dark:bg-slate-900">
-                <span className="material-symbols-outlined shrink-0 text-[22px] text-emerald-600 dark:text-emerald-400" aria-hidden>
+            <div className="px-5 pb-6 pt-4 sm:px-6 sm:pt-5">
+
+              {/* Header */}
+              <div className="mb-5 flex items-start justify-between gap-3">
+                <div>
+                  <h2
+                    id="publish-review-title"
+                    className="font-headline text-lg font-bold tracking-tight text-slate-900 dark:text-white"
+                  >
+                    Publish your site
+                  </h2>
+                  <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                    Confirm your public URL, then hit publish.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={closePublishReview}
+                  disabled={saving || deploying || subdomainSaving}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-40 dark:hover:bg-slate-800"
+                  aria-label="Close"
+                >
+                  <span className="material-symbols-outlined text-[20px]">close</span>
+                </button>
+              </div>
+
+              {/* ── URL display ── */}
+              <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                <span className="material-symbols-outlined shrink-0 text-[18px] text-emerald-500" aria-hidden>
                   lock
                 </span>
-                <div className="min-w-0 flex-1 text-center text-sm sm:text-base">
+                <p className="min-w-0 flex-1 truncate font-mono text-sm text-slate-800 dark:text-slate-100">
                   {customPublicSiteUrl ? (
-                    <span className="break-all font-mono leading-snug">
-                      <span className="text-slate-500 dark:text-slate-400">https://</span>
+                    <>
+                      <span className="text-slate-400">https://</span>
                       <span className="font-semibold text-primary">{trimmedPublishSubdomain}</span>
-                      <span className="text-slate-500 dark:text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
-                    </span>
+                      <span className="text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                    </>
                   ) : (
-                    <span className="text-sm text-on-surface-variant">
-                      Enter a subdomain below for{' '}
-                      <span className="font-mono text-on-surface">https://….{PUBLIC_SITE_DOMAIN}</span>, or leave it
-                      empty to use only the default Vercel URL.
+                    <span className="text-slate-400 italic">No subdomain set yet</span>
+                  )}
+                </p>
+                {customPublicSiteUrl && (
+                  <button
+                    type="button"
+                    onClick={() => void copyPublishUrl()}
+                    title="Copy URL"
+                    className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">
+                      {publishUrlCopied ? 'check' : 'content_copy'}
                     </span>
+                    {publishUrlCopied ? 'Copied' : 'Copy'}
+                  </button>
+                )}
+              </div>
+
+              {/* ── Subdomain input ── */}
+              <div className="mt-4">
+                <label className="mb-1.5 block text-xs font-semibold text-slate-500 dark:text-slate-400" htmlFor="publish-review-subdomain">
+                  Subdomain
+                </label>
+                <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
+                  <input
+                    id="publish-review-subdomain"
+                    className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                    value={publishSubdomain}
+                    onChange={(e) =>
+                      setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+                    }
+                    placeholder={site?.placeData?.subdomainSuggestionPhrase?.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'your-business'}
+                    autoComplete="off"
+                    spellCheck="false"
+                    disabled={saving || deploying || subdomainSaving}
+                  />
+                  <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                </div>
+
+                {/* Status line — one compact line below the input */}
+                <div className="mt-2 flex items-center gap-1.5 text-xs">
+                  {subdomainSaving && (
+                    <><span className="material-symbols-outlined animate-spin text-[14px] text-slate-400">progress_activity</span>
+                    <span className="text-slate-400">Saving…</span></>
+                  )}
+                  {!subdomainSaving && subdomainCheckBusy && trimmedPublishSubdomain && (
+                    <><span className="material-symbols-outlined animate-spin text-[14px] text-slate-400">progress_activity</span>
+                    <span className="text-slate-400">Checking…</span></>
+                  )}
+                  {!subdomainSaving && !subdomainCheckBusy && trimmedPublishSubdomain && !subdomainFormatOk && (
+                    <><span className="material-symbols-outlined text-[14px] text-red-500" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                    <span className="text-red-600 dark:text-red-400">Invalid format — use letters, numbers and hyphens only.</span></>
+                  )}
+                  {!subdomainSaving && !subdomainCheckBusy && subdomainSaveError && (
+                    <><span className="material-symbols-outlined text-[14px] text-red-500" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                    <span className="text-red-600 dark:text-red-400">{subdomainSaveError}</span></>
+                  )}
+                  {!subdomainSaving && !subdomainCheckBusy && trimmedPublishSubdomain && subdomainFormatOk && subdomainAvailability && (
+                    subdomainAvailability.available ? (
+                      <><span className="material-symbols-outlined text-[14px] text-emerald-500" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                      <span className="text-emerald-700 dark:text-emerald-400">
+                        {subdomainInSyncWithDb ? 'Available and saved' : 'Available — saving…'}
+                      </span></>
+                    ) : (
+                      <><span className="material-symbols-outlined text-[14px] text-red-500" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                      <span className="text-red-600 dark:text-red-400">{subdomainAvailability.reason || 'Already taken — choose another.'}</span></>
+                    )
+                  )}
+                  {!trimmedPublishSubdomain && !subdomainSaving && (
+                    <span className="text-slate-400">Letters, numbers and hyphens only.</span>
                   )}
                 </div>
               </div>
-            </div>
 
-            {customPublicSiteUrl ? (
-              <div className="mt-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <code className="block max-h-20 overflow-auto rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-800 dark:bg-slate-800 dark:text-slate-200">
-                  {customPublicSiteUrl}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => void copyPublishUrl()}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-bold uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary dark:border-slate-600"
-                >
-                  <span className="material-symbols-outlined text-[18px]" aria-hidden>
-                    content_copy
-                  </span>
-                  {publishUrlCopied ? 'Copied' : 'Copy URL'}
-                </button>
-              </div>
-            ) : null}
-
-            <div className="mt-6">
-              <label className={labelClass} htmlFor="publish-review-subdomain">
-                Edit subdomain
-              </label>
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <input
-                  id="publish-review-subdomain"
-                  className={`${inputClass} min-w-0 flex-1 font-mono text-sm`}
-                  value={publishSubdomain}
-                  onChange={(e) =>
-                    setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
-                  }
-                  placeholder="e.g. biryani-blues"
-                  autoComplete="off"
-                  spellCheck="false"
-                  disabled={saving || deploying || subdomainSaving}
-                />
-                <span className="shrink-0 text-sm font-medium text-on-surface-variant">.{PUBLIC_SITE_DOMAIN}</span>
-              </div>
-              {site?.placeData?.subdomainSuggestionPhrase ? (
-                <p className="mt-2 text-xs text-on-surface-variant">
-                  Suggested wording from AI:{' '}
-                  <span className="font-medium text-on-surface">{site.placeData.subdomainSuggestionPhrase}</span>
-                </p>
-              ) : null}
-              <p className="mt-2 text-[11px] text-on-surface-variant">
-                Lowercase letters, numbers, and hyphens only. Leave empty if you do not want a{' '}
-                {PUBLIC_SITE_DOMAIN} address. We check the database when you change this; if the name is free, it is
-                saved automatically.
-              </p>
-              {subdomainSaving ? (
-                <p className="mt-2 text-xs font-medium text-on-surface-variant" aria-live="polite">
-                  Saving subdomain to your account…
-                </p>
-              ) : null}
-              {subdomainSaveError ? (
-                <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400" role="alert">
-                  {subdomainSaveError}
-                </p>
-              ) : null}
-              {trimmedPublishSubdomain && !subdomainFormatOk ? (
-                <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">
-                  That subdomain format is not valid (check hyphens at the start or end, or length).
-                </p>
-              ) : null}
-              {trimmedPublishSubdomain && subdomainCheckBusy ? (
-                <p className="mt-2 text-xs text-on-surface-variant">Checking availability…</p>
-              ) : null}
-              {trimmedPublishSubdomain && !subdomainCheckBusy && subdomainAvailability ? (
-                <p
-                  className={`mt-2 text-xs font-medium ${
-                    subdomainAvailability.available
-                      ? 'text-emerald-700 dark:text-emerald-400'
-                      : 'text-red-600 dark:text-red-400'
-                  }`}
-                >
-                  {subdomainAvailability.available
-                    ? subdomainInSyncWithDb
-                      ? `Available and saved — ${subdomainAvailability.fullDomain || `${trimmedPublishSubdomain}.${PUBLIC_SITE_DOMAIN}`}`
-                      : `Available — saving ${subdomainAvailability.fullDomain || `${trimmedPublishSubdomain}.${PUBLIC_SITE_DOMAIN}`} to your account…`
-                    : subdomainAvailability.reason ||
-                      'This subdomain is already taken. Please choose a different one.'}
-                </p>
-              ) : null}
-            </div>
-
-            {/* ── No credits error ── */}
-            {publishNoCredits && (
-              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-700/50 dark:bg-amber-950/40">
-                <div className="flex items-start gap-3">
-                  <span className="material-symbols-outlined mt-0.5 shrink-0 text-[22px] text-amber-600 dark:text-amber-400" aria-hidden>
-                    toll
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm text-amber-900 dark:text-amber-200">
-                      No publishing credits left
-                    </p>
-                    <p className="mt-1 text-xs leading-relaxed text-amber-800 dark:text-amber-300">
-                      You need at least one website credit to publish. Purchase a credit starting from $5 to go live.
-                    </p>
+              {/* ── No credits ── */}
+              {publishNoCredits && (
+                <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-700/50 dark:bg-amber-950/40">
+                  <span className="material-symbols-outlined mt-0.5 shrink-0 text-[20px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>toll</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">No publishing credits</p>
+                    <p className="mt-0.5 text-xs text-amber-700 dark:text-amber-300">Purchase at least $5 of credits to go live.</p>
                     <Link
                       to="/purchase-tokens"
                       onClick={closePublishReview}
-                      className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-600 px-5 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400"
+                      className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-amber-700"
                     >
-                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        language
-                      </span>
-                      Buy website credits
+                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
+                      Buy credits
                     </Link>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* ── Generic modal error ── */}
-            {publishModalError && !publishNoCredits && (
-              <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-800/50 dark:bg-red-950/40 dark:text-red-300" role="alert">
-                {publishModalError}
-              </div>
-            )}
+              {/* ── Generic error ── */}
+              {publishModalError && !publishNoCredits && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-950/40 dark:text-red-300" role="alert">
+                  <span className="material-symbols-outlined shrink-0 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                  {publishModalError}
+                </div>
+              )}
 
-            <div className="mt-6 flex flex-wrap justify-end gap-3">
-              <button
-                type="button"
-                onClick={closePublishReview}
-                disabled={saving || deploying || subdomainSaving}
-                className="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                Cancel
-              </button>
-              {!publishNoCredits && (
+              {/* ── Actions ── */}
+              <div className="mt-5 flex gap-2.5">
                 <button
                   type="button"
-                  onClick={() => void confirmPublishFromReview()}
-                  disabled={publishAddressBlocked || saving || deploying}
-                  className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary shadow-md transition-colors hover:bg-primary-container disabled:opacity-50"
+                  onClick={closePublishReview}
+                  disabled={saving || deploying || subdomainSaving}
+                  className="flex-1 rounded-full border border-slate-200 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
-                  {saving && !deploying ? 'Saving…' : deploying ? 'Publishing…' : 'Publish site'}
+                  Cancel
                 </button>
-              )}
+                {!publishNoCredits && (
+                  <button
+                    type="button"
+                    onClick={() => void confirmPublishFromReview()}
+                    disabled={publishAddressBlocked || saving || deploying}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold text-on-primary shadow-md transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+                  >
+                    {deploying ? (
+                      <><span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>Publishing…</>
+                    ) : saving ? (
+                      'Saving…'
+                    ) : (
+                      <><span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>Publish site</>
+                    )}
+                  </button>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
