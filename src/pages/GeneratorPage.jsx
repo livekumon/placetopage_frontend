@@ -3,25 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { createSite, enrichPlace, lookupPlace } from '../api/client'
 import { trimPhotoUrl } from '../utils/photoUrl'
 
-// Steps: input → lookup / enriching / generating (processing) → redirect to site settings
-const STEP_LABELS = ['Paste link', 'Processing']
-
-function stepIndex(step) {
-  if (step === 'input') return 0
-  if (step === 'lookup' || step === 'enriching' || step === 'generating') return 1
-  return 0
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-// Matches every known Google Maps URL format:
-//   maps.google.*           full URL on any country TLD
-//   www.google.com/maps     desktop Maps
-//   google.com/maps         same without www
-//   goo.gl/maps             legacy short link
-//   maps.app.goo.gl         standard share link
-//   share.google            new share.google/XXXXX format
-//   g.co                    Google's own short-domain
+// Matches every known Google Maps URL format
 const MAPS_URL_RE =
   /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl|share\.google|g\.co)/i
 
@@ -33,23 +15,57 @@ function formatTypes(types = []) {
     .map((t) => t.replace(/_/g, ' '))
 }
 
+// ── Google Maps pin SVG (matches Maps brand look) ─────────────────────────────
+function MapPin({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+    </svg>
+  )
+}
+
+// ── Animated progress row used in enriching / generating steps ────────────────
+function ProgressRow({ label, sub, state }) {
+  // state: 'done' | 'active' | 'pending'
+  return (
+    <div className={`flex items-start gap-4 transition-all duration-500 ${state === 'pending' ? 'opacity-30' : 'opacity-100'}`}>
+      <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
+        {state === 'done' && (
+          <span className="material-symbols-outlined text-[20px] text-emerald-500" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+        )}
+        {state === 'active' && (
+          <span className="flex h-2.5 w-2.5 animate-pulse rounded-full bg-primary" />
+        )}
+        {state === 'pending' && (
+          <span className="material-symbols-outlined text-[20px] text-slate-300">radio_button_unchecked</span>
+        )}
+      </div>
+      <div>
+        <p className={`text-sm font-semibold leading-tight ${state === 'active' ? 'text-primary' : state === 'done' ? 'text-slate-800' : 'text-slate-400'}`}>
+          {label}
+        </p>
+        <p className="mt-0.5 text-xs text-slate-400">{sub}</p>
+      </div>
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function GeneratorPage() {
   const navigate = useNavigate()
 
-  // Flow state
   const [step, setStep] = useState('input')
   const [mapsUrl, setMapsUrl] = useState('')
   const [urlError, setUrlError] = useState('')
   const [lookupError, setLookupError] = useState('')
   const [genError, setGenError] = useState(null)
   const [busy, setBusy] = useState(false)
-  const [enrichStage, setEnrichStage] = useState(0) // animation stage 0-3
+  const [enrichStage, setEnrichStage] = useState(0)
 
   const inputRef = useRef(null)
 
-  // ── On mount: pick up URL from sessionStorage (set by landing page) ──────────
+  // Pick up URL from sessionStorage (set by landing page)
   useEffect(() => {
     const stored = sessionStorage.getItem('pendingMapsUrl')
     if (stored) {
@@ -57,10 +73,8 @@ export default function GeneratorPage() {
       setMapsUrl(stored)
       triggerLookup(stored)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // ── Lookup ───────────────────────────────────────────────────────────────────
 
   const triggerLookup = useCallback(async (url) => {
     setLookupError('')
@@ -70,37 +84,24 @@ export default function GeneratorPage() {
     setStep('lookup')
     try {
       const result = await lookupPlace(url)
-
       setStep('enriching')
       setEnrichStage(1)
-
-      const stageTimer = setInterval(() => {
-        setEnrichStage((s) => Math.min(s + 1, 3))
-      }, 1200)
-
+      const stageTimer = setInterval(() => setEnrichStage((s) => Math.min(s + 1, 3)), 1200)
       let ai = null
       try {
         ai = await enrichPlace(result)
-      } catch {
-        /* AI optional */
-      } finally {
+      } catch { /* AI optional */ } finally {
         clearInterval(stageTimer)
         setEnrichStage(3)
       }
-
       const prefill = {}
-      for (const f of result.missingFields ?? []) {
-        prefill[f.id] = ai?.[f.id] ?? ''
-      }
+      for (const f of result.missingFields ?? []) prefill[f.id] = ai?.[f.id] ?? ''
       const defaultHero = trimPhotoUrl(result.photoUrl || result.photos?.[0] || '')
       const listing = [...new Set([defaultHero, ...(result.photos || []).filter(Boolean)].filter(Boolean))]
-
       setStep('generating')
-      setGenError(null)
       try {
         const heroUrl = trimPhotoUrl(defaultHero || '')
-        const aboutUrl =
-          trimPhotoUrl(listing[1] || '') || trimPhotoUrl(listing[0] || '') || heroUrl
+        const aboutUrl = trimPhotoUrl(listing[1] || '') || trimPhotoUrl(listing[0] || '') || heroUrl
         const site = await createSite({
           name: result.name,
           mapsUrl: result.mapsUrl,
@@ -150,9 +151,7 @@ export default function GeneratorPage() {
     if (!val) { setUrlError('Please paste a Google Maps link.'); return }
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
     if (!MAPS_URL_RE.test(withProtocol)) {
-      setUrlError(
-        "That doesn't look like a Google Maps link. Accepted formats: maps.app.goo.gl, share.google, goo.gl/maps, or any google.com/maps URL."
-      )
+      setUrlError("That doesn't look like a Google Maps link. Try maps.app.goo.gl, share.google, or any google.com/maps URL.")
       return
     }
     setMapsUrl(withProtocol)
@@ -161,228 +160,277 @@ export default function GeneratorPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-  const currentStepIdx = stepIndex(step)
-
   return (
-    <div className="min-h-screen bg-background font-body text-on-surface antialiased">
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-6 sm:px-6 md:pt-10">
-        {/* Step indicator */}
-        <div className="mb-8 flex items-center justify-between px-2 sm:px-4 md:mb-16 md:px-20">
-          {STEP_LABELS.map((label, i, arr) => (
-            <div key={label} className="flex flex-1 items-center">
-              <div className={`flex flex-col items-center gap-2 ${i > currentStepIdx ? 'opacity-40' : ''}`}>
-                <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
-                    i < currentStepIdx
-                      ? 'bg-green-500 text-white'
-                      : i === currentStepIdx
-                        ? 'bg-primary text-on-primary'
-                        : 'bg-surface-container-high text-on-surface-variant'
-                  }`}
-                >
-                  {i < currentStepIdx ? (
-                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-                  ) : (
-                    i + 1
-                  )}
-                </span>
-                <span className={`text-xs uppercase tracking-widest ${i === currentStepIdx ? 'font-bold' : ''}`}>{label}</span>
-              </div>
-              {i < arr.length - 1 && (
-                <div className={`mx-2 mb-6 h-[2px] min-w-[1rem] flex-1 transition-colors md:mx-4 ${i < currentStepIdx ? 'bg-green-400' : 'bg-surface-container-high'}`} />
-              )}
+    <div className="min-h-[calc(100dvh-64px)] bg-white font-body text-slate-900 antialiased">
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          INPUT STEP
+      ══════════════════════════════════════════════════════════════════════ */}
+      {step === 'input' && (
+        <div className="relative flex min-h-[calc(100dvh-64px)] flex-col items-center justify-center px-4 py-14">
+
+          {/* Ambient background blobs */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute left-1/2 top-0 h-[480px] w-[680px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-primary/6 blur-3xl" />
+            <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-blue-100/50 blur-3xl" />
+            <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-violet-100/40 blur-3xl" />
+          </div>
+
+          <div className="relative w-full max-w-2xl">
+
+            {/* Badge */}
+            <div className="mb-6 flex justify-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
+                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                AI-powered website builder
+              </span>
             </div>
-          ))}
-        </div>
 
-        {/* ── STEP: input ─────────────────────────────────────────────────── */}
-        {step === 'input' && (
-          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-5 shadow-md sm:p-8 md:p-12">
-            <div className="mx-auto max-w-xl">
-              <div className="mb-8 text-center md:mb-10">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg sm:h-16 sm:w-16">
-                  <span className="material-symbols-outlined text-2xl sm:text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
-                </div>
-                <h1 className="mb-2 font-headline text-2xl font-extrabold tracking-tight sm:text-3xl">Paste your Google Maps link</h1>
-                <p className="text-on-surface-variant">
-                  We will fetch the business, generate your page, then open <strong>Site settings</strong> where you can
-                  customize everything and publish when you are ready.
-                </p>
+            {/* Headline */}
+            <h1 className="text-center font-headline text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+              Turn any{' '}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-primary">Google Maps</span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-1 z-0 h-3 rounded-full bg-primary/12"
+                />
+              </span>{' '}
+              listing<br className="hidden sm:block" /> into a live website
+            </h1>
+            <p className="mx-auto mt-4 max-w-lg text-center text-base text-slate-500 sm:text-lg">
+              Paste your business link below. We fetch your details, our AI writes the copy, and your website is ready to publish — in under a minute.
+            </p>
+
+            {/* Error banners */}
+            {(lookupError || genError) && (
+              <div className="mt-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+                <span className="material-symbols-outlined mt-0.5 shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                <span>{lookupError || genError}</span>
               </div>
+            )}
 
-              {lookupError && (
-                <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  <span className="material-symbols-outlined mt-0.5 flex-shrink-0 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
-                  {lookupError}
-                </div>
-              )}
-              {genError && (
-                <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  <span className="material-symbols-outlined mt-0.5 flex-shrink-0 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
-                  {genError}
-                </div>
-              )}
-
-              <form onSubmit={handleUrlSubmit} className="space-y-4">
-                <div>
-                  <div className={`flex items-center rounded-xl border-2 bg-white p-1.5 shadow-sm transition-all focus-within:border-primary ${urlError ? 'border-red-400' : 'border-surface-container-high'}`}>
-                    <div className="flex flex-1 items-center px-3">
-                      <span className={`material-symbols-outlined mr-2 flex-shrink-0 ${urlError ? 'text-red-400' : 'text-outline'}`}>
-                        {urlError ? 'error' : 'link'}
-                      </span>
-                      <input
-                        ref={inputRef}
-                        autoFocus
-                        className="min-w-0 flex-1 border-none bg-transparent py-3 text-sm font-medium text-on-surface placeholder:text-outline-variant focus:ring-0"
-                        placeholder="https://maps.app.goo.gl/… or share.google/… or any Maps link"
-                        type="text"
-                        value={mapsUrl}
-                        onChange={(e) => { setMapsUrl(e.target.value); setUrlError('') }}
-                      />
-                      {mapsUrl && (
-                        <button type="button" onClick={() => { setMapsUrl(''); setUrlError(''); inputRef.current?.focus() }}
-                          className="ml-2 flex-shrink-0 text-outline-variant hover:text-on-surface">
-                          <span className="material-symbols-outlined text-lg">close</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  {urlError && <p className="mt-2 text-xs font-medium text-red-500">{urlError}</p>}
+            {/* ── URL input card ── */}
+            <form onSubmit={handleUrlSubmit} className="mt-8">
+              <div
+                className={`flex flex-col gap-2 rounded-2xl border-2 bg-white p-2 shadow-xl shadow-slate-200/70 transition-all duration-200 focus-within:border-primary focus-within:shadow-primary/10 sm:flex-row sm:items-center ${urlError ? 'border-red-400' : 'border-slate-200'}`}
+              >
+                {/* Input row */}
+                <div className="flex flex-1 items-center gap-2.5 px-3 py-1">
+                  <MapPin className="h-5 w-5 shrink-0 text-slate-400" />
+                  <input
+                    ref={inputRef}
+                    autoFocus
+                    className="min-w-0 flex-1 border-none bg-transparent py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-base"
+                    placeholder="Paste your Google Maps link here…"
+                    type="text"
+                    value={mapsUrl}
+                    onChange={(e) => { setMapsUrl(e.target.value); setUrlError('') }}
+                  />
+                  {mapsUrl && (
+                    <button
+                      type="button"
+                      onClick={() => { setMapsUrl(''); setUrlError(''); inputRef.current?.focus() }}
+                      className="shrink-0 rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                      aria-label="Clear"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                  )}
                 </div>
 
+                {/* Generate button — full-width on mobile, inline on sm+ */}
                 <button
                   type="submit"
                   disabled={busy}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 font-headline text-lg font-bold text-on-primary transition-all hover:bg-primary-container active:scale-95 disabled:opacity-60"
+                  className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-headline text-base font-bold text-on-primary shadow-md shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.97] disabled:opacity-60 sm:py-3"
                 >
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                  Generate
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                  Generate website
                 </button>
-              </form>
-
-              <div className="mt-8 rounded-xl bg-surface-container-low px-5 py-4">
-                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-on-surface-variant">All accepted link formats</p>
-                <ul className="space-y-1 text-xs text-on-surface-variant">
-                  <li className="break-all font-mono">https://www.google.com/maps/place/...</li>
-                  <li className="break-all font-mono">https://maps.google.com/maps?...</li>
-                  <li className="break-all font-mono">https://goo.gl/maps/XXXX</li>
-                  <li className="break-all font-mono">https://maps.app.goo.gl/XXXX</li>
-                  <li className="break-all font-mono">https://share.google/XXXX</li>
-                  <li className="break-all font-mono">https://g.co/maps/XXXX</li>
-                </ul>
               </div>
+
+              {urlError && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-red-600">
+                  <span className="material-symbols-outlined text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+                  {urlError}
+                </p>
+              )}
+            </form>
+
+            {/* Accepted format chips */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              <span className="text-[11px] font-medium text-slate-400">Works with:</span>
+              {['maps.app.goo.gl', 'share.google', 'goo.gl/maps', 'google.com/maps', 'g.co'].map((fmt) => (
+                <span
+                  key={fmt}
+                  className="rounded-full bg-slate-100 px-2.5 py-0.5 font-mono text-[11px] text-slate-500"
+                >
+                  {fmt}
+                </span>
+              ))}
             </div>
-          </section>
-        )}
 
-        {/* ── STEP: lookup (loading) ───────────────────────────────────────── */}
-        {step === 'lookup' && (
-          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-8 md:p-12">
-            <div className="mx-auto max-w-md text-center">
-              <div className="relative mx-auto mb-8 h-20 w-20">
-                <div className="absolute inset-0 rounded-full border-4 border-surface-container-high" />
-                <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
-                </div>
-              </div>
-              <h2 className="mb-3 font-headline text-2xl font-extrabold tracking-tight">Fetching place details…</h2>
-              <p className="text-sm text-on-surface-variant">
-                We're calling the Google Maps Places API to pull reviews, photos, hours, and more.
-              </p>
-            </div>
-          </section>
-        )}
-
-        {/* ── STEP: enriching (AI content generation) ─────────────────────── */}
-        {step === 'enriching' && (
-          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-8 md:p-12">
-            <div className="mx-auto max-w-md text-center">
-              {/* Animated icon */}
-              <div className="relative mx-auto mb-8 h-20 w-20">
-                <div className="absolute inset-0 animate-ping rounded-full bg-primary/10" />
-                <div className="absolute inset-0 rounded-full border-4 border-surface-container-high" />
-                <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                </div>
-              </div>
-              <h2 className="mb-2 font-headline text-2xl font-extrabold tracking-tight">AI is reading your business…</h2>
-              <p className="mb-10 text-sm text-on-surface-variant">Crafting descriptions, taglines and page copy tailored to your listing.</p>
-
-              <div className="space-y-5 text-left">
-                {[
-                  { label: 'Business data fetched from Google Maps', sub: 'Name, address, rating, photos, reviews collected' },
-                  { label: 'Analysing reviews and business category', sub: 'Understanding tone, strengths and customer sentiment' },
-                  { label: 'Generating description and tagline', sub: 'Crafting copy specific to your business' },
-                  { label: 'Preparing your site draft', sub: 'Next you will land in Site settings to review and publish' },
-                ].map((s, i) => {
-                  const done = enrichStage > i
-                  const active = enrichStage === i
-                  return (
-                    <div key={s.label} className={`flex items-start gap-4 transition-opacity duration-500 ${!done && !active ? 'opacity-30' : ''}`}>
-                      <div className="mt-0.5 flex-shrink-0">
-                        {done ? (
-                          <span className="material-symbols-outlined text-lg text-green-500" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                        ) : active ? (
-                          <div className="flex h-5 w-5 items-center justify-center">
-                            <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-                          </div>
-                        ) : (
-                          <span className="material-symbols-outlined text-lg text-on-surface-variant/40">radio_button_unchecked</span>
-                        )}
-                      </div>
-                      <div>
-                        <p className={`text-sm font-semibold ${active ? 'text-primary' : done ? 'text-on-surface' : 'text-on-surface-variant'}`}>{s.label}</p>
-                        <p className="text-xs text-on-surface-variant">{s.sub}</p>
-                      </div>
+            {/* ── How it works — 3 cards ── */}
+            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {[
+                {
+                  icon: 'map',
+                  num: '01',
+                  bg: 'bg-blue-50',
+                  iconColor: 'text-blue-600',
+                  title: 'Fetch your data',
+                  desc: 'Name, address, photos, reviews and opening hours — pulled straight from Google Maps.',
+                },
+                {
+                  icon: 'auto_awesome',
+                  num: '02',
+                  bg: 'bg-violet-50',
+                  iconColor: 'text-violet-600',
+                  title: 'AI writes the copy',
+                  desc: 'Claude AI crafts your headline, tagline, description, and page content in seconds.',
+                },
+                {
+                  icon: 'rocket_launch',
+                  num: '03',
+                  bg: 'bg-emerald-50',
+                  iconColor: 'text-emerald-600',
+                  title: 'Publish live',
+                  desc: 'Tweak anything in the editor, then publish your site live on your own subdomain.',
+                },
+              ].map(({ icon, num, bg, iconColor, title, desc }) => (
+                <div
+                  key={num}
+                  className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${bg}`}>
+                      <span
+                        className={`material-symbols-outlined text-xl ${iconColor}`}
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        {icon}
+                      </span>
                     </div>
-                  )
-                })}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── STEP: generating ────────────────────────────────────────────── */}
-        {step === 'generating' && (
-          <section className="rounded-xl border border-surface-container-high bg-surface-container-lowest p-8 md:p-12">
-            <div className="mx-auto max-w-md text-center">
-              <div className="relative mx-auto mb-8 h-20 w-20">
-                <div className="absolute inset-0 rounded-full border-4 border-surface-container-high" />
-                <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>magic_button</span>
-                </div>
-              </div>
-              <h2 className="mb-8 font-headline text-2xl font-extrabold tracking-tight">Creating your site…</h2>
-              <div className="mb-10 space-y-6 text-left">
-                {[
-                  { icon: 'check_circle', color: 'text-green-500', label: 'Place data fetched', sub: 'Google Maps Places API sync complete', done: true },
-                  { icon: 'check_circle', color: 'text-green-500', label: 'AI content ready', sub: 'Descriptions and copy merged where available', done: true },
-                  { icon: 'magic_button', color: 'text-primary', label: 'Saving your draft', sub: 'Generating HTML and storing your site', done: false, active: true },
-                  { icon: 'radio_button_unchecked', color: 'text-on-surface-variant', label: 'Opening Site settings', sub: 'You can customize and go live from there', done: false, active: false },
-                ].map((s) => (
-                  <div key={s.label} className={`flex items-center gap-4 ${!s.done && !s.active ? 'opacity-30' : ''}`}>
-                    {s.active ? (
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
-                        <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-                      </div>
-                    ) : (
-                      <span className={`material-symbols-outlined flex-shrink-0 ${s.color}`} style={{ fontVariationSettings: s.done ? "'FILL' 1" : "'FILL' 0" }}>{s.icon}</span>
-                    )}
-                    <div>
-                      <span className={`block text-sm font-bold ${s.active ? 'text-primary' : ''}`}>{s.label}</span>
-                      <span className="block text-xs text-on-surface-variant">{s.sub}</span>
-                    </div>
+                    <span className="font-mono text-xs font-bold text-slate-300">{num}</span>
                   </div>
-                ))}
-              </div>
+                  <p className="mb-1 font-semibold text-slate-800">{title}</p>
+                  <p className="text-xs leading-relaxed text-slate-500">{desc}</p>
+                </div>
+              ))}
             </div>
-          </section>
-        )}
+          </div>
+        </div>
+      )}
 
-      </main>
+      {/* ══════════════════════════════════════════════════════════════════════
+          PROCESSING STEPS (lookup / enriching / generating)
+      ══════════════════════════════════════════════════════════════════════ */}
+      {step !== 'input' && (
+        <div className="flex min-h-[calc(100dvh-64px)] flex-col items-center justify-center px-4 py-16">
+          <div className="w-full max-w-sm">
+
+            {/* ── Lookup ── */}
+            {step === 'lookup' && (
+              <>
+                <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
+                  <div className="absolute inset-0 animate-ping rounded-full bg-primary/15" />
+                  <div className="absolute inset-0 rounded-full bg-primary/8" />
+                  <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+                  <MapPin className="relative h-9 w-9 text-primary" />
+                </div>
+                <h2 className="text-center font-headline text-2xl font-extrabold tracking-tight text-slate-900">
+                  Fetching place details…
+                </h2>
+                <p className="mt-3 text-center text-sm leading-relaxed text-slate-500">
+                  Calling the Google Maps Places API to pull your reviews, photos, hours, and more.
+                </p>
+                <div className="mt-8 space-y-3.5">
+                  <ProgressRow label="Resolving your Maps link" sub="Following redirects to the canonical URL" state="active" />
+                  <ProgressRow label="Fetching business profile" sub="Reviews, photos, address, opening hours" state="pending" />
+                  <ProgressRow label="Running AI enrichment" sub="Writing copy tailored to your business" state="pending" />
+                  <ProgressRow label="Building your site draft" sub="Generating HTML and saving to your account" state="pending" />
+                </div>
+              </>
+            )}
+
+            {/* ── Enriching ── */}
+            {step === 'enriching' && (
+              <>
+                <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
+                  <div className="absolute inset-0 animate-ping rounded-full bg-violet-500/15" />
+                  <div className="absolute inset-0 rounded-full bg-violet-500/8" />
+                  <div className="absolute inset-0 animate-spin rounded-full border-4 border-violet-200 border-t-violet-500" />
+                  <span
+                    className="relative material-symbols-outlined text-[36px] text-violet-600"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    auto_awesome
+                  </span>
+                </div>
+                <h2 className="text-center font-headline text-2xl font-extrabold tracking-tight text-slate-900">
+                  AI is reading your business…
+                </h2>
+                <p className="mt-2 text-center text-sm text-slate-500">
+                  Crafting descriptions, taglines and copy tailored to your listing.
+                </p>
+                <div className="mt-8 space-y-3.5">
+                  <ProgressRow
+                    label="Business data fetched"
+                    sub="Name, address, rating, photos, reviews collected"
+                    state={enrichStage > 0 ? 'done' : enrichStage === 0 ? 'active' : 'pending'}
+                  />
+                  <ProgressRow
+                    label="Analysing reviews & category"
+                    sub="Understanding tone, strengths and sentiment"
+                    state={enrichStage > 1 ? 'done' : enrichStage === 1 ? 'active' : 'pending'}
+                  />
+                  <ProgressRow
+                    label="Generating description & tagline"
+                    sub="Crafting copy specific to your business"
+                    state={enrichStage > 2 ? 'done' : enrichStage === 2 ? 'active' : 'pending'}
+                  />
+                  <ProgressRow
+                    label="Preparing your site draft"
+                    sub="Next you'll land in Site settings to review and publish"
+                    state={enrichStage > 3 ? 'done' : enrichStage === 3 ? 'active' : 'pending'}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* ── Generating ── */}
+            {step === 'generating' && (
+              <>
+                <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
+                  <div className="absolute inset-0 animate-ping rounded-full bg-emerald-500/15" />
+                  <div className="absolute inset-0 rounded-full bg-emerald-500/8" />
+                  <div className="absolute inset-0 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-500" />
+                  <span
+                    className="relative material-symbols-outlined text-[36px] text-emerald-600"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    rocket_launch
+                  </span>
+                </div>
+                <h2 className="text-center font-headline text-2xl font-extrabold tracking-tight text-slate-900">
+                  Creating your site…
+                </h2>
+                <p className="mt-2 text-center text-sm text-slate-500">
+                  Almost there — generating your HTML and saving your draft.
+                </p>
+                <div className="mt-8 space-y-3.5">
+                  <ProgressRow label="Place data fetched" sub="Google Maps Places API sync complete" state="done" />
+                  <ProgressRow label="AI content ready" sub="Descriptions and copy merged" state="done" />
+                  <ProgressRow label="Saving your draft" sub="Generating HTML and storing your site" state="active" />
+                  <ProgressRow label="Opening Site settings" sub="You can customise and go live from there" state="pending" />
+                </div>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
     </div>
   )
 }
