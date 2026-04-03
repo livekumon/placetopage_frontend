@@ -574,28 +574,47 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              {/* ── Agency ── */}
+              {/* ── Bulk Credits ── */}
               <div
                 id="agencies"
-                className="scroll-mt-28 flex h-full flex-col rounded-2xl border-2 border-dashed border-outline-variant/40 bg-white p-10 shadow-sm"
+                className="scroll-mt-28 flex h-full flex-col rounded-2xl border-2 border-outline-variant/30 bg-white p-10 shadow-sm"
               >
                 <span className="mb-4 self-start rounded-full bg-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-on-secondary-container">
-                  Agencies
+                  Bulk credits
                 </span>
-                <h3 className="mb-2 font-headline text-2xl font-bold">Scale with us</h3>
-                <div className="mb-1 text-5xl font-extrabold">Custom</div>
-                <div className="mb-8 text-sm text-on-surface-variant">Bulk pricing tailored to your volume</div>
-                <p className="mb-8 text-sm leading-relaxed text-on-surface-variant">
-                  Managing dozens or hundreds of business clients? We offer special bulk rates so each site costs you far less. Get in touch and we'll put together a plan that works for your agency.
-                </p>
-                <ul className="mb-10 flex-1 space-y-3">
+                <h3 className="mb-2 font-headline text-2xl font-bold">Buy more, save more</h3>
+                <div className="mb-1 text-2xl font-extrabold text-primary">From $4 / site</div>
+                <div className="mb-6 text-sm text-on-surface-variant">One-time purchase · credits never expire</div>
+
+                {/* Tiered price rows */}
+                <div className="mb-8 flex-1 divide-y divide-outline-variant/20 rounded-xl border border-outline-variant/20 overflow-hidden">
                   {[
-                    'Volume discounts on every site',
-                    'White-label dashboard',
-                    'Client access & team logins',
-                    'API access for automation',
-                    'Priority support & SLA',
-                    'Dedicated account manager',
+                    { sites: 5,  price: 20,  per: '4.00', label: 'Builder',  save: null },
+                    { sites: 20, price: 60,  per: '3.00', label: 'Studio',   save: '25%' },
+                    { sites: 40, price: 100, per: '2.50', label: 'Agency',   save: '38%' },
+                  ].map(({ sites, price, per, label, save }) => (
+                    <div key={price} className="flex items-center justify-between gap-3 bg-surface-container-lowest px-4 py-3.5 hover:bg-surface-container-low transition-colors">
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-on-surface">{label} <span className="font-normal text-on-surface-variant">· {sites} websites</span></p>
+                        <p className="text-xs text-on-surface-variant">${per} per site</p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        {save && (
+                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                            Save {save}
+                          </span>
+                        )}
+                        <span className="text-xl font-extrabold text-on-surface">${price}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <ul className="mb-8 space-y-3">
+                  {[
+                    'Everything in Go Live',
+                    'Credits stack with existing balance',
+                    'Use across multiple sites',
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-3 text-sm font-medium">
                       <span className="material-symbols-outlined mt-0.5 flex-shrink-0 text-lg text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
@@ -608,7 +627,7 @@ export default function LandingPage() {
                   onClick={() => setContactOpen(true)}
                   className="w-full rounded-full bg-on-surface py-4 text-center font-bold text-surface transition-all hover:opacity-90"
                 >
-                  Contact us for a bulk plan
+                  Buy credits
                 </button>
               </div>
 
