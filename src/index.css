@@ -113,9 +113,11 @@ body {
   gap: 0.4rem;
 }
 
-.site-footer__logo-icon {
-  font-size: 20px !important;
-  color: var(--color-primary, #1a56ff);
+.site-footer__logo-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .site-footer__logo-text {

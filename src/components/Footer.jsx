@@ -15,9 +15,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          <span className="site-footer__logo-icon material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-            magic_button
-          </span>
+          <img src="/logo.png" alt="Place to Page logo" className="site-footer__logo-img" />
           <span className="site-footer__logo-text">Place to Page</span>
         </div>
 

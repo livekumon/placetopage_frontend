@@ -751,8 +751,9 @@ export default function SiteEditPage() {
             <span className="hidden h-4 w-px shrink-0 bg-slate-300 sm:inline dark:bg-slate-600" aria-hidden />
             <Link
               to="/"
-              className="shrink-0 font-manrope text-lg font-bold tracking-tighter text-slate-900 dark:text-white"
+              className="flex shrink-0 items-center gap-1.5 font-manrope text-lg font-bold tracking-tighter text-slate-900 dark:text-white"
             >
+              <img src="/logo.png" alt="" className="h-7 w-7 rounded-md object-contain" aria-hidden />
               Place to Page
             </Link>
             <span className="hidden h-4 w-px shrink-0 bg-slate-300 sm:inline dark:bg-slate-600" aria-hidden />

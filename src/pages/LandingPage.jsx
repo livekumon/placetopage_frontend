@@ -102,9 +102,12 @@ export default function LandingPage() {
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
           <Link
             to="/"
-            className="shrink-0 text-lg font-bold tracking-tight text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:text-xl dark:text-white"
+            className="flex shrink-0 items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            Place to Page
+            <img src="/logo.png" alt="Place to Page logo" className="h-9 w-9 rounded-lg object-contain" />
+            <span className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl dark:text-white">
+              Place to Page
+            </span>
           </Link>
 
           <nav
