@@ -12,6 +12,11 @@ import SiteEditPage from './pages/SiteEditPage'
 import GeneratorPage from './pages/GeneratorPage'
 import BiryaniBluesPage from './pages/BiryaniBluesPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
+import CancellationRefundPage from './pages/policies/CancellationRefundPage'
+import TermsPage from './pages/policies/TermsPage'
+import ShippingPage from './pages/policies/ShippingPage'
+import PrivacyPage from './pages/policies/PrivacyPage'
+import ContactPage from './pages/policies/ContactPage'
 
 export default function App() {
   return (
@@ -74,6 +79,12 @@ export default function App() {
               }
             />
           </Route>
+          {/* Public policy pages — no auth required */}
+          <Route path="/policies/cancellation-refunds" element={<CancellationRefundPage />} />
+          <Route path="/policies/terms" element={<TermsPage />} />
+          <Route path="/policies/shipping" element={<ShippingPage />} />
+          <Route path="/policies/privacy" element={<PrivacyPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
