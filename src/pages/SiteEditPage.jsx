@@ -1139,30 +1139,6 @@ export default function SiteEditPage() {
                         <p className="mb-3 text-xs text-on-surface-variant">
                           No photos were saved with this site. Upload a hero image above, or regenerate from a Maps listing that includes photos.
                         </p>
-                        <div className="mb-2 flex gap-2">
-                          <ul className="grid max-w-[200px] grid-cols-1 gap-2 sm:max-w-none sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                            <li>
-                              <button
-                                type="button"
-                                disabled={!uploadConfigured || uploadBusy}
-                                onClick={() => heroFileInputRef.current?.click()}
-                                className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60 dark:hover:border-primary"
-                                title={uploadBusy ? 'Uploading…' : 'Upload image and use as hero'}
-                              >
-                                <span className="material-symbols-outlined text-[28px]" aria-hidden>
-                                  upload
-                                </span>
-                          <button
-                            type="button"
-                            disabled={!uploadConfigured || uploadBusy}
-                            onClick={() => aboutFileInputRef.current?.click()}
-                            className="flex h-16 w-28 flex-col items-center justify-center gap-0.5 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/90 text-on-surface-variant transition-colors hover:border-amber-600 hover:bg-amber-50 hover:text-amber-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800/60"
-                            title={uploadBusy ? 'Uploading…' : 'Upload About us image'}
-                          >
-                            <span className="material-symbols-outlined text-[22px]" aria-hidden>upload</span>
-                            <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
-                          </button>
-                        </div>
                         {!uploadConfigured && (
                           <p className="mb-4 text-[11px] text-on-surface-variant">
                             Server has no GCS bucket — add GCP env vars (see backend/.env.example).
