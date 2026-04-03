@@ -839,7 +839,7 @@ export default function SiteEditPage() {
             )}
 
             {/* ── Mobile tab switcher (Settings / Preview) — hidden on desktop ── */}
-            <div className="flex shrink-0 overflow-hidden rounded-xl bg-surface-container-high/80 p-1 lg:hidden">
+            <div className="mb-1 flex shrink-0 overflow-hidden rounded-xl bg-surface-container-high/80 p-1 lg:hidden">
               <button
                 type="button"
                 onClick={() => setMobileEditorTab('settings')}
@@ -929,32 +929,35 @@ export default function SiteEditPage() {
                       <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Your URL</h3>
                     </div>
 
-                    {/* Subdomain row */}
-                    <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
-                      <span className="shrink-0 font-mono text-xs text-slate-400">https://</span>
-                      <input
-                        ref={publicSubdomainInputRef}
-                        id="public-subdomain-inline"
-                        className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
-                        value={publishSubdomain}
-                        onChange={(e) => {
-                          setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
-                          setInlineAddressError(null)
-                        }}
-                        placeholder="your-subdomain"
-                        autoComplete="off"
-                        spellCheck="false"
-                        disabled={inlineAddressSaving}
-                      />
-                      <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                    {/* Subdomain row — stacks on mobile, inline on sm+ */}
+                    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+                      <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
+                        <span className="hidden shrink-0 font-mono text-xs text-slate-400 sm:inline">https://</span>
+                        <input
+                          ref={publicSubdomainInputRef}
+                          id="public-subdomain-inline"
+                          className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                          value={publishSubdomain}
+                          onChange={(e) => {
+                            setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+                            setInlineAddressError(null)
+                          }}
+                          placeholder="your-subdomain"
+                          autoComplete="off"
+                          spellCheck="false"
+                          disabled={inlineAddressSaving}
+                        />
+                        <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                      </div>
                       <button
                         type="button"
                         title="Save subdomain"
                         disabled={inlineAddressSaving}
                         onClick={() => void savePublicAddressFromSettings()}
-                        className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-primary transition-colors hover:bg-primary/10 disabled:opacity-40"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-40 sm:w-auto sm:rounded-lg sm:px-3 sm:py-2"
                       >
-                        <span className="material-symbols-outlined text-[20px]">save</span>
+                        <span className="material-symbols-outlined text-[18px]">save</span>
+                        <span className="sm:hidden">Save URL</span>
                       </button>
                     </div>
 
