@@ -716,26 +716,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="legal" className="scroll-mt-28 border-t border-outline-variant/20 bg-surface-container-lowest px-6 py-16">
-          <div className="mx-auto max-w-3xl space-y-8 text-on-surface-variant">
-            <div>
-              <h2 id="terms" className="scroll-mt-28 font-headline text-xl font-bold text-on-surface">
-                Terms of service
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed">
-                By using Place to Page you agree to our product terms. This is a demo application; replace this copy with your real terms before launch.
-              </p>
-            </div>
-            <div>
-              <h2 id="privacy" className="scroll-mt-28 font-headline text-xl font-bold text-on-surface">
-                Privacy policy
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed">
-                We describe how we handle data from Google Maps listings and generated sites. Replace with your legal privacy policy.
-              </p>
-            </div>
-          </div>
-        </section>
       </main>
 
       <footer
@@ -749,13 +729,13 @@ export default function LandingPage() {
           <nav className="flex flex-wrap justify-center gap-8" aria-label="Footer">
             <a
               className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="#terms"
+              href="/policies/terms"
             >
               Terms
             </a>
             <a
               className="font-inter text-xs uppercase tracking-widest text-slate-400 opacity-80 transition-opacity hover:opacity-100 dark:hover:text-white"
-              href="#privacy"
+              href="/policies/privacy"
             >
               Privacy
             </a>
