@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import {
   checkSubdomain,
   deploySite,
@@ -128,6 +129,7 @@ export default function SiteEditPage() {
   const { siteId } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { user } = useAuth()
   const isPublishStepRoute = /\/dashboard\/sites\/[^/]+\/publish\/?$/.test(location.pathname)
   const previewGen = useRef(0)
 
@@ -774,6 +776,17 @@ export default function SiteEditPage() {
                 <span className="material-symbols-outlined text-[18px]">open_in_new</span>
                 View live
               </a>
+            )}
+            {user && (
+              <Link
+                to="/purchase-tokens"
+                className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-on-surface-variant transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
+                title="Buy more websites"
+              >
+                <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
+                <span>{user.publishingCredits ?? 0} website{(user.publishingCredits ?? 0) !== 1 ? 's' : ''}</span>
+                <span className="hidden text-on-surface-variant/60 sm:inline">· Buy more</span>
+              </Link>
             )}
             {!loading && site && (
               <button
