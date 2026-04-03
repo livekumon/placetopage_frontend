@@ -97,9 +97,9 @@ export default function AppShell() {
                   <span className="material-symbols-outlined shrink-0 text-[22px]">add_circle</span>
                   {expanded && <span>New site</span>}
                 </Link>
-                <Link to="/purchase-tokens" title="Purchase tokens" className={itemClass(purchaseTokensActive, expanded)}>
-                  <span className="material-symbols-outlined shrink-0 text-[22px]">toll</span>
-                  {expanded && <span>Purchase tokens</span>}
+                <Link to="/purchase-tokens" title="Purchase websites" className={itemClass(purchaseTokensActive, expanded)}>
+                  <span className="material-symbols-outlined shrink-0 text-[22px]">language</span>
+                  {expanded && <span>Purchase websites</span>}
                 </Link>
                 <Link to="/recycle-bin" title="Recycle bin" className={itemClass(recycleBinActive, expanded)}>
                   <span className="material-symbols-outlined shrink-0 text-[22px]">delete_sweep</span>
@@ -165,13 +165,13 @@ export default function AppShell() {
           <Link
             to="/purchase-tokens"
             className="fixed right-5 top-4 z-[200] flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:opacity-90 hover:-translate-y-0.5 hover:shadow-xl"
-            title="Buy more tokens"
+            title="Buy more websites"
           >
             <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              toll
+              language
             </span>
             <span>
-              {user.publishingCredits ?? 0} token{(user.publishingCredits ?? 0) !== 1 ? 's' : ''}
+              {user.publishingCredits ?? 0} website{(user.publishingCredits ?? 0) !== 1 ? 's' : ''}
             </span>
             <span className="hidden sm:inline text-white/80">· Buy more</span>
           </Link>

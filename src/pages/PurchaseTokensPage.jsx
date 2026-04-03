@@ -4,12 +4,12 @@ import { capturePaypalOrder, createPaypalOrder, getPaypalClientId, getTokenPacks
 import { useAuth } from '../context/AuthContext'
 
 function PerCreditLabel({ pack }) {
-  const perCredit = (pack.amountUsd / pack.credits).toFixed(2)
+  const perSite = (pack.amountUsd / pack.credits).toFixed(2)
   const basePrice = 5
   const savePct = Math.round((1 - pack.amountUsd / (basePrice * pack.credits)) * 100)
   return (
     <span className="pack-per-credit">
-      ${perCredit} / credit
+      ${perSite} / website
       {savePct > 0 && <span className="pack-save-badge">Save {savePct}%</span>}
     </span>
   )
@@ -62,7 +62,7 @@ export default function PurchaseTokensPage() {
         setNewCredits(result.user?.publishingCredits ?? null)
         setPayStatus('success')
         setPayMessage(
-          `Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} credit${
+          `Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${
             result.payment?.publishingCreditsGranted !== 1 ? 's' : ''
           } added to your account.`
         )
@@ -103,16 +103,16 @@ export default function PurchaseTokensPage() {
   return (
     <div className="pt-page">
       <header className="pt-page__header">
-        <h1 className="pt-page__title">Purchase Tokens</h1>
+        <h1 className="pt-page__title">Purchase Websites</h1>
         <p className="pt-page__subtitle">
-          Each token lets you publish one site live on{' '}
+          Each website lets you publish one site live on{' '}
           <strong>placetopage.com</strong>
         </p>
         {user && (
           <div className="pt-balance-chip">
-            <span className="material-symbols-outlined">token</span>
+            <span className="material-symbols-outlined">language</span>
             <span>
-              {newCredits !== null ? newCredits : (user.publishingCredits ?? 0)} token
+              {newCredits !== null ? newCredits : (user.publishingCredits ?? 0)} website
               {(newCredits !== null ? newCredits : (user.publishingCredits ?? 0)) !== 1 ? 's' : ''}{' '}
               remaining
             </span>
@@ -127,11 +127,11 @@ export default function PurchaseTokensPage() {
           <p>{payMessage}</p>
           {newCredits !== null && (
             <p className="pt-result__balance">
-              Your balance is now <strong>{newCredits} token{newCredits !== 1 ? 's' : ''}</strong>.
+              Your balance is now <strong>{newCredits} website{newCredits !== 1 ? 's' : ''}</strong>.
             </p>
           )}
           <button className="pt-btn pt-btn--primary" onClick={resetAndBuyMore}>
-            Buy more tokens
+            Buy more websites
           </button>
         </div>
       ) : (
@@ -161,7 +161,7 @@ export default function PurchaseTokensPage() {
                     <span className="pt-pack__amount">${pack.amountUsd}</span>
                   </div>
                   <div className="pt-pack__credits">
-                    {pack.credits} publish token{pack.credits !== 1 ? 's' : ''}
+                    {pack.credits} website{pack.credits !== 1 ? 's' : ''}
                   </div>
                   <div className="pt-pack__meta">
                     <PerCreditLabel pack={pack} />
@@ -177,7 +177,7 @@ export default function PurchaseTokensPage() {
           {selectedPack && (
             <div className="pt-checkout">
               <p className="pt-checkout__summary">
-                You selected <strong>{selectedPack.label}</strong> — {selectedPack.credits} token
+                You selected <strong>{selectedPack.label}</strong> — {selectedPack.credits} website
                 {selectedPack.credits !== 1 ? 's' : ''} for{' '}
                 <strong>${selectedPack.amountUsd}</strong>
               </p>
