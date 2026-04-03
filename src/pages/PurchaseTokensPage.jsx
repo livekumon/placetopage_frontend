@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import {
   capturePaypalOrder,
@@ -11,17 +12,13 @@ import {
 } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 
-/** Detect India via browser timezone — fast, no network call needed */
 function detectIsIndia() {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
     return tz === 'Asia/Calcutta' || tz === 'Asia/Kolkata'
-  } catch {
-    return false
-  }
+  } catch { return false }
 }
 
-/** Dynamically load the Razorpay checkout script once */
 function loadRazorpayScript() {
   return new Promise((resolve) => {
     if (window.Razorpay) return resolve(true)
@@ -33,20 +30,70 @@ function loadRazorpayScript() {
   })
 }
 
-function PerSiteLabel({ pack }) {
-  const perSite = (pack.amountUsd / pack.credits).toFixed(2)
-  const savePct = Math.round((1 - pack.amountUsd / (5 * pack.credits)) * 100)
-  return (
-    <span className="pack-per-credit">
-      ${perSite} / website
-      {savePct > 0 && <span className="pack-save-badge">Save {savePct}%</span>}
-    </span>
-  )
-}
-
 const GATEWAY_PAYPAL = 'paypal'
 const GATEWAY_RAZORPAY = 'razorpay'
 
+// ── Pack card ─────────────────────────────────────────────────────────────────
+function PackCard({ pack, selected, onSelect }) {
+  const perSite = (pack.amountUsd / pack.credits).toFixed(2)
+  const savePct = Math.round((1 - pack.amountUsd / (5 * pack.credits)) * 100)
+
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onSelect}
+      className={`relative flex flex-col items-center rounded-2xl border-2 p-4 text-center transition-all active:scale-[0.97] ${
+        selected
+          ? 'border-primary bg-primary/5 shadow-md shadow-primary/10'
+          : 'border-slate-200 bg-white hover:border-primary/40 hover:shadow-sm dark:border-slate-700 dark:bg-slate-800'
+      }`}
+    >
+      {/* Popular badge */}
+      {pack.popular && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+          Most popular
+        </span>
+      )}
+
+      {/* Save badge */}
+      {savePct > 0 && (
+        <span className="mb-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+          Save {savePct}%
+        </span>
+      )}
+
+      <p className="mb-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{pack.label}</p>
+
+      {/* Price */}
+      <p className="font-headline text-3xl font-extrabold leading-none tracking-tight text-primary">
+        ${pack.amountUsd}
+      </p>
+
+      {/* Credits */}
+      <p className="mt-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200">
+        {pack.credits} website{pack.credits !== 1 ? 's' : ''}
+      </p>
+
+      {/* Per-site cost */}
+      <p className="mt-0.5 text-xs text-slate-400">
+        ${perSite} / site
+      </p>
+
+      {/* Selected tick */}
+      {selected && (
+        <span
+          className="material-symbols-outlined absolute right-2.5 top-2.5 text-[18px] text-primary"
+          style={{ fontVariationSettings: "'FILL' 1" }}
+        >
+          check_circle
+        </span>
+      )}
+    </button>
+  )
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
 export default function PurchaseTokensPage() {
   const { user, refreshUser } = useAuth()
   const isIndia = detectIsIndia()
@@ -57,7 +104,7 @@ export default function PurchaseTokensPage() {
   const [selectedPack, setSelectedPack] = useState(null)
   const [gateway, setGateway] = useState(isIndia ? GATEWAY_RAZORPAY : GATEWAY_PAYPAL)
   const [loadingPacks, setLoadingPacks] = useState(true)
-  const [payStatus, setPayStatus] = useState(null) // null | 'processing' | 'success' | 'error'
+  const [payStatus, setPayStatus] = useState(null)
   const [payMessage, setPayMessage] = useState('')
   const [newCredits, setNewCredits] = useState(null)
   const rzpRef = useRef(null)
@@ -67,29 +114,24 @@ export default function PurchaseTokensPage() {
     ;(async () => {
       try {
         const [ppId, rzpId, packList] = await Promise.all([
-          getPaypalClientId(),
-          getRazorpayKeyId(),
-          getTokenPacks(),
+          getPaypalClientId(), getRazorpayKeyId(), getTokenPacks(),
         ])
         if (cancelled) return
         setPaypalClientId(ppId)
         setRazorpayKeyId(rzpId)
         setPacks(packList)
         setSelectedPack(packList.find((p) => p.popular) || packList[0] || null)
-      } catch {
-        // silently degrade
-      } finally {
+      } catch { /* silently degrade */ } finally {
         if (!cancelled) setLoadingPacks(false)
       }
     })()
     return () => { cancelled = true }
   }, [])
 
-  // ── PayPal handlers ───────────────────────────────────────────────────────
+  // ── PayPal ────────────────────────────────────────────────────────────────
   const handlePaypalCreate = useCallback(async () => {
     if (!selectedPack) throw new Error('No pack selected')
-    setPayStatus('processing')
-    setPayMessage('')
+    setPayStatus('processing'); setPayMessage('')
     const data = await createPaypalOrder(selectedPack.id)
     return data.orderId
   }, [selectedPack])
@@ -100,41 +142,31 @@ export default function PurchaseTokensPage() {
       await refreshUser()
       setNewCredits(result.user?.publishingCredits ?? null)
       setPayStatus('success')
-      setPayMessage(
-        `Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${
-          result.payment?.publishingCreditsGranted !== 1 ? 's' : ''
-        } added to your account.`
-      )
+      setPayMessage(`Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${result.payment?.publishingCreditsGranted !== 1 ? 's' : ''} added.`)
     } catch (err) {
       setPayStatus('error')
       setPayMessage(err.message || 'Payment capture failed. Please contact support.')
     }
   }, [refreshUser])
 
-  const handlePaypalError = useCallback((err) => {
-    console.error('PayPal error', err)
-    setPayStatus('error')
-    setPayMessage('Something went wrong with PayPal. Please try again.')
+  const handlePaypalError = useCallback(() => {
+    setPayStatus('error'); setPayMessage('Something went wrong with PayPal. Please try again.')
   }, [])
 
   const handlePaypalCancel = useCallback(() => {
-    setPayStatus(null)
-    setPayMessage('')
+    setPayStatus(null); setPayMessage('')
   }, [])
 
-  // ── Razorpay handler ──────────────────────────────────────────────────────
+  // ── Razorpay ──────────────────────────────────────────────────────────────
   const handleRazorpay = useCallback(async () => {
     if (!selectedPack) return
-    setPayStatus('processing')
-    setPayMessage('')
+    setPayStatus('processing'); setPayMessage('')
     try {
       const loaded = await loadRazorpayScript()
-      if (!loaded) throw new Error('Failed to load Razorpay checkout. Check your connection.')
-
+      if (!loaded) throw new Error('Failed to load Razorpay checkout.')
       const order = await createRazorpayOrder(selectedPack.id)
-
       await new Promise((resolve, reject) => {
-        const options = {
+        rzpRef.current = new window.Razorpay({
           key: razorpayKeyId,
           amount: order.amountPaise,
           currency: 'INR',
@@ -152,226 +184,294 @@ export default function PurchaseTokensPage() {
               await refreshUser()
               setNewCredits(result.user?.publishingCredits ?? null)
               setPayStatus('success')
-              setPayMessage(
-                `Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${
-                  result.payment?.publishingCreditsGranted !== 1 ? 's' : ''
-                } added to your account.`
-              )
+              setPayMessage(`Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${result.payment?.publishingCreditsGranted !== 1 ? 's' : ''} added.`)
               resolve()
             } catch (err) {
-              setPayStatus('error')
-              setPayMessage(err.message || 'Payment verification failed. Contact support.')
-              reject(err)
+              setPayStatus('error'); setPayMessage(err.message || 'Verification failed. Contact support.'); reject(err)
             }
           },
-          modal: {
-            ondismiss: () => {
-              setPayStatus(null)
-              setPayMessage('')
-              resolve()
-            },
-          },
-          prefill: {
-            email: user?.email || '',
-            name: user?.name || '',
-          },
+          modal: { ondismiss: () => { setPayStatus(null); setPayMessage(''); resolve() } },
+          prefill: { email: user?.email || '', name: user?.name || '' },
           theme: { color: '#1a56ff' },
-        }
-        rzpRef.current = new window.Razorpay(options)
+        })
         rzpRef.current.open()
       })
     } catch (err) {
-      setPayStatus('error')
-      setPayMessage(err.message || 'Something went wrong. Please try again.')
+      setPayStatus('error'); setPayMessage(err.message || 'Something went wrong. Please try again.')
     }
   }, [selectedPack, razorpayKeyId, user, refreshUser])
 
-  const resetAndBuyMore = () => {
-    setPayStatus(null)
-    setPayMessage('')
-    setNewCredits(null)
-  }
+  const resetAndBuyMore = () => { setPayStatus(null); setPayMessage(''); setNewCredits(null) }
 
+  const credits = newCredits !== null ? newCredits : (user?.publishingCredits ?? 0)
+
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (loadingPacks) {
     return (
-      <div className="pt-page pt-page--loading">
-        <span className="material-symbols-outlined spinning">progress_activity</span>
-        <p>Loading plans…</p>
+      <div className="flex min-h-[calc(100dvh-64px)] flex-col items-center justify-center gap-3 text-on-surface-variant">
+        <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
+        <p className="text-sm">Loading plans…</p>
       </div>
     )
   }
 
-  const credits = newCredits !== null ? newCredits : (user?.publishingCredits ?? 0)
-
-  return (
-    <div className="pt-page">
-      <header className="pt-page__header">
-        <h1 className="pt-page__title">Purchase Websites</h1>
-        <p className="pt-page__subtitle">
-          Each website lets you publish one site live on <strong>placetopage.com</strong>
-        </p>
-        {user && (
-          <div className="pt-balance-chip">
-            <span className="material-symbols-outlined">language</span>
-            <span>{credits} website{credits !== 1 ? 's' : ''} remaining</span>
-          </div>
+  // ── Success screen ────────────────────────────────────────────────────────
+  if (payStatus === 'success') {
+    return (
+      <div className="flex min-h-[calc(100dvh-64px)] flex-col items-center justify-center px-4 py-16 text-center">
+        <span
+          className="material-symbols-outlined mb-4 text-[72px] text-emerald-500"
+          style={{ fontVariationSettings: "'FILL' 1" }}
+        >
+          check_circle
+        </span>
+        <h2 className="font-headline text-2xl font-extrabold text-slate-900 dark:text-white">You're all set!</h2>
+        <p className="mt-2 max-w-sm text-sm text-slate-500">{payMessage}</p>
+        {newCredits !== null && (
+          <p className="mt-3 text-base font-semibold text-slate-800 dark:text-slate-100">
+            Balance: <span className="text-primary">{newCredits} website{newCredits !== 1 ? 's' : ''}</span>
+          </p>
         )}
-      </header>
-
-      {payStatus === 'success' ? (
-        <div className="pt-result pt-result--success">
-          <span className="material-symbols-outlined pt-result__icon">check_circle</span>
-          <h2>You're all set!</h2>
-          <p>{payMessage}</p>
-          {newCredits !== null && (
-            <p className="pt-result__balance">
-              Your balance is now <strong>{newCredits} website{newCredits !== 1 ? 's' : ''}</strong>.
-            </p>
-          )}
-          <button className="pt-btn pt-btn--primary" onClick={resetAndBuyMore}>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <button
+            onClick={resetAndBuyMore}
+            className="rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:brightness-110 active:scale-[0.97]"
+          >
             Buy more websites
           </button>
+          <Link
+            to="/dashboard"
+            className="rounded-full border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200"
+          >
+            Go to Dashboard
+          </Link>
         </div>
-      ) : (
-        <>
-          {/* Pack grid */}
-          <div className="pt-packs">
-            {packs.map((pack) => {
-              const isSelected = selectedPack?.id === pack.id
-              const savePct = Math.round((1 - pack.amountUsd / (5 * pack.credits)) * 100)
-              return (
-                <button
-                  key={pack.id}
-                  className={`pt-pack${isSelected ? ' pt-pack--selected' : ''}${pack.popular ? ' pt-pack--popular' : ''}`}
-                  onClick={() => { setSelectedPack(pack); setPayStatus(null); setPayMessage('') }}
-                  aria-pressed={isSelected}
-                >
-                  {pack.popular && <div className="pt-pack__badge">Most popular</div>}
-                  <div className="pt-pack__label">{pack.label}</div>
-                  <div className="pt-pack__price">
-                    <span className="pt-pack__amount">${pack.amountUsd}</span>
-                  </div>
-                  <div className="pt-pack__credits">
-                    {pack.credits} website{pack.credits !== 1 ? 's' : ''}
-                  </div>
-                  <div className="pt-pack__meta">
-                    <PerSiteLabel pack={pack} />
-                  </div>
-                  {savePct > 0 && (
-                    <div className="pt-pack__saving">Save ${5 * pack.credits - pack.amountUsd}</div>
-                  )}
-                  <p className="pt-pack__desc">{pack.description}</p>
-                </button>
-              )
-            })}
-          </div>
+      </div>
+    )
+  }
 
-          {selectedPack && (
-            <div className="pt-checkout">
-              <p className="pt-checkout__summary">
-                You selected <strong>{selectedPack.label}</strong> —{' '}
-                {selectedPack.credits} website{selectedPack.credits !== 1 ? 's' : ''} for{' '}
-                <strong>${selectedPack.amountUsd}</strong>
-              </p>
+  // ── Main ──────────────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-[calc(100dvh-64px)] bg-slate-50 dark:bg-slate-950">
 
-              {/* Gateway toggle */}
-              <div className="pt-gateway-toggle" role="group" aria-label="Payment method">
-                <button
-                  type="button"
-                  className={`pt-gateway-btn${gateway === GATEWAY_PAYPAL ? ' pt-gateway-btn--active' : ''}`}
-                  onClick={() => { setGateway(GATEWAY_PAYPAL); setPayStatus(null); setPayMessage('') }}
-                >
-                  <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal" className="pt-gateway-logo" />
-                  <div className="pt-gateway-info">
-                    <span className="pt-gateway-name">PayPal</span>
-                    <span className="pt-gateway-region">USA &amp; worldwide</span>
-                  </div>
-                </button>
+      {/* Mobile logo bar — hidden on desktop (sidebar already shows logo) */}
+      <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden dark:border-slate-800 dark:bg-slate-900">
+        <Link to="/" className="flex items-center gap-2 rounded-lg p-1" aria-label="Home">
+          <img src="/logo.png" alt="Place to Page" className="h-8 w-8 rounded-lg object-contain" />
+          <span className="font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">Place to Page</span>
+        </Link>
+        <Link to="/dashboard" className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 dark:border-slate-700">
+          <span className="material-symbols-outlined text-[15px]">dashboard</span>
+          Dashboard
+        </Link>
+      </div>
 
-                <button
-                  type="button"
-                  className={`pt-gateway-btn${gateway === GATEWAY_RAZORPAY ? ' pt-gateway-btn--active' : ''}`}
-                  onClick={() => { setGateway(GATEWAY_RAZORPAY); setPayStatus(null); setPayMessage('') }}
-                >
-                  <img src="https://razorpay.com/assets/razorpay-logo.svg" alt="Razorpay" className="pt-gateway-logo pt-gateway-logo--rzp" />
-                  <div className="pt-gateway-info">
-                    <span className="pt-gateway-name">Razorpay</span>
-                    <span className="pt-gateway-region">India (INR)</span>
-                  </div>
-                </button>
-              </div>
+      <div className="mx-auto max-w-2xl px-4 pb-48 pt-8 sm:px-6 lg:pb-12">
 
-              {payStatus === 'error' && (
-                <div className="pt-alert pt-alert--error">
-                  <span className="material-symbols-outlined">error</span>
-                  {payMessage}
-                </div>
-              )}
-
-              {/* PayPal flow */}
-              {gateway === GATEWAY_PAYPAL && (
-                !paypalClientId ? (
-                  <div className="pt-alert pt-alert--warn">
-                    <span className="material-symbols-outlined">warning</span>
-                    PayPal is not configured. Please contact the administrator.
-                  </div>
-                ) : (
-                  <div className="pt-paypal-wrap">
-                    <PayPalScriptProvider
-                      key={paypalClientId}
-                      options={{ clientId: paypalClientId, currency: 'USD', intent: 'capture' }}
-                    >
-                      <PayPalButtons
-                        style={{ layout: 'vertical', shape: 'rect', label: 'pay', height: 48 }}
-                        disabled={payStatus === 'processing'}
-                        createOrder={handlePaypalCreate}
-                        onApprove={handlePaypalApprove}
-                        onError={handlePaypalError}
-                        onCancel={handlePaypalCancel}
-                      />
-                    </PayPalScriptProvider>
-                  </div>
-                )
-              )}
-
-              {/* Razorpay flow */}
-              {gateway === GATEWAY_RAZORPAY && (
-                !razorpayKeyId ? (
-                  <div className="pt-alert pt-alert--warn">
-                    <span className="material-symbols-outlined">warning</span>
-                    Razorpay is not configured. Please contact the administrator.
-                  </div>
-                ) : (
-                  <div className="pt-razorpay-wrap">
-                    <p className="pt-razorpay-note">
-                      You'll be charged{' '}
-                      <strong>₹{Math.round(selectedPack.amountUsd * 84)}</strong>{' '}
-                      (approx. at current exchange rate)
-                    </p>
-                    <button
-                      type="button"
-                      disabled={payStatus === 'processing'}
-                      onClick={handleRazorpay}
-                      className="pt-rzp-btn"
-                    >
-                      {payStatus === 'processing' ? (
-                        <>
-                          <span className="material-symbols-outlined spinning-sm">progress_activity</span>
-                          Processing…
-                        </>
-                      ) : (
-                        <>
-                          <span className="material-symbols-outlined">payment</span>
-                          Pay with Razorpay
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )
-              )}
+        {/* ── Page header ── */}
+        <div className="mb-8 text-center">
+          <h1 className="font-headline text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            Purchase Websites
+          </h1>
+          <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
+            Each website publishes one site live on <strong className="text-slate-700 dark:text-slate-200">placetopage.com</strong>
+          </p>
+          {user && (
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
+              {credits} website{credits !== 1 ? 's' : ''} remaining
             </div>
           )}
-        </>
+        </div>
+
+        {/* ── Pack grid — 2 columns on mobile, 4 on lg ── */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {packs.map((pack) => (
+            <PackCard
+              key={pack.id}
+              pack={pack}
+              selected={selectedPack?.id === pack.id}
+              onSelect={() => { setSelectedPack(pack); setPayStatus(null); setPayMessage('') }}
+            />
+          ))}
+        </div>
+
+        {/* ── Checkout — fixed bottom sheet on mobile, inline card on desktop ── */}
+        {selectedPack && (
+          <>
+            {/* Mobile: fixed bottom panel */}
+            <div className="fixed bottom-16 left-0 right-0 z-50 border-t border-slate-200 bg-white px-4 pb-4 pt-3 shadow-2xl shadow-slate-900/20 dark:border-slate-700 dark:bg-slate-900 lg:hidden">
+              <CheckoutPanel
+                selectedPack={selectedPack}
+                gateway={gateway}
+                setGateway={setGateway}
+                setPayStatus={setPayStatus}
+                setPayMessage={setPayMessage}
+                payStatus={payStatus}
+                payMessage={payMessage}
+                paypalClientId={paypalClientId}
+                razorpayKeyId={razorpayKeyId}
+                handlePaypalCreate={handlePaypalCreate}
+                handlePaypalApprove={handlePaypalApprove}
+                handlePaypalError={handlePaypalError}
+                handlePaypalCancel={handlePaypalCancel}
+                handleRazorpay={handleRazorpay}
+              />
+            </div>
+
+            {/* Desktop: inline card below packs */}
+            <div className="mt-6 hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 lg:block">
+              <div className="px-6 py-5">
+                <CheckoutPanel
+                  selectedPack={selectedPack}
+                  gateway={gateway}
+                  setGateway={setGateway}
+                  setPayStatus={setPayStatus}
+                  setPayMessage={setPayMessage}
+                  payStatus={payStatus}
+                  payMessage={payMessage}
+                  paypalClientId={paypalClientId}
+                  razorpayKeyId={razorpayKeyId}
+                  handlePaypalCreate={handlePaypalCreate}
+                  handlePaypalApprove={handlePaypalApprove}
+                  handlePaypalError={handlePaypalError}
+                  handlePaypalCancel={handlePaypalCancel}
+                  handleRazorpay={handleRazorpay}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Checkout panel (shared between mobile sheet and desktop card) ──────────────
+function CheckoutPanel({
+  selectedPack, gateway, setGateway, setPayStatus, setPayMessage,
+  payStatus, payMessage, paypalClientId, razorpayKeyId,
+  handlePaypalCreate, handlePaypalApprove, handlePaypalError, handlePaypalCancel, handleRazorpay,
+}) {
+  return (
+    <div className="space-y-3">
+      {/* Summary pill */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          {selectedPack.credits} website{selectedPack.credits !== 1 ? 's' : ''}
+          <span className="mx-2 text-slate-300">·</span>
+          <span className="text-primary">${selectedPack.amountUsd}</span>
+        </p>
+        <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800">
+          {selectedPack.label}
+        </span>
+      </div>
+
+      {/* Gateway toggle */}
+      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Payment method">
+        <button
+          type="button"
+          onClick={() => { setGateway(GATEWAY_PAYPAL); setPayStatus(null); setPayMessage('') }}
+          className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-2.5 transition-all ${
+            gateway === GATEWAY_PAYPAL
+              ? 'border-primary bg-primary/5 shadow-sm'
+              : 'border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800'
+          }`}
+        >
+          <img
+            src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
+            alt="PayPal"
+            className="h-6 w-auto flex-shrink-0 object-contain"
+          />
+          <div className="text-left">
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-100">PayPal</p>
+            <p className="text-[10px] text-slate-400">USD · Worldwide</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => { setGateway(GATEWAY_RAZORPAY); setPayStatus(null); setPayMessage('') }}
+          className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-2.5 transition-all ${
+            gateway === GATEWAY_RAZORPAY
+              ? 'border-primary bg-primary/5 shadow-sm'
+              : 'border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800'
+          }`}
+        >
+          <img
+            src="https://razorpay.com/assets/razorpay-logo.svg"
+            alt="Razorpay"
+            className="h-5 w-auto flex-shrink-0 object-contain"
+            style={{ maxWidth: 72 }}
+          />
+          <div className="text-left">
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-100">Razorpay</p>
+            <p className="text-[10px] text-slate-400">INR · India</p>
+          </div>
+        </button>
+      </div>
+
+      {/* Error */}
+      {payStatus === 'error' && (
+        <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+          <span className="material-symbols-outlined mt-0.5 shrink-0 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+          {payMessage}
+        </div>
+      )}
+
+      {/* PayPal */}
+      {gateway === GATEWAY_PAYPAL && (
+        !paypalClientId ? (
+          <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-800">
+            <span className="material-symbols-outlined mt-0.5 shrink-0 text-[16px]">warning</span>
+            PayPal is not configured. Please contact the administrator.
+          </div>
+        ) : (
+          <PayPalScriptProvider key={paypalClientId} options={{ clientId: paypalClientId, currency: 'USD', intent: 'capture' }}>
+            <PayPalButtons
+              style={{ layout: 'vertical', shape: 'rect', label: 'pay', height: 44 }}
+              disabled={payStatus === 'processing'}
+              createOrder={handlePaypalCreate}
+              onApprove={handlePaypalApprove}
+              onError={handlePaypalError}
+              onCancel={handlePaypalCancel}
+            />
+          </PayPalScriptProvider>
+        )
+      )}
+
+      {/* Razorpay */}
+      {gateway === GATEWAY_RAZORPAY && (
+        !razorpayKeyId ? (
+          <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-800">
+            <span className="material-symbols-outlined mt-0.5 shrink-0 text-[16px]">warning</span>
+            Razorpay is not configured. Please contact the administrator.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-center text-xs text-slate-400">
+              You'll be charged approx. <strong className="text-slate-600 dark:text-slate-300">₹{Math.round(selectedPack.amountUsd * 84)}</strong>
+            </p>
+            <button
+              type="button"
+              disabled={payStatus === 'processing'}
+              onClick={handleRazorpay}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#072654] py-3 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {payStatus === 'processing' ? (
+                <>
+                  <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
+                  Processing…
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-[18px]">payment</span>
+                  Pay with Razorpay
+                </>
+              )}
+            </button>
+          </div>
+        )
       )}
     </div>
   )
