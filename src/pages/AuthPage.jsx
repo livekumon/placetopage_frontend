@@ -79,6 +79,12 @@ export default function AuthPage({ mode }) {
 
   // ── Redirect helper
   const redirectAfterAuth = useCallback(() => {
+    // If the landing page stored a pending Maps URL, always go to the generator
+    // regardless of where the user navigated from — the generator consumes it.
+    if (sessionStorage.getItem('pendingMapsUrl')) {
+      navigate('/generator', { replace: true })
+      return
+    }
     const from = location.state?.from
     navigate(typeof from === 'string' && from.startsWith('/') ? from : '/dashboard', { replace: true })
   }, [location.state?.from, navigate])

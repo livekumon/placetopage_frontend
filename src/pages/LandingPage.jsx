@@ -82,7 +82,7 @@ export default function LandingPage() {
       return
     }
     sessionStorage.setItem('pendingMapsUrl', withProtocol)
-    navigate(user ? '/generator' : '/register')
+    navigate(user ? '/generator' : '/register', { state: { from: '/generator' } })
   }
 
   function closeMobileNav() {
