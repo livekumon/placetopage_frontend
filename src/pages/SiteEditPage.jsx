@@ -918,7 +918,30 @@ export default function SiteEditPage() {
 
                     <div>
                       <label className={labelClass} htmlFor="maps-url">Google Maps link</label>
-                      <input id="maps-url" type="url" className={inputClass} value={mapsUrl} onChange={(e) => setMapsUrl(e.target.value)} placeholder="https://maps.google.com/…" />
+                      <div className="relative">
+                        <input
+                          id="maps-url"
+                          type="url"
+                          readOnly
+                          className={`${inputClass} cursor-default select-all bg-slate-50 text-on-surface-variant dark:bg-slate-800/60`}
+                          value={mapsUrl}
+                          tabIndex={-1}
+                        />
+                        {mapsUrl && (
+                          <a
+                            href={mapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-primary"
+                            title="Open in Google Maps"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+                          </a>
+                        )}
+                      </div>
+                      <p className="mt-1.5 text-[11px] text-on-surface-variant">
+                        Sourced from your original Google Maps listing. Not editable.
+                      </p>
                     </div>
                   </section>
 
@@ -931,42 +954,69 @@ export default function SiteEditPage() {
                       <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Your URL</h3>
                     </div>
 
-                    {/* Subdomain row — stacks on mobile, inline on sm+ */}
-                    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
-                      <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
-                        <span className="hidden shrink-0 font-mono text-xs text-slate-400 sm:inline">https://</span>
-                        <input
-                          ref={publicSubdomainInputRef}
-                          id="public-subdomain-inline"
-                          className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
-                          value={publishSubdomain}
-                          onChange={(e) => {
-                            setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
-                            setInlineAddressError(null)
-                          }}
-                          placeholder="your-subdomain"
-                          autoComplete="off"
-                          spellCheck="false"
-                          disabled={inlineAddressSaving}
-                        />
-                        <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                    {liveUrl ? (
+                      /* ── Published: show locked URL ── */
+                      <div className="space-y-2">
+                        <div className="relative">
+                          <input
+                            readOnly
+                            tabIndex={-1}
+                            className="w-full cursor-default select-all rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 font-mono text-sm text-on-surface-variant outline-none dark:border-slate-700 dark:bg-slate-800/60"
+                            value={liveUrl}
+                          />
+                          <a
+                            href={liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-primary"
+                            title="Open live site"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+                          </a>
+                        </div>
+                        <p className="text-[11px] text-on-surface-variant">
+                          Your site is live at this URL. The address is locked after publishing.
+                        </p>
                       </div>
-                      <button
-                        type="button"
-                        title="Save subdomain"
-                        disabled={inlineAddressSaving}
-                        onClick={() => void savePublicAddressFromSettings()}
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-40 sm:w-auto sm:rounded-lg sm:px-3 sm:py-2"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">save</span>
-                        <span className="sm:hidden">Save URL</span>
-                      </button>
-                    </div>
-
-                    {inlineAddressSaving && <p className="text-xs text-slate-400" aria-live="polite">Saving…</p>}
-                    {inlineAddressError && <p className="text-xs font-medium text-red-600 dark:text-red-400" role="alert">{inlineAddressError}</p>}
-                    {customPublicSiteUrl && !inlineAddressError && (
-                      <p className="break-all font-mono text-[11px] text-slate-400">{customPublicSiteUrl}</p>
+                    ) : (
+                      /* ── Not yet published: editable subdomain picker ── */
+                      <>
+                        <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+                          <div className="flex min-w-0 flex-1 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 dark:border-slate-700 dark:bg-slate-800">
+                            <span className="hidden shrink-0 font-mono text-xs text-slate-400 sm:inline">https://</span>
+                            <input
+                              ref={publicSubdomainInputRef}
+                              id="public-subdomain-inline"
+                              className="min-w-0 flex-1 border-none bg-transparent py-2 font-mono text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                              value={publishSubdomain}
+                              onChange={(e) => {
+                                setPublishSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+                                setInlineAddressError(null)
+                              }}
+                              placeholder="your-subdomain"
+                              autoComplete="off"
+                              spellCheck="false"
+                              disabled={inlineAddressSaving}
+                            />
+                            <span className="shrink-0 font-mono text-xs text-slate-400">.{PUBLIC_SITE_DOMAIN}</span>
+                          </div>
+                          <button
+                            type="button"
+                            title="Save subdomain"
+                            disabled={inlineAddressSaving}
+                            onClick={() => void savePublicAddressFromSettings()}
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-40 sm:w-auto sm:rounded-lg sm:px-3 sm:py-2"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">save</span>
+                            <span className="sm:hidden">Save URL</span>
+                          </button>
+                        </div>
+                        {inlineAddressSaving && <p className="text-xs text-slate-400" aria-live="polite">Saving…</p>}
+                        {inlineAddressError && <p className="text-xs font-medium text-red-600 dark:text-red-400" role="alert">{inlineAddressError}</p>}
+                        {customPublicSiteUrl && !inlineAddressError && (
+                          <p className="break-all font-mono text-[11px] text-slate-400">{customPublicSiteUrl}</p>
+                        )}
+                      </>
                     )}
                   </section>
 
