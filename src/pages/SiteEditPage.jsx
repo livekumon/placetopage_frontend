@@ -155,7 +155,7 @@ export default function SiteEditPage() {
   const [previewBusy, setPreviewBusy] = useState(false)
   const [previewTab, setPreviewTab] = useState('desktop')
   /** Mobile-only: which panel is visible — 'settings' | 'preview' */
-  const [mobileEditorTab, setMobileEditorTab] = useState('settings')
+  const [mobileEditorTab, setMobileEditorTab] = useState('preview')
 
   const [name, setName] = useState('')
   const [theme, setTheme] = useState('light')
