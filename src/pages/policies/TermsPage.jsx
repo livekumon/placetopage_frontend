@@ -68,7 +68,7 @@ export default function TermsPage() {
               (OAuth) or with an email address and password. You are responsible for keeping
               your login credentials secure and for all activity that occurs under your
               account. Notify us immediately at{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a> if you
+              <a href="mailto:support@place2page.com">support@place2page.com</a> if you
               suspect unauthorised access.
             </p>
             <p>
@@ -190,8 +190,7 @@ export default function TermsPage() {
             <h2>15. Contact</h2>
             <p>Questions about these Terms? Reach us at:</p>
             <div className="policy-contact-card">
-              <p><strong>Email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Email:</strong> <a href="mailto:support@place2page.com">support@place2page.com</a></p>
             </div>
           </div>
         </article>

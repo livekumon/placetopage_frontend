@@ -153,7 +153,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               If you wish to delete your account and all associated data, please email us at{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a>. We will
+              <a href="mailto:support@place2page.com">support@place2page.com</a>. We will
               process the request within 30 days.
             </p>
 
@@ -186,7 +186,7 @@ export default function PrivacyPage() {
             </ul>
             <p>
               To exercise any of these rights, contact us at{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a>.
+              <a href="mailto:support@place2page.com">support@place2page.com</a>.
             </p>
 
             <h2>9. Children's Privacy</h2>
@@ -206,8 +206,7 @@ export default function PrivacyPage() {
             <h2>11. Contact</h2>
             <p>For any privacy-related questions or requests:</p>
             <div className="policy-contact-card">
-              <p><strong>Email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Email:</strong> <a href="mailto:support@place2page.com">support@place2page.com</a></p>
             </div>
           </div>
         </article>

@@ -76,8 +76,7 @@ export default function ShippingPage() {
 
             <h2>Reporting a Delivery Issue</h2>
             <div className="policy-contact-card">
-              <p><strong>Email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Email:</strong> <a href="mailto:support@place2page.com">support@place2page.com</a></p>
               <p><strong>Response time:</strong> Within 1–2 business days</p>
             </div>
             <p>

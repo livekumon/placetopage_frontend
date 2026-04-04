@@ -5,9 +5,7 @@ import Footer from '../components/Footer'
 import { isValidWebUrlInput } from '../utils/isWebUrl'
 
 const CONTACT = {
-  email: 'hello@placetopage.app',
-  phone: '+1 (415) 555-0199',
-  hours: 'Monday–Friday, 9:00 a.m.–6:00 p.m. PT',
+  email: 'support@place2page.com',
   note: 'Questions about pricing, agencies, or going live? Reach out—we usually reply within one business day.',
 }
 
@@ -390,7 +388,7 @@ export default function LandingPage() {
 
               <button
                 type="button"
-                onClick={() => setContactOpen(true)}
+                onClick={() => navigate(user ? '/dashboard' : '/login')}
                 className="mb-7 rounded-full border-2 border-primary/30 bg-transparent px-6 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary/5 active:scale-[0.98]"
               >
                 Start a journey
@@ -754,29 +752,6 @@ export default function LandingPage() {
                   >
                     {CONTACT.email}
                   </a>
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <span className="material-symbols-outlined mt-0.5 shrink-0 text-slate-400" aria-hidden>
-                  call
-                </span>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Phone</p>
-                  <a
-                    href={`tel:${CONTACT.phone.replace(/[^+\d]/g, '')}`}
-                    className="font-semibold text-slate-900 hover:underline dark:text-white"
-                  >
-                    {CONTACT.phone}
-                  </a>
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <span className="material-symbols-outlined mt-0.5 shrink-0 text-slate-400" aria-hidden>
-                  schedule
-                </span>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Hours</p>
-                  <p className="font-medium text-slate-800 dark:text-slate-200">{CONTACT.hours}</p>
                 </div>
               </li>
             </ul>

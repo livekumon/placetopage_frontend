@@ -90,14 +90,13 @@ export default function CancellationRefundPage() {
             <h2>How to Request a Refund</h2>
             <p>
               Email us at{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a> with the
+              <a href="mailto:support@place2page.com">support@place2page.com</a> with the
               subject line <em>"Refund Request — [your email]"</em>. All refund requests are
               reviewed manually and we aim to respond within 5–7 business days.
             </p>
 
             <div className="policy-contact-card">
-              <p><strong>Support email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
+              <p><strong>Support email:</strong> <a href="mailto:support@place2page.com">support@place2page.com</a></p>
               <p><strong>Response time:</strong> 5–7 business days for refund decisions</p>
               <p><strong>Refund processing:</strong> 10–15 business days after approval</p>
             </div>

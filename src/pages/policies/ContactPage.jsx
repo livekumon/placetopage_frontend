@@ -24,9 +24,7 @@ export default function ContactPage() {
             </p>
 
             <div className="policy-contact-card">
-              <p><strong>Support email:</strong> <a href="mailto:support@placetopage.com">support@placetopage.com</a></p>
-              <p><strong>Phone:</strong> <a href="tel:+918309341208">+91 83093 41208</a></p>
-              <p><strong>Support hours:</strong> Monday–Friday, 10:00 a.m.–6:00 p.m. IST</p>
+              <p><strong>Support email:</strong> <a href="mailto:support@place2page.com">support@place2page.com</a></p>
             </div>
 
             <h2>Getting Started</h2>
@@ -90,7 +88,7 @@ export default function ContactPage() {
               Are you an agency, freelancer, or business owner looking to generate websites
               for multiple clients? We offer bulk credit packs and are open to discussing
               custom arrangements. Email us at{' '}
-              <a href="mailto:support@placetopage.com">support@placetopage.com</a> with the
+              <a href="mailto:support@place2page.com">support@place2page.com</a> with the
               subject line <em>"Agency enquiry"</em> and tell us a bit about your needs.
             </p>
           </div>
