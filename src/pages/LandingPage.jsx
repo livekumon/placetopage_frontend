@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
+import { isValidWebUrlInput } from '../utils/isWebUrl'
 
 const CONTACT = {
   email: 'hello@placetopage.app',
@@ -9,9 +10,6 @@ const CONTACT = {
   hours: 'Monday–Friday, 9:00 a.m.–6:00 p.m. PT',
   note: 'Questions about pricing, agencies, or going live? Reach out—we usually reply within one business day.',
 }
-
-const MAPS_URL_RE =
-  /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i
 
 function userInitialLetter(user) {
   const name = (user?.name || '').trim()
@@ -79,10 +77,8 @@ export default function LandingPage() {
       return
     }
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
-    if (!MAPS_URL_RE.test(withProtocol)) {
-      setUrlError(
-        "That doesn't look like a Google Maps link. Copy the URL directly from Google Maps while a business is open."
-      )
+    if (!isValidWebUrlInput(withProtocol)) {
+      setUrlError('Enter a valid link (http or https). Paste a share URL or address-bar URL from Google Maps.')
       return
     }
     sessionStorage.setItem('pendingMapsUrl', withProtocol)

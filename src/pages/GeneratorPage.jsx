@@ -2,10 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createSite, enrichPlace, lookupPlace } from '../api/client'
 import { trimPhotoUrl } from '../utils/photoUrl'
-
-// Matches every known Google Maps URL format
-const MAPS_URL_RE =
-  /^https?:\/\/(maps\.google\.|www\.google\.com\/maps|google\.com\/maps|goo\.gl\/maps|maps\.app\.goo\.gl|share\.google|g\.co)/i
+import { isValidWebUrlInput } from '../utils/isWebUrl'
 
 function formatTypes(types = []) {
   const skip = new Set(['point_of_interest', 'establishment', 'food', 'store'])
@@ -150,8 +147,8 @@ export default function GeneratorPage() {
     const val = mapsUrl.trim()
     if (!val) { setUrlError('Please paste a Google Maps link.'); return }
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
-    if (!MAPS_URL_RE.test(withProtocol)) {
-      setUrlError("That doesn't look like a Google Maps link. Try maps.app.goo.gl, share.google, or any google.com/maps URL.")
+    if (!isValidWebUrlInput(withProtocol)) {
+      setUrlError('Enter a valid link (http or https). Paste a share URL or address-bar URL from Google Maps.')
       return
     }
     setMapsUrl(withProtocol)
