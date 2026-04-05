@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { createSite, enrichPlace, lookupPlace } from '../api/client'
 import { trimPhotoUrl } from '../utils/photoUrl'
 import { isValidWebUrlInput } from '../utils/isWebUrl'
+import { trackFormSubmit, trackSiteGenerate, trackEvent } from '../utils/analytics'
 
 function formatTypes(types = []) {
   const skip = new Set(['point_of_interest', 'establishment', 'food', 'store'])
@@ -79,8 +80,10 @@ export default function GeneratorPage() {
     setEnrichStage(0)
     setBusy(true)
     setStep('lookup')
+    trackSiteGenerate(url)
     try {
       const result = await lookupPlace(url)
+      trackEvent('site_lookup_success', { place_name: result.name, place_id: result.placeId })
       setStep('enriching')
       setEnrichStage(1)
       const stageTimer = setInterval(() => setEnrichStage((s) => Math.min(s + 1, 3)), 1200)
@@ -127,12 +130,15 @@ export default function GeneratorPage() {
             subdomainSuggestionPhrase: ai?.subdomainSuggestionPhrase || '',
           },
         })
+        trackEvent('site_created', { site_id: site._id, site_name: site.name, place_name: result.name })
         navigate(`/dashboard/sites/${site._id}`, { replace: true })
       } catch (err) {
+        trackEvent('site_create_error', { error: err.message })
         setGenError(err.message || 'Failed to create site')
         setStep('input')
       }
     } catch (e) {
+      trackEvent('site_lookup_error', { error: e.message })
       setLookupError(e.message || 'Failed to look up this place.')
       setStep('input')
     } finally {
@@ -145,12 +151,18 @@ export default function GeneratorPage() {
     setUrlError('')
     setGenError(null)
     const val = mapsUrl.trim()
-    if (!val) { setUrlError('Please paste a Google Maps link.'); return }
+    if (!val) {
+      setUrlError('Please paste a Google Maps link.')
+      trackFormSubmit('generator_url', { result: 'validation_error', reason: 'empty_url' })
+      return
+    }
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
     if (!isValidWebUrlInput(withProtocol)) {
       setUrlError('Enter a valid link (http or https). Paste a share URL or address-bar URL from Google Maps.')
+      trackFormSubmit('generator_url', { result: 'validation_error', reason: 'invalid_url' })
       return
     }
+    trackFormSubmit('generator_url', { result: 'submitted' })
     setMapsUrl(withProtocol)
     triggerLookup(withProtocol)
   }
@@ -240,6 +252,7 @@ export default function GeneratorPage() {
                 <button
                   type="submit"
                   disabled={busy}
+                  data-track-label="Generator — Generate website"
                   className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-headline text-base font-bold text-on-primary shadow-md shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.97] disabled:opacity-60 sm:py-3"
                 >
                   <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>

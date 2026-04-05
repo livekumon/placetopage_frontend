@@ -11,6 +11,7 @@ import {
   verifyRazorpayPayment,
 } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { trackBeginCheckout, trackPackSelect, trackPurchase, trackClick, trackEvent } from '../utils/analytics'
 
 function detectIsIndia() {
   try {
@@ -132,6 +133,7 @@ export default function PurchaseTokensPage() {
   const handlePaypalCreate = useCallback(async () => {
     if (!selectedPack) throw new Error('No pack selected')
     setPayStatus('processing'); setPayMessage('')
+    trackBeginCheckout(selectedPack, GATEWAY_PAYPAL)
     const data = await createPaypalOrder(selectedPack.id)
     return data.orderId
   }, [selectedPack])
@@ -141,19 +143,23 @@ export default function PurchaseTokensPage() {
       const result = await capturePaypalOrder(data.orderID)
       await refreshUser()
       setNewCredits(result.user?.publishingCredits ?? null)
+      trackPurchase(selectedPack, GATEWAY_PAYPAL, data.orderID)
       setPayStatus('success')
       setPayMessage(`Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${result.payment?.publishingCreditsGranted !== 1 ? 's' : ''} added.`)
     } catch (err) {
+      trackEvent('payment_error', { gateway: GATEWAY_PAYPAL, error: err.message })
       setPayStatus('error')
       setPayMessage(err.message || 'Payment capture failed. Please contact support.')
     }
-  }, [refreshUser])
+  }, [refreshUser, selectedPack])
 
   const handlePaypalError = useCallback(() => {
+    trackEvent('payment_error', { gateway: GATEWAY_PAYPAL, error: 'paypal_sdk_error' })
     setPayStatus('error'); setPayMessage('Something went wrong with PayPal. Please try again.')
   }, [])
 
   const handlePaypalCancel = useCallback(() => {
+    trackEvent('payment_cancel', { gateway: GATEWAY_PAYPAL })
     setPayStatus(null); setPayMessage('')
   }, [])
 
@@ -161,6 +167,7 @@ export default function PurchaseTokensPage() {
   const handleRazorpay = useCallback(async () => {
     if (!selectedPack) return
     setPayStatus('processing'); setPayMessage('')
+    trackBeginCheckout(selectedPack, GATEWAY_RAZORPAY)
     try {
       const loaded = await loadRazorpayScript()
       if (!loaded) throw new Error('Failed to load Razorpay checkout.')
@@ -183,20 +190,23 @@ export default function PurchaseTokensPage() {
               })
               await refreshUser()
               setNewCredits(result.user?.publishingCredits ?? null)
+              trackPurchase(selectedPack, GATEWAY_RAZORPAY, response.razorpay_order_id)
               setPayStatus('success')
               setPayMessage(`Payment successful! ${result.payment?.publishingCreditsGranted ?? ''} website${result.payment?.publishingCreditsGranted !== 1 ? 's' : ''} added.`)
               resolve()
             } catch (err) {
+              trackEvent('payment_error', { gateway: GATEWAY_RAZORPAY, error: err.message })
               setPayStatus('error'); setPayMessage(err.message || 'Verification failed. Contact support.'); reject(err)
             }
           },
-          modal: { ondismiss: () => { setPayStatus(null); setPayMessage(''); resolve() } },
+          modal: { ondismiss: () => { trackEvent('payment_cancel', { gateway: GATEWAY_RAZORPAY }); setPayStatus(null); setPayMessage(''); resolve() } },
           prefill: { email: user?.email || '', name: user?.name || '' },
           theme: { color: '#1a56ff' },
         })
         rzpRef.current.open()
       })
     } catch (err) {
+      trackEvent('payment_error', { gateway: GATEWAY_RAZORPAY, error: err.message })
       setPayStatus('error'); setPayMessage(err.message || 'Something went wrong. Please try again.')
     }
   }, [selectedPack, razorpayKeyId, user, refreshUser])
@@ -291,7 +301,7 @@ export default function PurchaseTokensPage() {
               key={pack.id}
               pack={pack}
               selected={selectedPack?.id === pack.id}
-              onSelect={() => { setSelectedPack(pack); setPayStatus(null); setPayMessage('') }}
+              onSelect={() => { setSelectedPack(pack); trackPackSelect(pack); setPayStatus(null); setPayMessage('') }}
             />
           ))}
         </div>

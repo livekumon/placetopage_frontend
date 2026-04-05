@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getSites, softDeleteSite, updateSite } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { trackClick, trackEvent, trackSiteArchive, trackSiteDelete } from '../utils/analytics'
 
 const RECENT_SITES_VIEW_KEY = 'p2p-dashboard-recent-sites-view'
 
@@ -226,6 +227,7 @@ export default function DashboardPage() {
       const { vercelPauseWarning, vercelPaused, ...sitePayload } = data || {}
       void vercelPaused
       setSites((prev) => prev.map((s) => (s._id === id ? { ...s, ...sitePayload } : s)))
+      trackSiteArchive(id, site.name)
       setArchiveModalSite(null)
       if (vercelPauseWarning) {
         setError(`Archived. Note: ${vercelPauseWarning}`)
@@ -247,6 +249,7 @@ export default function DashboardPage() {
     try {
       const result = await softDeleteSite(id)
       setSites((prev) => prev.filter((s) => s._id !== id))
+      trackSiteDelete(id, site.name)
       setDeleteModalSite(null)
       if (result?.vercelPauseWarning) {
         setError(`Removed from your dashboard. Note: ${result.vercelPauseWarning}`)
@@ -471,7 +474,7 @@ export default function DashboardPage() {
                   <button
                     key={id}
                     type="button"
-                    onClick={() => setRecentSitesView(id)}
+                    onClick={() => { setRecentSitesView(id); trackClick(`Dashboard — View: ${title}`) }}
                     aria-pressed={recentSitesView === id}
                     title={title}
                     className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors md:h-9 md:w-9 ${
@@ -527,7 +530,7 @@ export default function DashboardPage() {
                                 >
                                   <button
                                     type="button"
-                                    onClick={() => navigate(`/dashboard/sites/${site._id}`)}
+                                    onClick={() => { trackEvent('site_open', { site_id: site._id, site_name: site.name, view: 'card' }); navigate(`/dashboard/sites/${site._id}`) }}
                                     className="group flex w-full flex-1 flex-col overflow-hidden text-left"
                                   >
                                     <div className="relative aspect-[16/10] overflow-hidden bg-surface-container-high">
@@ -630,7 +633,7 @@ export default function DashboardPage() {
                       <li key={site._id} className="flex items-stretch">
                         <button
                           type="button"
-                          onClick={() => navigate(`/dashboard/sites/${site._id}`)}
+                          onClick={() => { trackEvent('site_open', { site_id: site._id, site_name: site.name, view: 'list' }); navigate(`/dashboard/sites/${site._id}`) }}
                           className="flex min-w-0 flex-1 flex-col gap-3 px-4 py-4 text-left transition-colors hover:bg-surface-container-low sm:flex-row sm:items-center sm:gap-4 md:px-8"
                         >
                           <div className="flex min-w-0 flex-1 items-center gap-3">

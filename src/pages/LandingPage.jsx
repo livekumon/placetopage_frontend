@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
 import { isValidWebUrlInput } from '../utils/isWebUrl'
+import { trackClick, trackFormSubmit, trackSiteGenerate } from '../utils/analytics'
 
 const CONTACT = {
   email: 'support@place2page.com',
@@ -72,13 +73,17 @@ export default function LandingPage() {
     const val = mapsUrl.trim()
     if (!val) {
       setUrlError('Please paste a Google Maps link first.')
+      trackFormSubmit('hero_generate', { result: 'validation_error', reason: 'empty_url' })
       return
     }
     const withProtocol = /^https?:\/\//i.test(val) ? val : 'https://' + val
     if (!isValidWebUrlInput(withProtocol)) {
       setUrlError('Enter a valid link (http or https). Paste a share URL or address-bar URL from Google Maps.')
+      trackFormSubmit('hero_generate', { result: 'validation_error', reason: 'invalid_url' })
       return
     }
+    trackFormSubmit('hero_generate', { result: 'success', user_logged_in: Boolean(user) })
+    trackSiteGenerate(withProtocol)
     sessionStorage.setItem('pendingMapsUrl', withProtocol)
     navigate(user ? '/generator' : '/register', { state: { from: '/generator' } })
   }
@@ -200,7 +205,8 @@ export default function LandingPage() {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => setContactOpen(true)}
+                  data-track-label="Nav — Sign up"
+                  onClick={() => { trackClick('Nav — Sign up'); setContactOpen(true) }}
                   className={`${headerNavLinkClass} hidden md:inline-flex`}
                 >
                   Sign up
@@ -371,6 +377,7 @@ export default function LandingPage() {
                   </div>
                   <button
                     type="submit"
+                    data-track-label="Hero — Generate website"
                     className="flex flex-shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-bold text-on-primary transition-all hover:bg-primary-container active:scale-95 sm:px-5 md:px-6"
                   >
                     <span className="hidden sm:inline">Generate</span>
@@ -388,7 +395,11 @@ export default function LandingPage() {
 
               <button
                 type="button"
-                onClick={() => navigate(user ? '/dashboard' : '/login')}
+                data-track-label="Hero — Start a journey"
+                onClick={() => {
+                  trackClick('Hero — Start a journey', { user_logged_in: Boolean(user) })
+                  navigate(user ? '/dashboard' : '/login')
+                }}
                 className="mb-7 rounded-full border-2 border-primary/30 bg-transparent px-6 py-2.5 font-headline text-sm font-bold text-primary transition-all hover:border-primary hover:bg-primary/5 active:scale-[0.98]"
               >
                 Start a journey
@@ -601,6 +612,7 @@ export default function LandingPage() {
                 </ul>
                 <a
                   href="/login"
+                  data-track-label="Pricing — Get started free"
                   className="w-full rounded-full bg-surface-container-highest py-4 text-center font-bold text-on-surface transition-all hover:bg-surface-container block"
                 >
                   Get started free
@@ -638,6 +650,7 @@ export default function LandingPage() {
                 </ul>
                 <a
                   href="/login"
+                  data-track-label="Pricing — Buy for $5"
                   className="w-full rounded-full bg-white py-5 text-center text-lg font-bold text-black transition-all hover:bg-slate-100 block"
                 >
                   Buy for $5
@@ -700,6 +713,7 @@ export default function LandingPage() {
                 </ul>
                 <a
                   href="/login"
+                  data-track-label="Pricing — Buy credits (bulk)"
                   className="w-full rounded-full bg-on-surface py-4 text-center font-bold text-surface transition-all hover:opacity-90 block"
                 >
                   Buy credits
@@ -765,7 +779,8 @@ export default function LandingPage() {
               </button>
               <Link
                 to="/register"
-                onClick={() => setContactOpen(false)}
+                data-track-label="Contact modal — Create free account"
+                onClick={() => { trackClick('Contact modal — Create free account'); setContactOpen(false) }}
                 className="order-1 inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-center font-headline text-sm font-bold text-on-primary shadow-md transition-colors hover:bg-primary-container sm:order-2"
               >
                 Create free account

@@ -10,6 +10,7 @@ import {
   updateSite,
   uploadHeroImage,
 } from '../api/client'
+import { trackClick, trackEvent, trackSitePublish, trackSiteSave } from '../utils/analytics'
 import { IPHONE_HEIGHT, IPHONE_WIDTH } from '../constants/viewports'
 import { samePhotoUrl, trimPhotoUrl } from '../utils/photoUrl'
 import { buildSiteEditPreviewSrcDoc } from '../utils/previewIframe'
@@ -222,8 +223,9 @@ export default function SiteEditPage() {
     // Detect zero credits immediately so the modal shows the buy-credits UI
     // without requiring the user to click "Publish site" first.
     setPublishNoCredits((user?.publishingCredits ?? 0) < 1)
+    trackClick('Site Editor — Open Publish modal', { site_id: siteId })
     setPublishReviewOpen(true)
-  }, [user?.publishingCredits])
+  }, [user?.publishingCredits, siteId])
 
   const closePublishReview = useCallback(() => {
     if (saving || deploying || subdomainSaving) return
@@ -626,6 +628,7 @@ export default function SiteEditPage() {
       setPreviewHtml(deployed.generatedHtml || previewHtml)
       const live = (deployed?.deploymentUrl || '').trim() || null
       setPublishSuccessLiveUrl(live)
+      trackSitePublish(siteId, site?.name)
       setPublishReviewOpen(false)
       setSubdomainAvailability(null)
       if (isPublishStepRoute) {
@@ -813,6 +816,7 @@ export default function SiteEditPage() {
                 type="button"
                 disabled={saving || deploying}
                 onClick={openPublishReview}
+                data-track-label="Site Editor — Publish"
                 className="rounded-full bg-primary px-4 py-2 font-headline text-xs font-bold uppercase tracking-widest text-on-primary shadow-md shadow-primary/15 transition-all hover:bg-primary-container disabled:opacity-60 sm:px-6 sm:py-2.5"
               >
                 Publish
@@ -1578,6 +1582,7 @@ export default function SiteEditPage() {
                       type="button"
                       onClick={() => void confirmPublishFromReview()}
                       disabled={publishAddressBlocked || saving || deploying}
+                      data-track-label="Site Editor — Confirm publish site"
                       className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold text-on-primary shadow-md transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
                     >
                       {deploying ? (

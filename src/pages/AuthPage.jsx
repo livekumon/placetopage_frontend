@@ -7,6 +7,7 @@ import {
   registerWithGoogleCredential,
 } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { trackAuth, trackFormSubmit, trackClick } from '../utils/analytics'
 
 // ── Small reusable field component ────────────────────────────────────────────
 
@@ -102,14 +103,20 @@ export default function AuthPage({ mode }) {
     if (!form.password) errs.password = 'Password is required.'
     if (!isLogin && form.password && form.password.length < 8) errs.password = 'Password must be at least 8 characters.'
     if (!isLogin && form.password !== form.confirm) errs.confirm = 'Passwords do not match.'
-    if (Object.keys(errs).length) { setFieldErrors(errs); return }
+    if (Object.keys(errs).length) {
+      setFieldErrors(errs)
+      trackFormSubmit(isLogin ? 'login_email' : 'register_email', { result: 'validation_error' })
+      return
+    }
 
+    trackFormSubmit(isLogin ? 'login_email' : 'register_email', { result: 'submitted' })
     setBusy(true)
     try {
       const data = isLogin
         ? await loginWithEmail(form.email, form.password)
         : await registerWithEmail(form.name, form.email, form.password)
       loginWithSession(data.token, data.user)
+      trackAuth('email', isLogin ? 'login' : 'register')
       redirectAfterAuth()
     } catch (err) {
       if (err.field) {
@@ -127,6 +134,7 @@ export default function AuthPage({ mode }) {
     async (response) => {
       setGlobalError('')
       setBusy(true)
+      trackClick(`Google SSO — ${modeRef.current === 'register' ? 'Sign up' : 'Sign in'}`)
       try {
         const cred = response?.credential
         if (!cred) { setGlobalError('No credential received from Google.'); return }
@@ -134,6 +142,7 @@ export default function AuthPage({ mode }) {
           ? await registerWithGoogleCredential(cred)
           : await loginWithGoogleCredential(cred)
         loginWithSession(data.token, data.user)
+        trackAuth('google', modeRef.current === 'register' ? 'register' : 'login')
         redirectAfterAuth()
       } catch (err) {
         setGlobalError(err.message || 'Google sign-in failed.')
@@ -271,6 +280,7 @@ export default function AuthPage({ mode }) {
               <button
                 type="submit"
                 disabled={busy}
+                data-track-label={isLogin ? 'Auth — Sign in (email)' : 'Auth — Create account (email)'}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-on-primary transition-all hover:bg-primary-container active:scale-[0.98] disabled:opacity-60"
               >
                 {busy ? (
