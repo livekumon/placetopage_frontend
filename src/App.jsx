@@ -11,6 +11,7 @@ import RecycleBinPage from './pages/RecycleBinPage'
 import PurchaseTokensPage from './pages/PurchaseTokensPage'
 import SiteEditPage from './pages/SiteEditPage'
 import GeneratorPage from './pages/GeneratorPage'
+import LinkedInGeneratorPage from './pages/LinkedInGeneratorPage'
 import BiryaniBluesPage from './pages/BiryaniBluesPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
 import CancellationRefundPage from './pages/policies/CancellationRefundPage'
@@ -19,6 +20,8 @@ import ShippingPage from './pages/policies/ShippingPage'
 import PrivacyPage from './pages/policies/PrivacyPage'
 import ContactPage from './pages/policies/ContactPage'
 import CampaignLandingPage from './pages/CampaignLandingPage'
+import BlogIndexPage from './pages/BlogIndexPage'
+import BlogPostPage from './pages/BlogPostPage'
 import { trackEvent, trackPageView } from './utils/analytics'
 import { captureUtmParams } from './utils/utm'
 
@@ -79,6 +82,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/lp/:campaign" element={<CampaignLandingPage />} />
+          <Route path="/blog" element={<BlogIndexPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/example/biryani-blues" element={<BiryaniBluesPage />} />
           <Route element={<AppShell />}>
@@ -129,6 +134,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <GeneratorPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/linkedin-generator"
+              element={
+                <ProtectedRoute>
+                  <LinkedInGeneratorPage />
                 </ProtectedRoute>
               }
             />

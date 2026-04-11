@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 const YEAR = new Date().getFullYear()
 
 const policies = [
+  { label: 'Blog', to: '/blog' },
   { label: 'Terms & Conditions', to: '/policies/terms' },
   { label: 'Privacy Policy', to: '/policies/privacy' },
   { label: 'Cancellation & Refunds', to: '/policies/cancellation-refunds' },

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /generator
+Disallow: /recycle-bin
+Disallow: /purchase-tokens
+
+Sitemap: https://www.placetopage.com/sitemap.xml

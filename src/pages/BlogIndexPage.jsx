@@ -1,0 +1,84 @@
+import { Link } from 'react-router-dom'
+import { getAllPosts } from '../data/blogPosts'
+import Footer from '../components/Footer'
+import useDocumentMeta from '../utils/useDocumentMeta'
+
+export default function BlogIndexPage() {
+  const posts = getAllPosts()
+
+  useDocumentMeta({
+    title: 'Blog — Local SEO & AI Website Tips for Business Owners | PlacePage',
+    description: 'Practical guides on Google Maps SEO, local business websites, and AI tools. Written for business owners who want more customers from Google.',
+    canonical: 'https://www.placetopage.com/blog',
+    ogTitle: 'Blog | PlacePage',
+    ogDescription: 'Practical guides on Google Maps SEO, local business websites, and AI tools.',
+  })
+
+  return (
+    <div className="min-h-dvh bg-background font-body text-on-background antialiased">
+      {/* Header */}
+      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="PlacePage" className="h-8 w-8 rounded-lg object-contain" />
+            <span className="font-manrope text-lg font-bold tracking-tight text-slate-900">PlacePage</span>
+          </Link>
+          <nav className="flex items-center gap-4">
+            <Link to="/" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Home</Link>
+            <Link
+              to="/register"
+              className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-container"
+            >
+              Get started free
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+        <h1 className="mb-3 font-headline text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          Blog
+        </h1>
+        <p className="mb-12 text-lg text-slate-500">
+          Practical guides on local SEO, Google Maps, and AI tools for business owners.
+        </p>
+
+        <div className="grid gap-6">
+          {posts.map((post) => (
+            <article
+              key={post.slug}
+              className="group rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all hover:border-slate-300 hover:shadow-md sm:p-8"
+            >
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  {post.category}
+                </span>
+                <span className="text-xs text-slate-400">{post.readTime}</span>
+                <span className="text-xs text-slate-400">
+                  {new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+              </div>
+              <h2 className="mb-2 font-headline text-xl font-bold leading-snug text-slate-900">
+                <Link
+                  to={`/blog/${post.slug}`}
+                  className="transition-colors group-hover:text-primary"
+                >
+                  {post.title}
+                </Link>
+              </h2>
+              <p className="mb-4 text-sm leading-relaxed text-slate-500">{post.description}</p>
+              <Link
+                to={`/blog/${post.slug}`}
+                className="text-sm font-semibold text-primary transition-colors hover:text-primary-container"
+              >
+                Read article &rarr;
+              </Link>
+            </article>
+          ))}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

@@ -253,6 +253,80 @@ body {
   font-size: 0.88rem !important;
 }
 
+/* ── Blog article content ─────────────────────────────────────────────────── */
+.blog-content h2 {
+  font-family: var(--font-headline, 'Manrope', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-on-surface, #131b2e);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.blog-content h3 {
+  font-family: var(--font-headline, 'Manrope', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-on-surface, #131b2e);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+
+.blog-content p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #4b5563;
+  margin-bottom: 1.25rem;
+}
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.blog-content ul { list-style-type: disc; }
+.blog-content ol { list-style-type: decimal; }
+
+.blog-content li {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content a {
+  color: var(--color-primary, #000000);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-content a:hover {
+  opacity: 0.7;
+}
+
+.blog-content strong {
+  font-weight: 600;
+  color: var(--color-on-surface, #131b2e);
+}
+
+.blog-content blockquote {
+  border-left: 3px solid var(--color-outline-variant, #c6c6cd);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
 /* Purchase Tokens page — all styles now in Tailwind inside the component */
 
 /* ── Prevent iOS Safari auto-zoom on input focus ───────────────────────────────

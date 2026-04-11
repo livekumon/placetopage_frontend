@@ -177,6 +177,9 @@ export default function LandingPage() {
             <a className={headerNavLinkClass} href="#agencies">
               For agencies
             </a>
+            <Link className={headerNavLinkClass} to="/blog">
+              Blog
+            </Link>
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
@@ -332,6 +335,9 @@ export default function LandingPage() {
               >
                 For agencies
               </a>
+              <Link className={headerNavLinkClass} to="/blog" onClick={closeMobileNav}>
+                Blog
+              </Link>
               {user && (
                 <>
                   <hr className="my-2 border-slate-200 dark:border-slate-700" />
@@ -515,6 +521,7 @@ export default function LandingPage() {
         {/* ── How it works strip ── */}
         <section className="border-y border-outline-variant/20 bg-surface-container-lowest py-12 md:py-14">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <h2 className="sr-only">How it works</h2>
             <div className="grid grid-cols-1 gap-10 text-center sm:grid-cols-3 sm:gap-8">
               {[
                 { icon: 'link', step: '1', title: 'Paste a Maps link', desc: 'Copy any Google Maps business URL and drop it in the input above.' },
