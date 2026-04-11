@@ -527,7 +527,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <img
-                  src="/editor-preview.png"
+                  src="/homepage.png"
                   alt="Place to Page site editor — settings panel on the left with a live website preview on the right"
                   className="block w-full"
                 />
