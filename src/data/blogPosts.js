@@ -113,6 +113,9 @@ No designers. No developers. No waiting. Just a professional website built from 
     readTime: '5 min read',
     category: 'Industry',
     keywords: ['website for restaurant', 'restaurant website generator', 'how to make a website for my restaurant'],
+    coverImage: '/blog/website-for-restaurant-card.png',
+    coverImageAlt:
+      'Illustration: digital portfolio and local business icons — open book, analytics laptop, Google Business, SEO growth, 60 second timer, and dining imagery for restaurants',
     cardImage: '/blog/website-for-restaurant-card.png',
     cardImageAlt:
       'Illustration: digital portfolio and local business icons — open book, analytics laptop, Google Business, SEO growth, 60 second timer, and dining imagery for restaurants',
@@ -201,6 +204,9 @@ Your future diners are searching right now. Give them something worth clicking o
     readTime: '6 min read',
     category: 'Local SEO',
     keywords: ['local SEO landing page', 'local business landing page', 'local SEO for small business'],
+    coverImage: '/blog/local-seo-landing-page-card.png',
+    coverImageAlt:
+      'Illustration: local landing page theme — analytics dashboard, Google Business, SEO arrow, 60 second timer, cafe and local business icons, call-to-action',
     cardImage: '/blog/local-seo-landing-page-card.png',
     cardImageAlt:
       'Illustration: local landing page theme — analytics dashboard, Google Business, SEO arrow, 60 second timer, cafe and local business icons, call-to-action',
@@ -291,6 +297,9 @@ You can build one yourself, hire someone, or let AI generate one from your exist
     readTime: '7 min read',
     category: 'Local SEO',
     keywords: ['Google Maps SEO', 'Google Maps SEO for small business', 'how to rank on Google Maps'],
+    coverImage: '/blog/google-maps-seo-small-business-card.png',
+    coverImageAlt:
+      'Isometric illustration: Google Business storefront, analytics laptop, mobile engagement, SEO growth, 60 second stopwatch, and web icons for local search',
     cardImage: '/blog/google-maps-seo-small-business-card.png',
     cardImageAlt:
       'Isometric illustration: Google Business storefront, analytics laptop, mobile engagement, SEO growth, 60 second stopwatch, and web icons for local search',
@@ -426,6 +435,9 @@ Your competitors aren't doing this. That's your advantage.`,
     readTime: '5 min read',
     category: 'AI Tools',
     keywords: ['AI website generator', 'AI website builder for local business', 'best AI website generator'],
+    coverImage: '/blog/ai-website-generator-local-business-card.png',
+    coverImageAlt:
+      'Illustration: boost your ranking on Google — smartphone with map and Map Pack, Google pin, upward arrows, and local business icons with star ratings',
     cardImage: '/blog/ai-website-generator-local-business-card.png',
     cardImageAlt:
       'Illustration: boost your ranking on Google — smartphone with map and Map Pack, Google pin, upward arrows, and local business icons with star ratings',
@@ -531,6 +543,9 @@ Your online presence is too important to put off any longer, and the barrier to 
     readTime: '6 min read',
     category: 'Industry',
     keywords: ['best website builder for salons', 'salon website builder', 'website for hair salon', 'beauty salon website'],
+    coverImage: '/blog/best-website-builder-for-salons-card.png',
+    coverImageAlt:
+      'Illustration: salon website builders speed vs style 2026 — AI-powered smartphone template done in minutes versus hours of manual design on laptop with balayage gallery',
     cardImage: '/blog/best-website-builder-for-salons-card.png',
     cardImageAlt:
       'Illustration: salon website builders speed vs style 2026 — AI-powered smartphone template done in minutes versus hours of manual design on laptop with balayage gallery',
@@ -667,6 +682,9 @@ Your next client is searching for you right now. Make sure they find something w
     readTime: '7 min read',
     category: 'Local SEO',
     keywords: ['how to get more customers from Google', 'get more customers Google Maps', 'local business Google ranking', 'Google My Business tips'],
+    coverImage: '/blog/how-to-get-more-customers-from-google-card.png',
+    coverImageAlt:
+      'Illustration: how to get more customers from Google — smartphone showing Google Ads, Map Pack, and organic results with growth arrows, directions, call buttons, and local business icons',
     cardImage: '/blog/how-to-get-more-customers-from-google-card.png',
     cardImageAlt:
       'Illustration: how to get more customers from Google — smartphone showing Google Ads, Map Pack, and organic results with growth arrows, directions, call buttons, and local business icons',

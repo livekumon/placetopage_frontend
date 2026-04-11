@@ -3,6 +3,17 @@ import { getAllPosts } from '../data/blogPosts'
 import Footer from '../components/Footer'
 import useDocumentMeta from '../utils/useDocumentMeta'
 
+const CATEGORY_COLORS = {
+  'How-to':    { bg: 'bg-emerald-50',  text: 'text-emerald-700' },
+  'Industry':  { bg: 'bg-violet-50',   text: 'text-violet-700' },
+  'Local SEO': { bg: 'bg-amber-50',    text: 'text-amber-700' },
+  'AI Tools':  { bg: 'bg-sky-50',      text: 'text-sky-700' },
+}
+
+function catColor(category) {
+  return CATEGORY_COLORS[category] || { bg: 'bg-blue-50', text: 'text-blue-700' }
+}
+
 export default function BlogIndexPage() {
   const posts = getAllPosts()
 
@@ -74,7 +85,7 @@ export default function BlogIndexPage() {
               </Link>
               <div className="flex flex-1 flex-col p-6 sm:p-7">
                 <div className="mb-3 flex flex-wrap items-center gap-3">
-                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${catColor(post.category).bg} ${catColor(post.category).text}`}>
                     {post.category}
                   </span>
                   <span className="text-xs text-slate-400">{post.readTime}</span>
