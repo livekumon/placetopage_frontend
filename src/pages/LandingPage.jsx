@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
@@ -34,100 +34,59 @@ const features = [
   { icon: 'hub', title: 'Agency-ready', text: 'Mass-generate sites for all your clients from a single dashboard. Client logins included.' },
 ]
 
-const PRICING_FAQS = [
-  {
-    plan: 'Free plan',
-    q: 'What exactly do I get for free?',
-    a: 'When you sign up you receive 1 publishing credit at no cost — no credit card required. Use it to generate a site from any Google Maps link and publish it live on a placetopage.com subdomain. That one site stays live indefinitely.',
-  },
-  {
-    plan: 'Free plan',
-    q: 'What happens after I use my free credit?',
-    a: 'Your existing site stays online. To generate and publish additional sites you\'ll need to purchase more credits — starting at $5 per site.',
-  },
-  {
-    plan: 'Starter — $5/site',
-    q: 'Is the $5 a subscription or a one-time payment?',
-    a: 'Strictly one-time. You pay $5, you get one website credit. No recurring charges, no hidden fees. Buy more credits whenever you need them.',
-  },
-  {
-    plan: 'Starter — $5/site',
-    q: 'What does the $5 site include?',
-    a: 'Everything: an AI-generated design built from your Google Maps photos and branding, SEO-optimised copy, a mobile-responsive layout, a free subdomain (yourname.placetopage.com), real-time analytics, and unlimited future edits.',
-  },
-  {
-    plan: 'Starter — $5/site',
-    q: 'Can I connect my own domain?',
-    a: 'Yes. After publishing you can point any custom domain to your site. Custom domain setup is available in the site settings inside the dashboard.',
-  },
-  {
-    plan: 'Bulk credits',
-    q: 'Do bulk credits expire?',
-    a: 'Never. Credits sit in your account until you use them. Buy a bundle now and deploy sites months later — they\'ll still be there.',
-  },
-  {
-    plan: 'Bulk credits',
-    q: 'Can I use bulk credits across multiple client sites?',
-    a: 'Yes. Credits are account-wide, not tied to a specific site. Perfect for agencies managing multiple clients from one dashboard.',
-  },
-  {
-    plan: 'Bulk credits',
-    q: 'Do bulk credits stack with credits I already have?',
-    a: 'Absolutely. Purchasing a pack adds to your existing balance — nothing is reset or replaced.',
-  },
-]
-
-function PricingFaq() {
+/**
+ * Inline FAQ accordion for individual pricing cards.
+ * `variant` controls the colour scheme: 'light' (default) or 'dark' (for the primary-bg Starter card).
+ */
+function PlanFaq({ items, variant = 'light' }) {
   const [openIndex, setOpenIndex] = useState(null)
-
-  // Group by plan label
-  const groups = PRICING_FAQS.reduce((acc, item, i) => {
-    const last = acc[acc.length - 1]
-    if (last && last.plan === item.plan) {
-      last.items.push({ ...item, index: i })
-    } else {
-      acc.push({ plan: item.plan, items: [{ ...item, index: i }] })
-    }
-    return acc
-  }, [])
+  const dark = variant === 'dark'
 
   return (
-    <div className="space-y-6">
-      {groups.map((group) => (
-        <div key={group.plan}>
-          <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-            {group.plan}
-          </p>
-          <div className="divide-y divide-outline-variant/20 overflow-hidden rounded-2xl border border-outline-variant/20 bg-white shadow-sm">
-            {group.items.map((item) => {
-              const isOpen = openIndex === item.index
-              return (
-                <div key={item.index}>
-                  <button
-                    type="button"
-                    onClick={() => setOpenIndex(isOpen ? null : item.index)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low"
-                    aria-expanded={isOpen}
-                  >
-                    {item.q}
-                    <span className={`material-symbols-outlined shrink-0 text-[20px] text-on-surface-variant transition-transform ${isOpen ? 'rotate-180' : ''}`}>
-                      expand_more
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <div className="px-5 pb-4 text-sm leading-relaxed text-on-surface-variant">
-                      {item.a}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+    <div className={`mt-6 divide-y overflow-hidden rounded-xl ${dark ? 'divide-white/10 border border-white/10' : 'divide-slate-200/80 border border-outline-variant/15'}`}>
+      {items.map((item, i) => {
+        const isOpen = openIndex === i
+        return (
+          <div key={i}>
+            <button
+              type="button"
+              onClick={() => setOpenIndex(isOpen ? null : i)}
+              className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-xs font-semibold transition-colors ${dark ? 'text-white/90 hover:bg-white/5' : 'text-on-surface hover:bg-surface-container-low'}`}
+              aria-expanded={isOpen}
+            >
+              {item.q}
+              <span className={`material-symbols-outlined shrink-0 text-[18px] transition-transform ${dark ? 'text-white/50' : 'text-on-surface-variant'} ${isOpen ? 'rotate-180' : ''}`}>
+                expand_more
+              </span>
+            </button>
+            {isOpen && (
+              <div className={`px-4 pb-3 text-xs leading-relaxed ${dark ? 'text-white/60' : 'text-on-surface-variant'}`}>
+                {item.a}
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
+
+const FREE_FAQS = [
+  { q: 'What exactly do I get for free?', a: 'One publishing credit at no cost — no credit card required. Generate a site from any Google Maps link and publish it live on a placetopage.com subdomain. That site stays live indefinitely.' },
+  { q: 'What happens after I use my free credit?', a: 'Your existing site stays online. To generate and publish additional sites you\'ll need to purchase more credits — starting at $5 per site.' },
+]
+
+const STARTER_FAQS = [
+  { q: 'Is this a subscription?', a: 'No — strictly one-time. You pay $5, get one website credit. No recurring charges, no hidden fees.' },
+  { q: 'What\'s included in the site?', a: 'AI-generated design from your Google Maps photos, SEO-optimised copy, mobile-responsive layout, free subdomain, real-time analytics, and unlimited future edits.' },
+  { q: 'Can I connect my own domain?', a: 'Yes. After publishing you can point any custom domain to your site from the dashboard settings.' },
+]
+
+const BULK_FAQS = [
+  { q: 'Do bulk credits expire?', a: 'Never. Credits sit in your account until you use them — buy now, deploy months later.' },
+  { q: 'Can I use them across multiple clients?', a: 'Yes. Credits are account-wide, not tied to a specific site. Perfect for agencies.' },
+  { q: 'Do they stack with existing credits?', a: 'Absolutely. Purchasing a pack adds to your existing balance — nothing is reset or replaced.' },
+]
 
 export default function LandingPage() {
   const { user, logout } = useAuth()
@@ -729,6 +688,7 @@ export default function LandingPage() {
                 >
                   Get started free
                 </a>
+                <PlanFaq items={FREE_FAQS} />
               </div>
 
               {/* ── $5 per site (Starter) ── */}
@@ -767,6 +727,7 @@ export default function LandingPage() {
                 >
                   Buy for $5
                 </a>
+                <PlanFaq items={STARTER_FAQS} variant="dark" />
               </div>
 
               {/* ── Bulk Credits ── */}
@@ -830,17 +791,11 @@ export default function LandingPage() {
                 >
                   Buy credits
                 </a>
+                <PlanFaq items={BULK_FAQS} />
               </div>
 
             </div>
 
-            {/* ── Pricing FAQ ── */}
-            <div className="mx-auto mt-16 max-w-3xl md:mt-24">
-              <h3 className="mb-8 text-center font-headline text-2xl font-extrabold text-on-surface">
-                Common questions about plans
-              </h3>
-              <PricingFaq />
-            </div>
           </div>
         </section>
 
