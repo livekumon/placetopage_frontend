@@ -359,6 +359,42 @@ export async function getUploadStatus() {
   return data
 }
 
+// ── LinkedIn API functions ────────────────────────────────────────────────────
+
+/**
+ * POST /api/linkedin/lookup
+ * Validates the LinkedIn URL and returns the parsed profile shell.
+ * @param {string} url - LinkedIn profile URL
+ * @param {object} [profile] - Optional manually entered profile data to merge
+ */
+export async function lookupLinkedIn(url, profile = {}) {
+  const res = await fetch(`${base}/api/linkedin/lookup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ url, profile }),
+  })
+  const data = await parseJson(res)
+  if (!res.ok) throw Object.assign(new Error(data?.message || 'Failed to look up LinkedIn profile'), { code: data?.code })
+  return data
+}
+
+/**
+ * POST /api/linkedin/enrich
+ * Uses Claude AI to generate compelling website copy from LinkedIn profile data.
+ * @param {object} profileData - LinkedIn profile fields
+ */
+export async function enrichLinkedIn(profileData) {
+  const res = await fetch(`${base}/api/linkedin/enrich`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(profileData),
+  })
+  const data = await parseJson(res)
+  if (res.status === 503) return data
+  if (!res.ok) throw new Error(data?.message || 'LinkedIn AI enrichment failed')
+  return data
+}
+
 /** Multipart upload → public URL on GCS (requires server env). */
 export async function uploadHeroImage(file) {
   const form = new FormData()
