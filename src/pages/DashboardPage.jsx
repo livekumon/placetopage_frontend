@@ -301,6 +301,7 @@ export default function DashboardPage() {
   }, [recentSitesView])
 
   useEffect(() => {
+    try { localStorage.setItem('dashboard_visited', 'true') } catch { /* noop */ }
     let cancelled = false
     ;(async () => {
       try {
@@ -348,6 +349,28 @@ export default function DashboardPage() {
                 Welcome back{user?.name ? `, ${user.name}` : ''}
               </p>
               <h1 className="font-headline text-xl font-extrabold tracking-tight text-on-surface md:text-3xl">Dashboard</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Credits indicator */}
+              {user && (
+                <Link
+                  to="/purchase-tokens"
+                  className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                >
+                  <span className="material-symbols-outlined text-[15px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>language</span>
+                  {user.publishingCredits ?? 0} credit{(user.publishingCredits ?? 0) !== 1 ? 's' : ''} left
+                </Link>
+              )}
+              {/* Generate another site — shown when user has sites */}
+              {!loading && sites.length > 0 && (
+                <Link
+                  to="/generator"
+                  className="hidden items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-on-primary shadow-sm transition-all hover:opacity-90 sm:inline-flex"
+                >
+                  <span className="material-symbols-outlined text-[15px]">add</span>
+                  Generate another site
+                </Link>
+              )}
             </div>
           </div>
           <label className="sr-only" htmlFor="dashboard-site-search">
@@ -493,13 +516,19 @@ export default function DashboardPage() {
               <div className="min-h-0 flex-1 overflow-auto px-4 py-6 md:px-8">
                 {loading && <p className="py-12 text-center text-sm text-on-surface-variant">Loading…</p>}
                 {!loading && sites.length === 0 && (
-                  <p className="py-12 text-center text-sm text-on-surface-variant">
-                    No sites yet.{' '}
-                    <Link to="/generator" className="font-medium text-primary underline">
-                      Create one
+                  <div className="flex flex-col items-center gap-4 py-16 text-center">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
+                      <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
+                    </div>
+                    <h3 className="font-headline text-lg font-bold text-on-surface">Create your first site</h3>
+                    <p className="max-w-xs text-sm text-on-surface-variant">Paste a Google Maps link and get a professional website in under 60 seconds.</p>
+                    <Link
+                      to="/generator"
+                      className="mt-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-on-primary shadow-md transition-all hover:brightness-110 active:scale-[0.97]"
+                    >
+                      Generate your first site
                     </Link>
-                    .
-                  </p>
+                  </div>
                 )}
                 {!loading && sites.length > 0 && filteredSites.length === 0 && (
                   <p className="py-12 text-center text-sm text-on-surface-variant">{emptyResultsMessage()}</p>
@@ -616,13 +645,19 @@ export default function DashboardPage() {
               <div className="min-h-0 flex-1 overflow-auto">
                 {loading && <p className="py-12 text-center text-sm text-on-surface-variant">Loading…</p>}
                 {!loading && sites.length === 0 && (
-                  <p className="px-4 py-12 text-center text-sm text-on-surface-variant md:px-8">
-                    No sites yet.{' '}
-                    <Link to="/generator" className="font-medium text-primary underline">
-                      Create one
+                  <div className="flex flex-col items-center gap-4 px-4 py-16 text-center md:px-8">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
+                      <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
+                    </div>
+                    <h3 className="font-headline text-lg font-bold text-on-surface">Create your first site</h3>
+                    <p className="max-w-xs text-sm text-on-surface-variant">Paste a Google Maps link and get a professional website in under 60 seconds.</p>
+                    <Link
+                      to="/generator"
+                      className="mt-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-on-primary shadow-md transition-all hover:brightness-110 active:scale-[0.97]"
+                    >
+                      Generate your first site
                     </Link>
-                    .
-                  </p>
+                  </div>
                 )}
                 {!loading && sites.length > 0 && filteredSites.length === 0 && (
                   <p className="px-4 py-12 text-center text-sm text-on-surface-variant md:px-8">{emptyResultsMessage()}</p>
@@ -724,12 +759,20 @@ export default function DashboardPage() {
                     )}
                     {!loading && sites.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="px-6 py-8 text-center text-on-surface-variant md:px-8">
-                          No sites yet.{' '}
-                          <Link to="/generator" className="font-medium text-primary underline">
-                            Create one
-                          </Link>
-                          .
+                        <td colSpan={6} className="px-6 py-16 text-center md:px-8">
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
+                              <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
+                            </div>
+                            <h3 className="font-headline text-lg font-bold text-on-surface">Create your first site</h3>
+                            <p className="max-w-xs text-sm text-on-surface-variant">Paste a Google Maps link and get a professional website in under 60 seconds.</p>
+                            <Link
+                              to="/generator"
+                              className="mt-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-on-primary shadow-md transition-all hover:brightness-110 active:scale-[0.97]"
+                            >
+                              Generate your first site
+                            </Link>
+                          </div>
                         </td>
                       </tr>
                     )}

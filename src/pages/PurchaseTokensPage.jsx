@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import {
@@ -11,7 +11,7 @@ import {
   verifyRazorpayPayment,
 } from '../api/client'
 import { useAuth } from '../context/AuthContext'
-import { trackBeginCheckout, trackPackSelect, trackPurchase, trackClick, trackEvent } from '../utils/analytics'
+import { trackBeginCheckout, trackPackSelect, trackPurchase, trackClick, trackEvent, trackViewPricing } from '../utils/analytics'
 
 function detectIsIndia() {
   try {
@@ -109,6 +109,8 @@ export default function PurchaseTokensPage() {
   const [payMessage, setPayMessage] = useState('')
   const [newCredits, setNewCredits] = useState(null)
   const rzpRef = useRef(null)
+
+  useEffect(() => { trackViewPricing() }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -306,6 +308,22 @@ export default function PurchaseTokensPage() {
           ))}
         </div>
 
+        {/* ── Trust row ── */}
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 sm:gap-6 dark:text-slate-400">
+          <span className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-emerald-600" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+            Secure checkout via Stripe
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-blue-600" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
+            Refund policy
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+            Used by 2,400+ businesses
+          </span>
+        </div>
+
         {/* ── Checkout — fixed bottom sheet on mobile, inline card on desktop ── */}
         {selectedPack && (
           <>
@@ -352,8 +370,70 @@ export default function PurchaseTokensPage() {
             </div>
           </>
         )}
+
+        {/* ── FAQ Accordion ── */}
+        <FaqAccordion />
       </div>
     </div>
+  )
+}
+
+// ── FAQ Accordion ──────────────────────────────────────────────────────────────
+const FAQ_ITEMS = [
+  {
+    q: 'What happens when I run out of credits?',
+    a: 'You can still browse your dashboard and edit existing sites. To generate or publish a new site you\'ll need to purchase additional credits. Your existing live sites remain online regardless of your credit balance.',
+  },
+  {
+    q: 'Can I get a refund?',
+    a: 'Yes — if you haven\'t used a credit yet, we\'re happy to issue a full refund within 14 days of purchase. Once a credit has been used to publish a site, that credit is non-refundable. Contact support@place2page.com for refund requests.',
+  },
+  {
+    q: 'Do credits expire?',
+    a: 'No. Credits never expire. Purchase them now and use them whenever you\'re ready — there\'s no time limit.',
+  },
+  {
+    q: 'What\'s included in a generated site?',
+    a: 'Every generated site includes a custom design based on your business photos and branding, SEO-optimised copy pulled from your Google Maps listing, a mobile-responsive layout, a free subdomain on placetopage.com, built-in analytics, and unlimited future edits.',
+  },
+]
+
+function FaqAccordion() {
+  const [openIndex, setOpenIndex] = useState(null)
+
+  return (
+    <section className="mt-10">
+      <h2 className="mb-4 text-center font-headline text-lg font-extrabold text-slate-900 dark:text-white">
+        Frequently asked questions
+      </h2>
+      <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-900">
+        {FAQ_ITEMS.map((item, i) => {
+          const isOpen = openIndex === i
+          return (
+            <div key={i}>
+              <button
+                type="button"
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                aria-expanded={isOpen}
+              >
+                {item.q}
+                <span
+                  className={`material-symbols-outlined shrink-0 text-[20px] text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                >
+                  expand_more
+                </span>
+              </button>
+              {isOpen && (
+                <div className="px-5 pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  {item.a}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 

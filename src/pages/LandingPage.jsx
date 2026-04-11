@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
 import { isValidWebUrlInput } from '../utils/isWebUrl'
-import { trackClick, trackFormSubmit, trackSiteGenerate } from '../utils/analytics'
+import { trackClick, trackCtaClick, trackFormSubmit, trackSiteGenerate } from '../utils/analytics'
 
 const CONTACT = {
   email: 'support@place2page.com',
@@ -83,6 +83,7 @@ export default function LandingPage() {
       return
     }
     trackFormSubmit('hero_generate', { result: 'success', user_logged_in: Boolean(user) })
+    trackCtaClick('homepage_hero')
     trackSiteGenerate(withProtocol)
     sessionStorage.setItem('pendingMapsUrl', withProtocol)
     navigate(user ? '/generator' : '/register', { state: { from: '/generator' } })
@@ -424,6 +425,22 @@ export default function LandingPage() {
                     Average deploy time: 54 seconds
                   </div>
                 </div>
+              </div>
+
+              {/* trust signals */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-on-surface-variant sm:gap-6">
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-emerald-600" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                  Secure checkout via Stripe
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-blue-600" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
+                  Refund policy
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  Used by 2,400+ businesses
+                </span>
               </div>
             </div>
 

@@ -135,6 +135,30 @@ export function trackSiteDelete(siteId, siteName) {
 }
 
 /**
+ * Track a primary CTA click with a location label.
+ * Maps to the GA4 custom event `cta_click`.
+ */
+export function trackCtaClick(location, params = {}) {
+  trackEvent('cta_click', { location, page_path: window.location.pathname, ...params })
+}
+
+/**
+ * Track when user views the pricing / purchase-tokens page.
+ * Maps to the GA4 custom event `view_pricing`.
+ */
+export function trackViewPricing() {
+  trackEvent('view_pricing', { page_path: window.location.pathname })
+}
+
+/**
+ * Track a successful site generation.
+ * Maps to the GA4 custom event `site_generated`.
+ */
+export function trackSiteGenerated(creditsUsed = 1) {
+  trackEvent('site_generated', { credits_used: creditsUsed })
+}
+
+/**
  * Track a page view (useful for SPA route changes).
  * GA4 automatically tracks the initial page view; call this on subsequent route changes.
  */

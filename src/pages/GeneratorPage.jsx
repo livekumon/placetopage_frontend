@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { createSite, enrichPlace, lookupPlace } from '../api/client'
 import { trimPhotoUrl } from '../utils/photoUrl'
 import { isValidWebUrlInput } from '../utils/isWebUrl'
-import { trackFormSubmit, trackSiteGenerate, trackEvent } from '../utils/analytics'
+import { trackFormSubmit, trackSiteGenerate, trackSiteGenerated, trackEvent } from '../utils/analytics'
 
 function formatTypes(types = []) {
   const skip = new Set(['point_of_interest', 'establishment', 'food', 'store'])
@@ -131,6 +131,7 @@ export default function GeneratorPage() {
           },
         })
         trackEvent('site_created', { site_id: site._id, site_name: site.name, place_name: result.name })
+        trackSiteGenerated(1)
         navigate(`/dashboard/sites/${site._id}`, { replace: true })
       } catch (err) {
         trackEvent('site_create_error', { error: err.message })

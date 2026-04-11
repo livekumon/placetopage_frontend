@@ -18,7 +18,9 @@ import TermsPage from './pages/policies/TermsPage'
 import ShippingPage from './pages/policies/ShippingPage'
 import PrivacyPage from './pages/policies/PrivacyPage'
 import ContactPage from './pages/policies/ContactPage'
+import CampaignLandingPage from './pages/CampaignLandingPage'
 import { trackEvent, trackPageView } from './utils/analytics'
+import { captureUtmParams } from './utils/utm'
 
 /**
  * Fires a GA4 `page_view` on every route change (SPA navigation).
@@ -27,6 +29,9 @@ import { trackEvent, trackPageView } from './utils/analytics'
  */
 function AnalyticsLayer() {
   const location = useLocation()
+
+  // Capture UTM params on first render
+  useEffect(() => { captureUtmParams() }, [])
 
   // SPA page-view tracking
   useEffect(() => {
@@ -73,6 +78,7 @@ export default function App() {
         <ScrollToHash />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/lp/:campaign" element={<CampaignLandingPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/example/biryani-blues" element={<BiryaniBluesPage />} />
           <Route element={<AppShell />}>
