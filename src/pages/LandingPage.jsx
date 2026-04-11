@@ -72,8 +72,8 @@ function PlanFaq({ items, variant = 'light' }) {
 }
 
 const FREE_FAQS = [
-  { q: 'What exactly do I get for free?', a: 'One publishing credit at no cost — no credit card required. Generate a site from any Google Maps link and publish it live on a placetopage.com subdomain. That site stays live indefinitely.' },
-  { q: 'What happens after I use my free credit?', a: 'Your existing site stays online. To generate and publish additional sites you\'ll need to purchase more credits — starting at $5 per site.' },
+  { q: 'What exactly do I get for free?', a: 'You can generate a site from any Google Maps link and preview the full result — design, copy, photos, everything. No credit card required.' },
+  { q: 'Can I publish my site on the free plan?', a: 'The free plan is preview-only. To publish your site live on placetopage.com you\'ll need to purchase a credit starting at $5.' },
 ]
 
 const STARTER_FAQS = [
@@ -663,17 +663,17 @@ export default function LandingPage() {
                 <div className="mb-1 text-5xl font-extrabold">$0</div>
                 <div className="mb-8 text-sm text-on-surface-variant">No credit card required</div>
                 <p className="mb-8 text-sm leading-relaxed text-on-surface-variant">
-                  Sign up and instantly get{' '}
-                  <span className="font-semibold text-on-surface">1 free publishing credit</span> —
-                  generate your website and publish it live with no payment needed. Buy more credits whenever you're ready to grow.
+                  Sign up and generate a website from any Google Maps listing —{' '}
+                  <span className="font-semibold text-on-surface">preview it in full</span> before
+                  you decide to publish. No credit card needed to get started.
                 </p>
                 <ul className="mb-10 flex-1 space-y-3">
                   {[
-                    '1 free website publish included',
+                    'Generate & preview your site for free',
                     'AI-generated design & copy',
                     'Full live preview before publishing',
-                    'Custom subdomain on placetopage.com',
-                    'Basic analytics dashboard',
+                    'See exactly what your site will look like',
+                    'Publish when ready — from $5',
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-3 text-sm font-medium">
                       <span className="material-symbols-outlined mt-0.5 flex-shrink-0 text-lg text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
