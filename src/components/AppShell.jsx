@@ -50,6 +50,7 @@ export default function AppShell() {
   const recycleBinActive = pathname === '/recycle-bin'
   const generatorActive = pathname === '/generator'
   const purchaseTokensActive = pathname === '/purchase-tokens'
+  const blogActive = pathname === '/blog' || pathname.startsWith('/blog/')
   const loginActive = pathname === '/login'
   const registerActive = pathname === '/register'
 
@@ -125,6 +126,10 @@ export default function AppShell() {
                 <Link to="/recycle-bin" title="Recycle bin" className={itemClass(recycleBinActive, expanded)}>
                   <span className="material-symbols-outlined shrink-0 text-[22px]">delete_sweep</span>
                   {expanded && <span>Recycle bin</span>}
+                </Link>
+                <Link to="/blog" title="Blog" className={itemClass(blogActive, expanded)}>
+                  <span className="material-symbols-outlined shrink-0 text-[22px]">article</span>
+                  {expanded && <span>Blog</span>}
                 </Link>
               </>
             )
@@ -214,7 +219,7 @@ export default function AppShell() {
             { to: '/dashboard', icon: 'dashboard', label: 'Dashboard', active: dashboardActive },
             { to: '/generator', icon: 'add_circle', label: 'New site', active: generatorActive },
             { to: '/purchase-tokens', icon: 'language', label: 'Purchase', active: purchaseTokensActive },
-            { to: '/recycle-bin', icon: 'delete_sweep', label: 'Recycle', active: recycleBinActive },
+            { to: '/blog', icon: 'article', label: 'Blog', active: blogActive },
           ].map(({ to, icon, label, active }) => (
             <Link
               key={to}
