@@ -113,6 +113,9 @@ No designers. No developers. No waiting. Just a professional website built from 
     readTime: '5 min read',
     category: 'Industry',
     keywords: ['website for restaurant', 'restaurant website generator', 'how to make a website for my restaurant'],
+    cardImage: '/blog/website-for-restaurant-card.png',
+    cardImageAlt:
+      'Illustration: digital portfolio and local business icons — open book, analytics laptop, Google Business, SEO growth, 60 second timer, and dining imagery for restaurants',
     content: `## The Restaurant Website Problem
 
 You run a restaurant. Your days start early and end late. Between managing staff, suppliers, and a dining room full of customers, "build a website" has been sitting on your to-do list for months. Maybe years.
@@ -198,6 +201,9 @@ Your future diners are searching right now. Give them something worth clicking o
     readTime: '6 min read',
     category: 'Local SEO',
     keywords: ['local SEO landing page', 'local business landing page', 'local SEO for small business'],
+    cardImage: '/blog/local-seo-landing-page-card.png',
+    cardImageAlt:
+      'Illustration: local landing page theme — analytics dashboard, Google Business, SEO arrow, 60 second timer, cafe and local business icons, call-to-action',
     content: `## What Is a Local Landing Page, Really?
 
 When most people hear "landing page," they think of startup-style marketing campaigns — flashy pages with countdown timers and email opt-in forms. But for a local business, a landing page is something much simpler and much more valuable.
@@ -285,6 +291,9 @@ You can build one yourself, hire someone, or let AI generate one from your exist
     readTime: '7 min read',
     category: 'Local SEO',
     keywords: ['Google Maps SEO', 'Google Maps SEO for small business', 'how to rank on Google Maps'],
+    cardImage: '/blog/google-maps-seo-small-business-card.png',
+    cardImageAlt:
+      'Isometric illustration: Google Business storefront, analytics laptop, mobile engagement, SEO growth, 60 second stopwatch, and web icons for local search',
     content: `## What Is Google Maps SEO and Why Should You Care?
 
 When someone searches "coffee shop near me" or "dentist in Brooklyn," Google shows a map with three businesses listed underneath. That section — called the "Local Pack" or "Map Pack" — gets clicked more than any other search result. Research from BrightLocal shows that 42% of local searches result in a click on the Map Pack.
@@ -417,6 +426,9 @@ Your competitors aren't doing this. That's your advantage.`,
     readTime: '5 min read',
     category: 'AI Tools',
     keywords: ['AI website generator', 'AI website builder for local business', 'best AI website generator'],
+    cardImage: '/blog/ai-website-generator-local-business-card.png',
+    cardImageAlt:
+      'Illustration: boost your ranking on Google — smartphone with map and Map Pack, Google pin, upward arrows, and local business icons with star ratings',
     content: `## The Shift From Templates to AI
 
 For the past fifteen years, building a website meant one of two things: hire someone, or use a template-based builder like Wix, Squarespace, or WordPress. Both approaches put the work on you — either you pay someone else to do it, or you do it yourself.
