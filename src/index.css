@@ -321,6 +321,14 @@ body {
   font-style: italic;
 }
 
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+  border: 1px solid #e5e7eb;
+}
+
 .blog-content hr {
   border: none;
   border-top: 1px solid #e5e7eb;

@@ -22,6 +22,7 @@ export default function BlogPostPage() {
 
   const jsonLd = useMemo(() => {
     if (!post) return null
+    const base = 'https://www.placetopage.com'
     return {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -33,6 +34,9 @@ export default function BlogPostPage() {
       publisher: { '@type': 'Organization', name: 'PlacePage', url: 'https://www.placetopage.com', logo: { '@type': 'ImageObject', url: 'https://www.placetopage.com/logo.png' } },
       mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.placetopage.com/blog/${post.slug}` },
       keywords: post.keywords.join(', '),
+      ...(post.coverImage
+        ? { image: [`${base}${post.coverImage}`] }
+        : {}),
     }
   }, [post])
 
@@ -43,6 +47,7 @@ export default function BlogPostPage() {
     ogTitle: post.title,
     ogDescription: post.description,
     ogType: 'article',
+    ogImage: post.coverImage ? `https://www.placetopage.com${post.coverImage}` : undefined,
     jsonLd,
   } : {})
 
@@ -91,6 +96,18 @@ export default function BlogPostPage() {
           </h1>
           <p className="text-base leading-relaxed text-slate-500 sm:text-lg">{post.description}</p>
         </header>
+
+        {post.coverImage ? (
+          <figure className="mb-10 overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-50 shadow-sm">
+            <img
+              src={post.coverImage}
+              alt={post.coverImageAlt || post.title}
+              className="w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+        ) : null}
 
         {/* Article content */}
         <article

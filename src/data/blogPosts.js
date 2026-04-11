@@ -1,6 +1,8 @@
 /**
  * Blog posts data — each post has full markdown content for SEO.
  * These are rendered client-side with a lightweight markdown parser.
+ *
+ * Optional: coverImage / coverImageAlt (post hero, OG image). cardImage / cardImageAlt (blog index card only; falls back to coverImage).
  */
 
 const blogPosts = [
@@ -12,6 +14,12 @@ const blogPosts = [
     readTime: '6 min read',
     category: 'How-to',
     keywords: ['Google Maps to website', 'Google Maps listing website', 'convert Google Maps to website'],
+    coverImage: '/blog/google-maps-to-website-infographic.png',
+    coverImageAlt:
+      'Infographic: how to turn your Google Maps listing into a professional website in 60 seconds — Maps limits vs website benefits, SEO, three-step flow, and included features',
+    cardImage: '/blog/google-maps-to-website-card.png',
+    cardImageAlt:
+      'Isometric illustration: Google Business and Maps, laptop with analytics, 60 second stopwatch, SEO growth arrow, website globe, and mobile engagement — turn your listing into a live site',
     content: `## Your Google Maps Listing Is Already Doing Half the Work
 
 If you own a local business, chances are your Google Maps listing is working harder than you think. It shows your name, address, hours, photos, and reviews to everyone searching nearby. That listing is already your digital storefront — but it has limits.
