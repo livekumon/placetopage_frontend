@@ -531,6 +531,9 @@ Your online presence is too important to put off any longer, and the barrier to 
     readTime: '6 min read',
     category: 'Industry',
     keywords: ['best website builder for salons', 'salon website builder', 'website for hair salon', 'beauty salon website'],
+    cardImage: '/blog/best-website-builder-for-salons-card.png',
+    cardImageAlt:
+      'Illustration: salon website builders speed vs style 2026 — AI-powered smartphone template done in minutes versus hours of manual design on laptop with balayage gallery',
     content: `## Why Most Salon Owners Still Don't Have a Website
 
 Here's a number that surprises people: roughly 40% of small beauty and hair salons don't have a website at all. Not a bad website. Not an outdated website. No website.
@@ -664,6 +667,9 @@ Your next client is searching for you right now. Make sure they find something w
     readTime: '7 min read',
     category: 'Local SEO',
     keywords: ['how to get more customers from Google', 'get more customers Google Maps', 'local business Google ranking', 'Google My Business tips'],
+    cardImage: '/blog/how-to-get-more-customers-from-google-card.png',
+    cardImageAlt:
+      'Illustration: how to get more customers from Google — smartphone showing Google Ads, Map Pack, and organic results with growth arrows, directions, call buttons, and local business icons',
     content: `## Google Is Your Biggest Source of New Customers (Whether You Realise It or Not)
 
 If you run a local business — a restaurant, salon, gym, plumber, dentist, or anything that serves a specific area — Google is almost certainly your number one source of new customers. Not Instagram. Not Facebook. Not word of mouth. Google.
