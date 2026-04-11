@@ -17,7 +17,7 @@ export default function ShippingPage() {
           <div className="policy-page__body">
             <h2>100% Digital — No Physical Shipping</h2>
             <p>
-              Place to Page is a fully digital platform. We do not sell or ship any physical
+              placetopage.com is a fully digital platform. We do not sell or ship any physical
               products. There are no couriers, packaging, customs duties, or delivery
               timelines to worry about. Everything we offer — website generation, live
               publishing, and account credits — is delivered electronically over the internet.
@@ -26,7 +26,7 @@ export default function ShippingPage() {
             <h2>Website Credits — Instant Delivery</h2>
             <p>
               When you purchase a credit pack (Starter, Builder, Growth, Studio, or Agency),
-              the credits are added to your Place to Page account <strong>immediately and
+              the credits are added to your placetopage.com account <strong>immediately and
               automatically</strong> as soon as your payment is confirmed by PayPal or
               Razorpay. You can verify your updated credit balance by checking the{' '}
               <strong>"websites remaining"</strong> indicator in the top bar or on the

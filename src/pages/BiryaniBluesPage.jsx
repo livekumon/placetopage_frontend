@@ -278,7 +278,7 @@ export default function BiryaniBluesPage() {
           <div className="flex items-center gap-2 opacity-80">
             <span>Made with</span>
             <Link to="/" className="font-bold tracking-tighter text-slate-900">
-              Place to Page
+              placetopage.com
             </Link>
           </div>
         </div>

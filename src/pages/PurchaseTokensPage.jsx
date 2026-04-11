@@ -179,7 +179,7 @@ export default function PurchaseTokensPage() {
           key: razorpayKeyId,
           amount: order.amountPaise,
           currency: 'INR',
-          name: 'Place to Page',
+          name: 'placetopage.com',
           description: `${selectedPack.label} — ${selectedPack.credits} website${selectedPack.credits !== 1 ? 's' : ''}`,
           order_id: order.orderId,
           handler: async (response) => {
@@ -269,8 +269,8 @@ export default function PurchaseTokensPage() {
       {/* Mobile logo bar — hidden on desktop (sidebar already shows logo) */}
       <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden dark:border-slate-800 dark:bg-slate-900">
         <Link to="/" className="flex items-center gap-2 rounded-lg p-1" aria-label="Home">
-          <img src="/logo.png" alt="Place to Page" className="h-8 w-8 rounded-lg object-contain" />
-          <span className="font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">Place to Page</span>
+          <img src="/logo.png" alt="placetopage.com" className="h-8 w-8 rounded-lg object-contain" />
+          <span className="font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">placetopage.com</span>
         </Link>
         <Link to="/dashboard" className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 dark:border-slate-700">
           <span className="material-symbols-outlined text-[15px]">dashboard</span>

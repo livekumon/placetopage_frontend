@@ -387,7 +387,7 @@ export default function LinkedInGeneratorPage() {
           key: razorpayKeyId,
           amount: order.amountPaise,
           currency: 'INR',
-          name: 'Place to Page',
+          name: 'placetopage.com',
           description: `${selectedPack.label} — ${selectedPack.credits} website${selectedPack.credits !== 1 ? 's' : ''}`,
           order_id: order.orderId,
           handler: async (response) => {

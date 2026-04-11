@@ -16,8 +16,8 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          <img src="/logo.png" alt="Place to Page logo" className="site-footer__logo-img" />
-          <span className="site-footer__logo-text">Place to Page</span>
+          <img src="/logo.png" alt="placetopage.com logo" className="site-footer__logo-img" />
+          <span className="site-footer__logo-text">placetopage.com</span>
         </div>
 
         <nav className="site-footer__links" aria-label="Policy links">
@@ -54,7 +54,7 @@ export default function Footer() {
         </div>
 
         <p className="site-footer__copy">
-          © {YEAR} Place to Page. All rights reserved.
+          © {YEAR} placetopage.com. All rights reserved.
         </p>
       </div>
     </footer>

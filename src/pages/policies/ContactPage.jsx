@@ -19,7 +19,7 @@ export default function ContactPage() {
             <p>
               Whether you have a question about generating your first website, need help
               with your account, or want to report a technical issue — our team is ready to
-              assist. Place to Page is built to make professional web presence effortless for
+              assist. placetopage.com is built to make professional web presence effortless for
               every business, and great support is part of that promise.
             </p>
 
@@ -29,7 +29,7 @@ export default function ContactPage() {
 
             <h2>Getting Started</h2>
             <p>
-              If you're new to Place to Page and need help understanding how website
+              If you're new to placetopage.com and need help understanding how website
               generation works, please email us with the subject line{' '}
               <em>"Getting started"</em>. We're happy to walk you through how to:
             </p>

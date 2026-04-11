@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           <div className="policy-page__body">
             <h2>1. Who We Are</h2>
             <p>
-              Place to Page ("we", "our", "us") is a platform that helps businesses create
+              placetopage.com ("we", "our", "us") is a platform that helps businesses create
               and publish AI-generated websites from their Google Maps listing. This Privacy
               Policy explains what personal information we collect, how we use it, and your
               rights over it.
@@ -129,7 +129,7 @@ export default function PrivacyPage() {
             </ul>
             <p>
               We may also disclose your information if required by law, a court order, or
-              to protect the rights and safety of Place to Page or its users.
+              to protect the rights and safety of placetopage.com or its users.
             </p>
 
             <h2>5. Cookies &amp; Local Storage</h2>
@@ -141,7 +141,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               You can clear localStorage and cookies at any time via your browser settings.
-              Doing so will log you out of Place to Page.
+              Doing so will log you out of placetopage.com.
             </p>
 
             <h2>6. Data Retention</h2>
@@ -191,7 +191,7 @@ export default function PrivacyPage() {
 
             <h2>9. Children's Privacy</h2>
             <p>
-              Place to Page is not directed at children under 13 years of age. We do not
+              placetopage.com is not directed at children under 13 years of age. We do not
               knowingly collect personal information from children. If you believe a child
               has provided us with personal data, please contact us and we will delete it.
             </p>

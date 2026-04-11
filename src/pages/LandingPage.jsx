@@ -158,9 +158,9 @@ export default function LandingPage() {
             to="/"
             className="flex shrink-0 items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <img src="/logo.png" alt="Place to Page logo" className="h-9 w-9 rounded-lg object-contain" />
+            <img src="/logo.png" alt="placetopage.com logo" className="h-9 w-9 rounded-lg object-contain" />
             <span className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl dark:text-white">
-              Place to Page
+              placetopage.com
             </span>
           </Link>
 
@@ -589,7 +589,7 @@ export default function LandingPage() {
                 </div>
                 <img
                   src="/homepage.png"
-                  alt="Place to Page site editor — settings panel on the left with a live website preview on the right"
+                  alt="placetopage.com site editor — settings panel on the left with a live website preview on the right"
                   className="block w-full"
                 />
               </div>

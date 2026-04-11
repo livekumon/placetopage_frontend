@@ -23,8 +23,8 @@ export default function CampaignLandingPage() {
     <div className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-12 font-body text-on-background antialiased">
       {/* Logo */}
       <Link to="/" className="mb-10 flex items-center gap-2">
-        <img src="/logo.png" alt="Place to Page" className="h-10 w-10 rounded-xl object-contain" />
-        <span className="font-manrope text-xl font-bold tracking-tight text-on-surface">Place to Page</span>
+        <img src="/logo.png" alt="placetopage.com" className="h-10 w-10 rounded-xl object-contain" />
+        <span className="font-manrope text-xl font-bold tracking-tight text-on-surface">placetopage.com</span>
       </Link>
 
       {/* Headline */}

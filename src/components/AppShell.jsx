@@ -73,12 +73,12 @@ export default function AppShell() {
           >
             <img
               src="/logo.png"
-              alt="Place to Page logo"
+              alt="placetopage.com logo"
               className="h-9 w-9 shrink-0 rounded-lg object-contain"
             />
             {expanded && (
               <span className="truncate font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">
-                Place to Page
+                placetopage.com
               </span>
             )}
           </Link>

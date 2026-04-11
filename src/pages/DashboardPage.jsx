@@ -327,11 +327,11 @@ export default function DashboardPage() {
             <Link
               to="/"
               className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
-              aria-label="Go to Place to Page home"
+              aria-label="Go to placetopage.com home"
             >
-              <img src="/logo.png" alt="Place to Page" className="h-8 w-8 rounded-lg object-contain" />
+              <img src="/logo.png" alt="placetopage.com" className="h-8 w-8 rounded-lg object-contain" />
               <span className="font-manrope text-base font-bold tracking-tighter text-slate-900 dark:text-white">
-                Place to Page
+                placetopage.com
               </span>
             </Link>
             <a

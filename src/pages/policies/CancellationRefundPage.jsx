@@ -17,7 +17,7 @@ export default function CancellationRefundPage() {
           <div className="policy-page__body">
             <h2>Overview</h2>
             <p>
-              Place to Page provides an AI-powered website generation and publishing service.
+              placetopage.com provides an AI-powered website generation and publishing service.
               Because our product is entirely digital — website credits are delivered
               instantly and published sites go live immediately — our cancellation and refund
               policy reflects the nature of digital services where value is delivered at the
@@ -43,7 +43,7 @@ export default function CancellationRefundPage() {
             <h3>Website Credit Purchases</h3>
             <p>
               All purchases of website credits are final. Once credits are added to your
-              Place to Page account — whether you purchased 1, 5, 10, 20, or 40 credits —
+              placetopage.com account — whether you purchased 1, 5, 10, 20, or 40 credits —
               refunds are not available. Credits do not expire and can be used at any time to
               publish a site.
             </p>

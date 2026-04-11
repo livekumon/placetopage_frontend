@@ -54,9 +54,9 @@ Website builders like Wix and Squarespace are cheaper, but they still require yo
 
 ## The Faster Way: Paste a Link, Get a Website
 
-Tools like [PlacePage](https://www.placetopage.com) have changed this completely. The idea is simple: you already have data sitting in your Google Maps profile — photos, reviews, hours, location, category. Why enter all that again?
+Tools like [placetopage.com](https://www.placetopage.com) have changed this completely. The idea is simple: you already have data sitting in your Google Maps profile — photos, reviews, hours, location, category. Why enter all that again?
 
-With PlacePage, the process is:
+With placetopage.com, the process is:
 
 1. **Copy your Google Maps link** from your browser or the share button
 2. **Paste it** into the generator
@@ -87,7 +87,7 @@ Yes — and here's why.
 
 When you link a website from your Google Business Profile, Google crawls it. The more relevant content Google finds on your website, the better it understands what your business does and who it serves. That understanding feeds into your local search rankings.
 
-A PlacePage-generated site includes structured data, proper heading hierarchy, location keywords, and mobile-responsive design — all things Google's algorithm looks for.
+A site built with placetopage.com includes structured data, proper heading hierarchy, location keywords, and mobile-responsive design — all things Google's algorithm looks for.
 
 Businesses that added a website to their Maps profile saw an average 20-30% increase in profile views, according to Google's own case studies. That's more calls, more directions requests, and more walk-ins.
 
@@ -97,7 +97,7 @@ If you've been putting off getting a website because it felt too expensive, too 
 
 1. Open Google Maps and find your business
 2. Click the share button and copy the link
-3. Go to [PlacePage](https://www.placetopage.com) and paste it in
+3. Go to [placetopage.com](https://www.placetopage.com) and paste it in
 4. Preview your site, make any edits you want, and publish
 
 Your site will be live on a custom subdomain within a minute. From there, you can link it to your Google Business Profile and start seeing results.
@@ -155,7 +155,7 @@ Three hours later, you have something that looks... okay. But you could have bee
 
 Here's what restaurant owners are discovering: your Google Maps listing already has everything a website needs. Your photos, your reviews, your hours, your address, your menu (if you've uploaded it to Google), your category — it's all sitting right there.
 
-[PlacePage](https://www.placetopage.com) uses that data to generate a complete restaurant website in under 60 seconds. You paste your Google Maps link, and the AI:
+[placetopage.com](https://www.placetopage.com) uses that data to generate a complete restaurant website in under 60 seconds. You paste your Google Maps link, and the AI:
 
 - Pulls your best photos and builds a hero section
 - Formats your hours and contact details
@@ -188,7 +188,7 @@ Even after generating your site, a few small tweaks can make a big difference:
 
 You don't need a developer. You don't need a budget of thousands. You don't need to spend your one free afternoon wrestling with a template.
 
-Go to [PlacePage](https://www.placetopage.com), paste your Google Maps link, and see what your restaurant's website could look like. Preview it for free, and if you like it, publish it for $5.
+Go to [placetopage.com](https://www.placetopage.com), paste your Google Maps link, and see what your restaurant's website could look like. Preview it for free, and if you like it, publish it for $5.
 
 Your future diners are searching right now. Give them something worth clicking on.`,
   },
@@ -260,7 +260,7 @@ For many small business owners, neither option is realistic. The website project
 
 Here's the approach that thousands of local businesses are now taking: since your Google Maps profile already contains your business data — photos, hours, reviews, location, category — why not use it?
 
-Tools like [PlacePage](https://www.placetopage.com) let you paste your Google Maps link and get a complete, SEO-optimised landing page generated in under a minute. The AI reads your listing data and builds a page with proper headings, location keywords, embedded reviews, and mobile-responsive design.
+Tools like [placetopage.com](https://www.placetopage.com) let you paste your Google Maps link and get a complete, SEO-optimised landing page generated in under a minute. The AI reads your listing data and builds a page with proper headings, location keywords, embedded reviews, and mobile-responsive design.
 
 It's not a template you fill in. It's a finished page built specifically for your business, using your actual data. And it publishes on a live URL immediately.
 
@@ -280,7 +280,7 @@ Whether you build your landing page yourself or generate one automatically, do t
 
 A dedicated landing page isn't a luxury — it's the foundation of your local online presence. It supports your Google Maps ranking, gives customers the information they need, and makes your business look professional and established.
 
-You can build one yourself, hire someone, or let AI generate one from your existing Google Maps data at [PlacePage](https://www.placetopage.com). However you do it, don't leave this for later. Every day without a landing page is a day you're invisible to potential customers searching right now.`,
+You can build one yourself, hire someone, or let AI generate one from your existing Google Maps data at [placetopage.com](https://www.placetopage.com). However you do it, don't leave this for later. Every day without a landing page is a day you're invisible to potential customers searching right now.`,
   },
 
   {
@@ -375,7 +375,7 @@ A website linked from your GBP does several things:
 - **It improves click-through rate.** Searchers who see a website link in your Maps listing are more likely to click and engage.
 - **It builds authority.** Google sees that your business has an established web presence beyond just a directory listing.
 
-Your website doesn't need to be complex. A single, well-built landing page with your services, location, reviews, and contact details can make a significant difference. Tools like [PlacePage](https://www.placetopage.com) can generate one from your Maps listing data in under a minute.
+Your website doesn't need to be complex. A single, well-built landing page with your services, location, reviews, and contact details can make a significant difference. Tools like [placetopage.com](https://www.placetopage.com) can generate one from your Maps listing data in under a minute.
 
 ## Local Citations and Consistency
 
@@ -413,7 +413,7 @@ Do this consistently for three months and you'll see meaningful movement in your
 
 Google Maps SEO isn't a one-time project — it's an ongoing habit. But the fundamentals are straightforward: complete your profile, earn reviews, keep information consistent, and have a website.
 
-If you don't have a website yet, that's the quickest win available. Go to [PlacePage](https://www.placetopage.com), paste your Google Maps link, and get a professional page live in 60 seconds. Then link it from your Google Business Profile and start the weekly routine above.
+If you don't have a website yet, that's the quickest win available. Go to [placetopage.com](https://www.placetopage.com), paste your Google Maps link, and get a professional page live in 60 seconds. Then link it from your Google Business Profile and start the weekly routine above.
 
 Your competitors aren't doing this. That's your advantage.`,
   },
@@ -482,7 +482,7 @@ That's not a massive marketing campaign. It's just the baseline effect of having
 
 **"Will it look generic?"**
 
-This is the most common worry, and it's fair. Early AI tools did produce cookie-cutter results. Current tools like [PlacePage](https://www.placetopage.com) generate unique designs based on your specific business data. Two restaurants using the same tool will get different designs because they have different photos, different brands, and different vibes.
+This is the most common worry, and it's fair. Early AI tools did produce cookie-cutter results. Current tools like [placetopage.com](https://www.placetopage.com) generate unique designs based on your specific business data. Two restaurants using the same tool will get different designs because they have different photos, different brands, and different vibes.
 
 **"Can I customise it after?"**
 
@@ -494,7 +494,7 @@ AI generators that focus on local business — rather than general-purpose tools
 
 **"What about updates?"**
 
-This varies by tool. Some generate a static page you host yourself. Others, like PlacePage, provide hosting and let you edit your site anytime from a dashboard. If your hours change, you log in and update them.
+This varies by tool. Some generate a static page you host yourself. Others, like placetopage.com, provide hosting and let you edit your site anytime from a dashboard. If your hours change, you log in and update them.
 
 **"Is $5 really enough to get a good website?"**
 
@@ -518,7 +518,7 @@ If you're evaluating AI generators for your local business, here's what to look 
 
 If you don't have a website for your business yet, an AI generator is the fastest path from zero to live. And if you already have a website that looks dated or doesn't reflect your business well, it might be worth generating a fresh one and comparing.
 
-Head to [PlacePage](https://www.placetopage.com), paste your Google Maps link, and see what comes out. You can preview for free — no credit card needed. If the result looks good, publish it for $5 and link it from your Google Business Profile.
+Head to [placetopage.com](https://www.placetopage.com), paste your Google Maps link, and see what comes out. You can preview for free — no credit card needed. If the result looks good, publish it for $5 and link it from your Google Business Profile.
 
 Your online presence is too important to put off any longer, and the barrier to getting it right has never been lower.`,
   },

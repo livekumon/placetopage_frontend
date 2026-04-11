@@ -7,10 +7,10 @@ export default function BlogIndexPage() {
   const posts = getAllPosts()
 
   useDocumentMeta({
-    title: 'Blog — Local SEO & AI Website Tips for Business Owners | PlacePage',
+    title: 'Blog — Local SEO & AI Website Tips for Business Owners | placetopage.com',
     description: 'Practical guides on Google Maps SEO, local business websites, and AI tools. Written for business owners who want more customers from Google.',
     canonical: 'https://www.placetopage.com/blog',
-    ogTitle: 'Blog | PlacePage',
+    ogTitle: 'Blog | placetopage.com',
     ogDescription: 'Practical guides on Google Maps SEO, local business websites, and AI tools.',
   })
 
@@ -20,8 +20,8 @@ export default function BlogIndexPage() {
       <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="PlacePage" className="h-8 w-8 rounded-lg object-contain" />
-            <span className="font-manrope text-lg font-bold tracking-tight text-slate-900">PlacePage</span>
+            <img src="/logo.png" alt="placetopage.com" className="h-8 w-8 rounded-lg object-contain" />
+            <span className="font-manrope text-lg font-bold tracking-tight text-slate-900">placetopage.com</span>
           </Link>
           <nav className="flex items-center gap-4">
             <Link to="/" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Home</Link>

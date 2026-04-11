@@ -6,7 +6,7 @@ import { useEffect } from 'react'
  *
  * Usage:
  *   useDocumentMeta({
- *     title: 'My Page | PlacePage',
+ *     title: 'My Page | placetopage.com',
  *     description: 'Page description for search results',
  *     canonical: 'https://www.placetopage.com/my-page',
  *     ogTitle: 'My Page',
@@ -17,7 +17,7 @@ import { useEffect } from 'react'
  *   })
  */
 const DEFAULTS = {
-  title: 'PlacePage — Turn Any Google Maps Listing Into a Live Website in 60 Seconds',
+  title: 'placetopage.com — Turn Any Google Maps Listing Into a Live Website in 60 Seconds',
   description: 'Paste a Google Maps link. Get a fully designed, SEO-optimised landing page live in under 60 seconds. No designers, no developers. Used by 2,400+ businesses. Start free.',
   canonical: 'https://www.placetopage.com',
 }

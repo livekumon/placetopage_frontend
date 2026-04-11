@@ -17,7 +17,7 @@ export default function TermsPage() {
           <div className="policy-page__body">
             <h2>1. Who We Are</h2>
             <p>
-              Place to Page (<strong>"we"</strong>, <strong>"our"</strong>, or{' '}
+              placetopage.com (<strong>"we"</strong>, <strong>"our"</strong>, or{' '}
               <strong>"the Platform"</strong>) is a web application that helps small
               businesses, restaurants, shops, and service providers create and publish
               professional websites in minutes. We do this by pulling real business data from
@@ -28,7 +28,7 @@ export default function TermsPage() {
             <h2>2. Acceptance of Terms</h2>
             <p>
               By creating an account, generating a site, or purchasing website credits on
-              Place to Page, you confirm that you have read, understood, and agree to be
+              placetopage.com, you confirm that you have read, understood, and agree to be
               bound by these Terms &amp; Conditions and our{' '}
               <Link to="/policies/privacy">Privacy Policy</Link>. If you do not agree, please
               do not use the Platform.
@@ -97,14 +97,14 @@ export default function TermsPage() {
               information associated with the Google Maps listing.
             </p>
             <p>
-              By using the Platform, you grant Place to Page a limited, non-exclusive licence
+              By using the Platform, you grant placetopage.com a limited, non-exclusive licence
               to store, process, and display your content solely for the purpose of generating
               and hosting your website. We do not claim ownership over your business data or
               generated sites.
             </p>
 
             <h2>7. Acceptable Use</h2>
-            <p>You agree not to use Place to Page to:</p>
+            <p>You agree not to use placetopage.com to:</p>
             <ul>
               <li>Generate or publish websites for fictitious or fraudulent businesses</li>
               <li>Publish content that is defamatory, harassing, obscene, or illegal</li>
@@ -120,7 +120,7 @@ export default function TermsPage() {
 
             <h2>8. Third-Party Services</h2>
             <p>
-              Place to Page integrates with and relies on the following third-party services:
+              placetopage.com integrates with and relies on the following third-party services:
             </p>
             <ul>
               <li><strong>Google Maps / Places API</strong> — for fetching public business data</li>
@@ -147,7 +147,7 @@ export default function TermsPage() {
 
             <h2>10. Service Availability</h2>
             <p>
-              We aim to keep Place to Page available 24/7 but do not guarantee uninterrupted
+              We aim to keep placetopage.com available 24/7 but do not guarantee uninterrupted
               access. Scheduled maintenance, Vercel outages, or unexpected issues may
               occasionally affect availability. We will communicate planned downtime through
               our platform where possible.
@@ -164,7 +164,7 @@ export default function TermsPage() {
 
             <h2>12. Limitation of Liability</h2>
             <p>
-              To the maximum extent permitted by applicable law, Place to Page shall not be
+              To the maximum extent permitted by applicable law, placetopage.com shall not be
               liable for any indirect, incidental, consequential, or punitive damages arising
               from your use of the Platform, including but not limited to loss of revenue,
               loss of data, or reputational harm. Our total liability to you in any
@@ -183,7 +183,7 @@ export default function TermsPage() {
             <h2>14. Governing Law</h2>
             <p>
               These Terms shall be governed by the laws of India. Any disputes arising from
-              the use of Place to Page shall be subject to the exclusive jurisdiction of the
+              the use of placetopage.com shall be subject to the exclusive jurisdiction of the
               courts of Hyderabad, Telangana, India.
             </p>
 

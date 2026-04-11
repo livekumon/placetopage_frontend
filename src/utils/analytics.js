@@ -1,5 +1,5 @@
 /**
- * GA4 tracking utility for Place to Page.
+ * GA4 tracking utility for placetopage.com.
  * Wraps window.gtag so all calls are safe even before the script loads.
  */
 

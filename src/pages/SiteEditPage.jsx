@@ -775,7 +775,7 @@ export default function SiteEditPage() {
               className="hidden shrink-0 items-center gap-1.5 font-manrope text-lg font-bold tracking-tighter text-slate-900 dark:text-white sm:flex"
             >
               <img src="/logo.png" alt="" className="h-7 w-7 rounded-md object-contain" aria-hidden />
-              Place to Page
+              placetopage.com
             </Link>
             <span className="hidden h-4 w-px shrink-0 bg-slate-300 sm:inline dark:bg-slate-600" aria-hidden />
             <span className="min-w-0 truncate font-headline text-sm font-extrabold tracking-tight text-on-surface sm:text-lg">
@@ -1236,7 +1236,7 @@ export default function SiteEditPage() {
                       <label className={labelClass} htmlFor="footer-attribution">Attribution text</label>
                       <input id="footer-attribution" className={inputClass} value={footerAttribution}
                         onChange={(e) => setFooterAttribution(e.target.value)}
-                        placeholder="Made with Place to Page" />
+                        placeholder="Made with placetopage.com" />
                     </div>
                     <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
                       <input id="footer-show-attrib" type="checkbox" checked={showFooterAttribution}

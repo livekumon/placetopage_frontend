@@ -30,8 +30,8 @@ export default function BlogPostPage() {
       description: post.description,
       datePublished: post.publishedAt,
       dateModified: post.publishedAt,
-      author: { '@type': 'Organization', name: 'PlacePage', url: 'https://www.placetopage.com' },
-      publisher: { '@type': 'Organization', name: 'PlacePage', url: 'https://www.placetopage.com', logo: { '@type': 'ImageObject', url: 'https://www.placetopage.com/logo.png' } },
+      author: { '@type': 'Organization', name: 'placetopage.com', url: 'https://www.placetopage.com' },
+      publisher: { '@type': 'Organization', name: 'placetopage.com', url: 'https://www.placetopage.com', logo: { '@type': 'ImageObject', url: 'https://www.placetopage.com/logo.png' } },
       mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.placetopage.com/blog/${post.slug}` },
       keywords: post.keywords.join(', '),
       ...(post.coverImage
@@ -41,7 +41,7 @@ export default function BlogPostPage() {
   }, [post])
 
   useDocumentMeta(post ? {
-    title: `${post.title} | PlacePage`,
+    title: `${post.title} | placetopage.com`,
     description: post.description,
     canonical: `https://www.placetopage.com/blog/${post.slug}`,
     ogTitle: post.title,
@@ -59,8 +59,8 @@ export default function BlogPostPage() {
       <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="PlacePage" className="h-8 w-8 rounded-lg object-contain" />
-            <span className="font-manrope text-lg font-bold tracking-tight text-slate-900">PlacePage</span>
+            <img src="/logo.png" alt="placetopage.com" className="h-8 w-8 rounded-lg object-contain" />
+            <span className="font-manrope text-lg font-bold tracking-tight text-slate-900">placetopage.com</span>
           </Link>
           <nav className="flex items-center gap-4">
             <Link to="/blog" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Blog</Link>
