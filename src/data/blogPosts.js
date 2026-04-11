@@ -522,6 +522,307 @@ Head to [placetopage.com](https://www.placetopage.com), paste your Google Maps l
 
 Your online presence is too important to put off any longer, and the barrier to getting it right has never been lower.`,
   },
+
+  {
+    slug: 'best-website-builder-for-salons',
+    title: 'Best Website Builder for Salons in 2026: What Actually Works (And What Wastes Your Time)',
+    description: 'Salon owners don\'t have hours to build a website. Compare the top website builders for salons — from Wix to AI generators — and find the fastest path to a professional site.',
+    publishedAt: '2026-04-11',
+    readTime: '6 min read',
+    category: 'Industry',
+    keywords: ['best website builder for salons', 'salon website builder', 'website for hair salon', 'beauty salon website'],
+    content: `## Why Most Salon Owners Still Don't Have a Website
+
+Here's a number that surprises people: roughly 40% of small beauty and hair salons don't have a website at all. Not a bad website. Not an outdated website. No website.
+
+It's not because salon owners don't care about their online presence. Most are actively posting on Instagram, responding to Google reviews, and keeping their Google Maps profile updated. The problem is time. When you're booked back-to-back with clients from 9 AM to 7 PM, spending a weekend learning Squarespace isn't realistic.
+
+But the cost of not having a website is real. Potential clients search "hair salon near me," see your Google listing, click through — and find nothing. No portfolio. No services list. No prices. No booking link. They move on to the salon down the street that has all of that on a clean, professional page.
+
+## What a Salon Website Actually Needs
+
+Before comparing builders, let's be clear about what a salon website should do. It's not a magazine. It's not a portfolio gallery. It's a conversion tool — its job is to turn a searcher into a booked appointment.
+
+A great salon website needs:
+
+**Your best work, front and centre.** Hair transformations, nail art, facial results — whatever your speciality is. Real photos from your chair, not stock images of models.
+
+**Services and pricing.** Clients want to know what you offer and what it costs before they call. If you do balayage, keratin treatments, bridal styling, or beard trims, list them. Transparency builds trust.
+
+**A booking button that works on mobile.** Over 75% of salon website visits come from phones. If someone has to pinch-zoom to find your phone number, you've lost them. A single tap should start the booking process.
+
+**Your location, hours, and contact info.** Sounds obvious, but many salon websites bury this information three clicks deep. It should be visible within seconds of landing on the page.
+
+**Google reviews.** Social proof is everything in the beauty industry. Showing your real Google reviews on your website reinforces that you're trusted and popular.
+
+**Mobile-responsive design.** Not "mobile-friendly" as an afterthought. Mobile-first. Your site needs to look stunning on an iPhone because that's where most people will see it.
+
+## Comparing the Top Website Builders for Salons
+
+### Wix
+
+Wix has salon-specific templates and a built-in booking system (Wix Bookings). It's one of the most popular choices for beauty businesses.
+
+**Pros:** Drag-and-drop editor, booking integration, hundreds of templates, custom domain included in paid plans.
+
+**Cons:** You still need to build everything yourself. Expect 4-8 hours for a decent result. The free plan shows Wix ads. Paid plans start at $17/month. Templates can look generic if you don't heavily customise them.
+
+**Best for:** Salon owners who have a full day to dedicate to building their site and want integrated booking.
+
+### Squarespace
+
+Squarespace is known for beautiful design. Their templates are more polished than most competitors, which matters in a visual industry like beauty.
+
+**Pros:** Gorgeous templates, strong mobile design, built-in SEO tools, scheduling add-on available.
+
+**Cons:** Less flexible than Wix for customisation. Learning curve is moderate. Plans start at $16/month. You'll still spend 3-6 hours building and configuring.
+
+**Best for:** Salon owners who prioritise aesthetics and are comfortable with a slight learning curve.
+
+### GoDaddy Website Builder
+
+GoDaddy's builder is simpler than Wix or Squarespace. It uses AI to generate a basic site from your business information.
+
+**Pros:** Very fast setup (under an hour), includes hosting, affordable plans from $10/month.
+
+**Cons:** Limited design flexibility. The AI-generated sites look functional but not premium. Fewer templates. The result often feels cookie-cutter.
+
+**Best for:** Salon owners who want something basic up fast and don't mind a simpler design.
+
+### Vagaro / Fresha / StyleSeat
+
+These are booking platforms that include a basic website or profile page. They're popular in the beauty industry.
+
+**Pros:** Booking is the core feature — it's seamless. Client management, payments, and scheduling are all integrated.
+
+**Cons:** The "website" is really just a profile page on their platform. You don't own the URL. SEO value is limited because you're building on someone else's domain. Design options are minimal.
+
+**Best for:** Salon owners who care more about booking functionality than having their own website.
+
+### AI Website Generators (placetopage.com)
+
+AI generators take a completely different approach. Instead of giving you a blank canvas, they build the website for you using data that already exists — specifically, your Google Maps listing.
+
+**Pros:** Done in 60 seconds. No design decisions needed. Pulls your real photos, reviews, hours, and services from Google Maps. Mobile-responsive by default. SEO-optimised out of the box. Costs $5 one-time (no monthly fee). You get your own subdomain.
+
+**Cons:** Single-page format (no multi-page site). Less granular customisation than a full website builder. Best suited for businesses that already have a solid Google Maps profile with photos and reviews.
+
+**Best for:** Salon owners who want a professional website live today without spending hours or hundreds of dollars.
+
+## The Real Question: How Much Time Do You Have?
+
+Here's an honest comparison of the time investment:
+
+| Builder | Time to launch | Monthly cost | Design quality |
+|---------|---------------|-------------|----------------|
+| Wix | 4-8 hours | $17+/mo | Good (if customised) |
+| Squarespace | 3-6 hours | $16+/mo | Excellent |
+| GoDaddy | 1-2 hours | $10+/mo | Basic |
+| Booking platforms | 30 min | $0-25/mo | Minimal |
+| AI generator | 1-2 min | $0 (one-time $5) | Professional |
+
+If you have a free weekend and enjoy design, Squarespace or Wix will give you the most control. If you need something live before your next client walks in, an AI generator is the practical choice.
+
+## What About SEO for Salon Websites?
+
+Having a website isn't just about looking professional — it directly impacts whether new clients find you on Google.
+
+When someone searches "hair salon downtown Chicago" or "best nail salon near me," Google uses several signals to rank results. One of the strongest is whether you have a website linked from your Google Business Profile. Salons with a linked website consistently outrank those without.
+
+Your website content also matters. If your site mentions "balayage specialist in Williamsburg" or "organic hair colour salon in Austin," Google can match you to those specific searches. Your Google Maps listing alone can't contain that level of detail.
+
+The salons that dominate local search results almost always have three things: a complete Google Business Profile, consistent reviews, and a website with relevant content. Two out of three isn't enough.
+
+## Making Your Salon Website Work Harder
+
+Whichever builder you choose, do these things to maximise results:
+
+**Link your website from your Google Business Profile.** This is the single most impactful SEO action. Go to your Business Profile, edit the "Website" field, and paste your URL. Do this today.
+
+**Use real photos of your work.** Stock photos kill trust in the beauty industry. Clients want to see what you actually do. Before-and-after shots are especially powerful.
+
+**Include location keywords naturally.** Don't write "best salon best salon best salon." Instead, write naturally: "We're a full-service hair salon in the heart of Soho, specialising in colour correction and precision cuts." Google understands natural language.
+
+**Keep your hours and services updated.** If you add a new treatment or change your hours, update your website. Outdated information frustrates clients and confuses Google.
+
+**Add a clear call-to-action.** Every page should make it obvious what the visitor should do next: "Book Now," "Call Us," or "View Our Services." Don't make them hunt for it.
+
+## Get Your Salon Online Today
+
+You don't need to be a web designer. You don't need a marketing budget. You just need a website that shows potential clients what you do, where you are, and how to book.
+
+If you want the fastest path, go to [placetopage.com](https://www.placetopage.com), paste your Google Maps link, and see what your salon's website looks like in 60 seconds. Preview it free, publish for $5, and link it from your Google Business Profile.
+
+Your next client is searching for you right now. Make sure they find something worth clicking.`,
+  },
+
+  {
+    slug: 'how-to-get-more-customers-from-google',
+    title: 'How to Get More Customers From Google: A Practical Guide for Local Business Owners',
+    description: 'Google sends more customers to local businesses than any other platform. Here\'s exactly how to show up, stand out, and convert searchers into paying customers.',
+    publishedAt: '2026-04-11',
+    readTime: '7 min read',
+    category: 'Local SEO',
+    keywords: ['how to get more customers from Google', 'get more customers Google Maps', 'local business Google ranking', 'Google My Business tips'],
+    content: `## Google Is Your Biggest Source of New Customers (Whether You Realise It or Not)
+
+If you run a local business — a restaurant, salon, gym, plumber, dentist, or anything that serves a specific area — Google is almost certainly your number one source of new customers. Not Instagram. Not Facebook. Not word of mouth. Google.
+
+Here's why: **46% of all Google searches have local intent.** That means nearly half of everyone using Google right now is looking for a business near them. "Coffee shop near me." "Emergency plumber in Dallas." "Best pizza downtown." These are people ready to spend money. They just need to find you first.
+
+The question isn't whether Google matters for your business. It's whether you're doing enough to show up when these people search.
+
+## The Three Places You Can Appear on Google
+
+When someone searches for a local business, Google shows results in three distinct sections:
+
+**1. Google Ads (top of page)**
+Paid results. You bid on keywords and pay per click. Effective but expensive — local service ads can cost $5-50 per click depending on your industry.
+
+**2. The Map Pack (middle of page)**
+The three businesses shown on the map with star ratings, hours, and a "Directions" button. This is the most valuable real estate for local businesses. Research shows 42% of local searchers click on a Map Pack result.
+
+**3. Organic results (below the map)**
+Traditional website results. These are ranked based on your website's content, authority, and relevance.
+
+Most local businesses focus on just one of these — usually ads because it feels like the "fastest" option. But the businesses getting the most customers from Google are showing up in all three sections, and paying for only one.
+
+## Step 1: Claim and Complete Your Google Business Profile
+
+This is the foundation. If you haven't claimed your Google Business Profile (formerly Google My Business), stop reading and do it now at [business.google.com](https://business.google.com).
+
+A complete profile is non-negotiable. Google's own data shows that complete profiles are **2.7x more likely to be considered reputable** and get **70% more visits** than incomplete ones.
+
+Here's what "complete" means:
+
+**Business name** — Use your real business name. Don't stuff keywords into it ("Joe's Pizza — Best Pizza in Brooklyn Cheap Pizza Near Me"). Google penalises this.
+
+**Category** — Choose your primary category carefully. It's the strongest ranking signal. If you're a hair salon, choose "Hair Salon" not "Beauty Salon" (unless that's more accurate). Add relevant secondary categories too.
+
+**Address and service area** — Make sure your address is exactly the same everywhere online. "123 Main St" on Google but "123 Main Street" on your website creates confusion for Google's algorithm.
+
+**Phone number** — Use a local number, not an 0800/toll-free number. Local numbers reinforce your geographic relevance.
+
+**Hours** — Keep these accurate. Update them for holidays. Google tracks whether businesses are open when they say they are (via phone location data from Android users).
+
+**Photos** — This is where most businesses under-invest. Profiles with photos get **42% more direction requests** and **35% more click-throughs** to websites. Add at least 10 real photos: your storefront, interior, team, products, and your best work.
+
+**Business description** — You get 750 characters. Use them. Describe what you do, who you serve, and where you're located. Write naturally — this isn't a keyword dump.
+
+## Step 2: Get More Google Reviews (and Respond to Every One)
+
+Reviews are the second most important ranking factor for Google Maps, and the number one factor that influences whether a customer chooses you over a competitor.
+
+**How to get more reviews:**
+
+- Ask in person right after a positive experience. "If you enjoyed today, we'd really appreciate a Google review" works surprisingly well
+- Send a follow-up text or email with a direct link to your Google review page
+- Add a QR code to your receipts, business cards, or counter display that links to your review page
+- Never offer incentives for reviews (Google explicitly prohibits this and will remove them)
+
+**How to generate your direct review link:**
+
+Search your business on Google Maps, click "Write a review," and copy that URL. Or use Google's [Place ID Finder](https://developers.google.com/maps/documentation/places/web-service/place-id) to generate a short link.
+
+**Respond to every review.** Every single one — positive and negative. Google confirms that responding to reviews improves your local ranking. It also shows potential customers that you care.
+
+For negative reviews: acknowledge the issue, apologise, and offer to resolve it offline. Never argue publicly. A thoughtful response to a bad review often impresses potential customers more than the review itself.
+
+## Step 3: Build a Website (Yes, You Still Need One)
+
+A Google Business Profile alone isn't enough. You need a website linked from your profile to maximise your visibility.
+
+Why? Three reasons:
+
+**Google uses your website content to understand your business.** Your Maps profile has limited space. A website lets you describe every service, mention every location you serve, and answer every question a customer might have. This gives Google more signals to rank you for more searches.
+
+**A website unlocks organic search results.** Without a website, you can only appear in the Map Pack. With one, you can appear in organic results too — that's two chances to show up on page one instead of one.
+
+**Credibility and conversion.** When a potential customer clicks through from your Google listing and lands on a professional website, trust goes up and they're more likely to call, book, or visit. A listing with no website feels incomplete.
+
+You don't need an expensive, multi-page website. A single, well-structured landing page with your services, photos, reviews, hours, and contact details is enough for most local businesses. Tools like [placetopage.com](https://www.placetopage.com) can generate one from your Google Maps listing in under 60 seconds.
+
+## Step 4: Use the Right Keywords on Your Website
+
+Keywords aren't just for SEO experts. They're simply the words and phrases your customers use when searching for what you offer.
+
+If you're a plumber in Austin, your customers are searching things like:
+- "plumber near me"
+- "emergency plumber Austin"
+- "water heater repair Austin TX"
+- "kitchen sink installation downtown Austin"
+
+Your website should naturally include these phrases — not crammed in artificially, but woven into your descriptions of services and locations.
+
+**Where to use keywords:**
+
+- **Page title** — "Expert Plumbing in Austin, TX — Emergency & Scheduled Service"
+- **Headings** — "Our Plumbing Services in Austin" (H2)
+- **Service descriptions** — "We provide same-day water heater repair across greater Austin, including Round Rock, Cedar Park, and Georgetown"
+- **Meta description** — This shows in Google search results and influences click-through
+
+**How to find the right keywords:**
+
+- Type your service into Google and look at "People also ask" and "Related searches" at the bottom
+- Use Google's autocomplete — start typing and see what Google suggests
+- Think about how a customer would describe what they need (they search "fix leaky tap" not "residential plumbing remediation")
+
+## Step 5: Get Listed in Online Directories
+
+Google cross-references your business information across the web. The more consistent mentions it finds, the more confident it is that your business is legitimate and well-established.
+
+Key directories to list your business on:
+
+- **Yelp** — still influential for restaurants, salons, and local services
+- **Facebook Business Page** — even if you don't post regularly, having one helps
+- **Apple Maps** — via Apple Business Connect
+- **Bing Places** — Microsoft's equivalent of Google Business Profile
+- **Industry-specific directories** — TripAdvisor for restaurants, Healthgrades for doctors, Avvo for lawyers, Houzz for home services
+
+The critical rule: **your business name, address, and phone number (NAP) must be identical everywhere.** Every variation — "Street" vs "St.", different phone numbers, old addresses — dilutes your signal.
+
+## Step 6: Post Content Regularly
+
+Google rewards businesses that show signs of being active and engaged. Two easy ways to do this:
+
+**Google Business Profile posts.** You can publish posts directly on your profile — offers, events, updates, new photos. These show up when people find your listing and signal to Google that your business is active. Aim for one post per week.
+
+**Blog content.** If your website supports it, publishing helpful articles targets long-tail searches. A dentist who writes "How to Know If You Need a Root Canal" can rank for that question and attract patients who are actively looking for dental care.
+
+You don't need to write a novel. A 500-word article answering a common customer question, published once or twice a month, is enough to build meaningful search visibility over time.
+
+## Step 7: Track What's Working
+
+You can't improve what you don't measure. Two free tools give you everything you need:
+
+**Google Business Profile Insights** — Shows how many people found your listing, what searches they used, how many clicked for directions or called, and how your photos compare to similar businesses.
+
+**Google Search Console** — Shows which searches your website appears for, your average position, and how many clicks you're getting. This is where you spot opportunities: if you're appearing on page two for a valuable search, a few improvements could push you to page one.
+
+Check these monthly. Look for trends: are views going up? Are new keywords appearing? Which posts or pages drive the most traffic?
+
+## The 30-Day Action Plan
+
+If you want more customers from Google, here's what to do in the next 30 days:
+
+**Week 1:** Claim and complete your Google Business Profile. Add 10+ real photos. Write a proper business description. Verify your hours.
+
+**Week 2:** Get a website live and link it from your profile. Ask 5 happy customers for Google reviews. Set up Google Search Console.
+
+**Week 3:** List your business on Yelp, Facebook, and Apple Maps with identical NAP. Publish your first Google Business Profile post.
+
+**Week 4:** Write one piece of content targeting a question your customers frequently ask. Respond to all existing Google reviews. Check your Insights for baseline metrics.
+
+Do this consistently for three months, and you'll see measurably more calls, direction requests, and website visits from Google.
+
+## Start Right Now
+
+The businesses that get the most customers from Google aren't doing anything magical. They have a complete profile, good reviews, a website, and consistent information across the web. That's it. The bar is low — and most of your competitors aren't clearing it.
+
+If you don't have a website yet, that's the fastest win. Go to [placetopage.com](https://www.placetopage.com), paste your Google Maps link, and get one live in under a minute. Then link it from your profile and start building from there.
+
+Every day you wait is a day your competitor shows up instead of you.`,
+  },
 ]
 
 export function getAllPosts() {
